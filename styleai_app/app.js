@@ -170,14 +170,14 @@ function renderTrendingCarousel() {
     };
     card.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 11px; font-weight: 700; background: rgba(168, 85, 247, 0.25); color: #c084fc; padding: 4px 10px; border-radius: 20px;">${sample.tag}</span>
-        <span style="font-family: var(--font-display); font-weight: 800; font-size: 12px; color: #34d399;">${sample.score}% Match</span>
+        <span style="font-size: 11.5px; font-weight: 800; background: rgba(168, 85, 247, 0.25); color: #c084fc; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(168, 85, 247, 0.4);">${sample.tag}</span>
+        <span style="font-family: var(--font-display); font-weight: 900; font-size: 13px; color: #00ff9d;">${sample.score}% Match</span>
       </div>
-      <div style="font-weight: 800; font-size: 14px; color: #fff; margin-top: 4px;">${sample.name}</div>
-      <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px;">
-        <span>👔 ${sample.top}</span>
-        <span>👖 ${sample.bottom}</span>
-        <span>👟 ${sample.shoes}</span>
+      <div class="carousel-card-item" style="font-weight: 800; font-size: 15px; color: #fff; margin-top: 2px;">${sample.name}</div>
+      <div style="font-size: 12.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; overflow: hidden;">
+        <span class="carousel-card-item">👔 ${sample.top}</span>
+        <span class="carousel-card-item">👖 ${sample.bottom}</span>
+        <span class="carousel-card-item">👟 ${sample.shoes}</span>
       </div>
     `;
     track.appendChild(card);
