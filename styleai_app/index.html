@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StyleAI - Recomendador de Outfits & Gestión de Armario</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon">✨</div>
+        <div>
+          <h1>StyleAI</h1>
+          <p class="subtitle">Sistema de Recomendación de Outfits y Gestión de Armario</p>
+        </div>
+      </div>
+      <div class="header-badge">PTIA - Proyecto ECI</div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-grid">
+
+      <!-- Left Column: Context Controls & Wardrobe Management -->
+      <section class="left-panel">
+        
+        <!-- Panel 1: Contexto (Clima, Entorno, Gustos) -->
+        <div class="card context-card">
+          <h2>🎯 Contexto y Preferencias</h2>
+          <p class="card-desc">Selecciona las condiciones de tu día para obtener la combinación ideal.</p>
+
+          <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
+            
+            <!-- Clima -->
+            <div class="form-group">
+              <label for="weather-select">🌤️ Clima / Temperatura:</label>
+              <select id="weather-select" class="form-control">
+                <option value="frio">❄️ Frío (&lt; 12°C)</option>
+                <option value="templado" selected>🌤️ Templado (12°C - 20°C)</option>
+                <option value="calido">☀️ Cálido (&gt; 20°C)</option>
+                <option value="lluvioso">🌧️ Lluvioso</option>
+              </select>
+            </div>
+
+            <!-- Entorno / Evento -->
+            <div class="form-group">
+              <label for="event-select">📌 Ocasión / Entorno:</label>
+              <select id="event-select" class="form-control">
+                <option value="casual" selected>👟 Universidad / Casual</option>
+                <option value="trabajo">💼 Oficina / Trabajo</option>
+                <option value="fiesta">🎉 Fiesta / Noche</option>
+                <option value="formal">👔 Evento Formal / Elegante</option>
+                <option value="deporte">🏃 Deporte / Ejercicio</option>
+                <option value="cita">🌹 Cita / Salida Especial</option>
+              </select>
+            </div>
+
+            <!-- Gusto / Estilo Preferido -->
+            <div class="form-group">
+              <label for="style-select">🎨 Estilo Preferido:</label>
+              <select id="style-select" class="form-control">
+                <option value="casual" selected>Casual y Cómodo</option>
+                <option value="urbano">Urbano / Streetwear</option>
+                <option value="elegante">Elegante / Sofisticado</option>
+                <option value="minimalista">Minimalista</option>
+                <option value="deportivo">Deportivo</option>
+              </select>
+            </div>
+
+            <!-- Motor de Recomendación -->
+            <div class="form-group">
+              <label for="engine-select">⚙️ Motor de Recomendación:</label>
+              <select id="engine-select" class="form-control">
+                <option value="llm" selected>⚡ Algoritmo Avanzado de Recomendación (Servidor API)</option>
+                <option value="rules">🛡️ Algoritmo Estándar por Reglas (Local)</option>
+              </select>
+            </div>
+
+            <button type="submit" id="btn-recommend" class="btn btn-primary">
+              ✨ Generar Combinaciones
+            </button>
+          </form>
+        </div>
+
+        <!-- Panel 2: Agregar Prenda -->
+        <div class="card add-item-card">
+          <div class="card-header-flex">
+            <h2>👕 Agregar al Armario</h2>
+            <button type="button" class="btn-toggle" onclick="toggleAddForm()">+ Nueva Prenda</button>
+          </div>
+
+          <form id="add-item-form" class="hidden-form" onsubmit="handleAddItem(event)">
+            <div class="form-group">
+              <label for="item-name">Nombre prenda:</label>
+              <input type="text" id="item-name" placeholder="Ej: Camisa Blanca Oxford" required class="form-control">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-category">Categoría:</label>
+                <select id="item-category" class="form-control">
+                  <option value="top">Superior (Camisa/Chaqueta/Buzo)</option>
+                  <option value="bottom">Inferior (Pantalón/Jeans/Short)</option>
+                  <option value="shoes">Calzado (Tenis/Zapatos)</option>
+                  <option value="outerwear">Abrigo Extra (Chaqueta/Saco)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="item-color">Color Primario:</label>
+                <select id="item-color" class="form-control">
+                  <option value="negro">Negro</option>
+                  <option value="blanco">Blanco</option>
+                  <option value="azul">Azul / Jeans</option>
+                  <option value="gris">Gris</option>
+                  <option value="beige">Beige / Caqui</option>
+                  <option value="rojo">Rojo / Vino</option>
+                  <option value="verde">Verde / Olivo</option>
+                  <option value="cafe">Marrón / Café</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-warmth">Abrigo (1 Ligero - 5 Muy Cálido):</label>
+                <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-range" oninput="document.getElementById('warmth-val').innerText = this.value">
+                <span id="warmth-val" class="range-val">3</span>
+              </div>
+
+              <div class="form-group">
+                <label for="item-formality">Formalidad (1 Informal - 5 Formal):</label>
+                <input type="range" id="item-formality" min="1" max="5" value="2" class="form-range" oninput="document.getElementById('formality-val').innerText = this.value">
+                <span id="formality-val" class="range-val">2</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Guardar en Armario</button>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Wardrobe Catalog & AI Outfit Results -->
+      <section class="right-panel">
+
+        <!-- Tabs Section -->
+        <div class="tabs-header">
+          <button id="tab-outfits-btn" class="tab-btn active" onclick="switchTab('outfits')">
+            💡 Combinaciones Recomendadas <span id="outfits-count-badge" class="badge">0</span>
+          </button>
+          <button id="tab-wardrobe-btn" class="tab-btn" onclick="switchTab('wardrobe')">
+            👔 Mi Armario <span id="items-count-badge" class="badge">0</span>
+          </button>
+        </div>
+
+        <!-- Tab Content 1: Recommendations -->
+        <div id="tab-outfits" class="tab-content active">
+          <div id="outfits-container" class="outfits-grid">
+            <div class="empty-state">
+              <div class="empty-icon">🧥</div>
+              <h3>Haz clic en "Generar Combinaciones"</h3>
+              <p>El motor de recomendación evaluará las prendas de tu armario con el clima y evento seleccionados.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 2: Wardrobe Catalog -->
+        <div id="tab-wardrobe" class="tab-content">
+          <div class="wardrobe-filter-bar">
+            <button class="filter-chip active" onclick="filterCategory('all', this)">Todas</button>
+            <button class="filter-chip" onclick="filterCategory('top', this)">Superiores</button>
+            <button class="filter-chip" onclick="filterCategory('bottom', this)">Inferiores</button>
+            <button class="filter-chip" onclick="filterCategory('shoes', this)">Calzado</button>
+            <button class="filter-chip" onclick="filterCategory('outerwear', this)">Abrigos</button>
+          </div>
+
+          <div id="wardrobe-container" class="wardrobe-grid">
+            <!-- Wardrobe items render here -->
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>StyleAI — Proyecto de Curso PTIA | Escuela Colombiana de Ingeniería Julio Garavito | Diego Andrade</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
