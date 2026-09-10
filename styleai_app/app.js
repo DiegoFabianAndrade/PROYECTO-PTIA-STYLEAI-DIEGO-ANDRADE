@@ -81,6 +81,22 @@ function checkColorHarmony(c1, c2, c3) {
   return Math.min(100, score);
 }
 
+// Collapsible Accordion Toggle
+function toggleAccordion(bodyId, arrowId) {
+  const body = document.getElementById(bodyId);
+  const arrow = document.getElementById(arrowId);
+  if (!body) return;
+
+  const isCollapsed = body.classList.contains('collapsed');
+  if (isCollapsed) {
+    body.classList.remove('collapsed');
+    if (arrow) arrow.classList.remove('collapsed');
+  } else {
+    body.classList.add('collapsed');
+    if (arrow) arrow.classList.add('collapsed');
+  }
+}
+
 // Toast Feedback System
 function showToast(msg) {
   const container = document.getElementById('toast-container');
@@ -104,7 +120,7 @@ function renderTrendingCarousel() {
     { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: '💼 Oficina' },
     { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: '👟 Casual' },
     { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: '🎉 Fiesta' },
-    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: '🌆 Urbano' },
+    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: '<ctrl42> Urbano' },
     { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: '🌹 Cita' }
   ];
 
@@ -117,10 +133,10 @@ function renderTrendingCarousel() {
     };
     card.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 11px; font-weight: 700; background: rgba(139, 92, 246, 0.2); color: #c4b5fd; padding: 4px 10px; border-radius: 20px;">${sample.tag}</span>
-        <span style="font-family: var(--font-display); font-weight: 800; font-size: 12px; color: #10b981;">${sample.score}% Match</span>
+        <span style="font-size: 11px; font-weight: 700; background: rgba(168, 85, 247, 0.25); color: #c084fc; padding: 4px 10px; border-radius: 20px;">${sample.tag}</span>
+        <span style="font-family: var(--font-display); font-weight: 800; font-size: 12px; color: #34d399;">${sample.score}% Match</span>
       </div>
-      <div style="font-weight: 700; font-size: 14px; color: #fff; margin-top: 4px;">${sample.name}</div>
+      <div style="font-weight: 800; font-size: 14px; color: #fff; margin-top: 4px;">${sample.name}</div>
       <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px;">
         <span>👔 ${sample.top}</span>
         <span>👖 ${sample.bottom}</span>
@@ -142,7 +158,6 @@ function generateSurpriseOutfit() {
   document.getElementById('weather-select').value = randomWeather;
   document.getElementById('event-select').value = randomOccasion;
 
-  // Update visual pills UI
   document.querySelectorAll('.visual-pill').forEach(pill => {
     if (pill.dataset.value === randomWeather || pill.dataset.value === randomOccasion) {
       pill.classList.add('active');
@@ -164,7 +179,6 @@ function handleLiveSearch(query) {
     return;
   }
 
-  // Filter Wardrobe
   const filteredItems = wardrobe.filter(i => 
     i.name.toLowerCase().includes(q) || 
     i.color.toLowerCase().includes(q) || 
@@ -178,7 +192,7 @@ function handleLiveSearch(query) {
       const card = document.createElement('div');
       card.className = 'item-card';
       card.innerHTML = `
-        <div class="item-icon-box">${CATEGORY_ICONS[item.category] || '👔'}</div>
+        <div class="piece-icon">${CATEGORY_ICONS[item.category] || '👔'}</div>
         <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
         <div style="font-size: 11px; color: var(--text-muted);">Color: ${item.color} | ${CATEGORY_LABELS[item.category]}</div>
       `;
@@ -271,11 +285,6 @@ function updateStatsDashboard() {
   document.getElementById('stat-formality').innerText = (totalFormality / total).toFixed(1) + '/5';
 }
 
-function toggleAddForm() {
-  const form = document.getElementById('add-item-form');
-  form.style.display = form.style.display === 'none' ? 'flex' : 'none';
-}
-
 function handleAddItem(event) {
   event.preventDefault();
   const name = document.getElementById('item-name').value.trim();
@@ -299,7 +308,6 @@ function handleAddItem(event) {
   renderWardrobe('all');
 
   document.getElementById('add-item-form').reset();
-  toggleAddForm();
   showToast(`✓ Prenda "${name}" guardada`);
 }
 
@@ -327,13 +335,12 @@ function renderWardrobe(categoryFilter = 'all') {
   filtered.forEach(item => {
     const card = document.createElement('div');
     card.className = 'item-card';
+    card.style.cssText = 'background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 14px; position: relative; display: flex; flex-direction: column; gap: 8px;';
     card.innerHTML = `
       <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Eliminar">✕</button>
-      <div class="item-icon-box">${CATEGORY_ICONS[item.category] || '👔'}</div>
+      <div style="font-size: 28px;">${CATEGORY_ICONS[item.category] || '👔'}</div>
       <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-        <span style="font-size: 11px; color: var(--text-muted);">${CATEGORY_LABELS[item.category]} • ${item.color}</span>
-      </div>
+      <div style="font-size: 11px; color: var(--text-muted);">${CATEGORY_LABELS[item.category]} • ${item.color}</div>
     `;
     container.appendChild(card);
   });
@@ -554,9 +561,9 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       </div>
 
       <div class="card-actions">
-        <button class="btn-action btn-fav" onclick="toggleFavorite(${index})">⭐ Guardar Favorito</button>
+        <button class="btn-action btn-fav" onclick="toggleFavorite(${index})">⭐ Favorito</button>
         <button class="btn-action" onclick="copyOutfitToClipboard(${index})">📋 Copiar</button>
-        <button class="btn-action" onclick="openOutfitModal(${index})">🔍 Inspeccionar</button>
+        <button class="btn-action" onclick="openOutfitModal(${index})">🔍 Detalle</button>
       </div>
     `;
 
@@ -614,27 +621,27 @@ function openOutfitModal(index) {
   
   let modalHtml = `
     <div style="display: flex; flex-direction: column; gap: 16px;">
-      <div style="background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.3); padding: 16px; border-radius: 14px;">
-        <strong style="color: #c4b5fd;">💡 Justificación Completa:</strong>
+      <div style="background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.3); padding: 16px; border-radius: 14px;">
+        <strong style="color: #c084fc;">💡 Justificación Completa:</strong>
         <p style="margin-top: 6px; font-size: 14px; color: #e2e8f0;">${outfit.reasoning}</p>
       </div>
 
       <h4 style="font-family: var(--font-display); font-size: 16px; color: #fff;">Prendas del Conjunto:</h4>
       <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
-        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>👔 <strong>Superior:</strong> ${outfit.top.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color}</span>
         </li>
-        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>👖 <strong>Inferior:</strong> ${outfit.bottom.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color}</span>
         </li>
-        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>👟 <strong>Calzado:</strong> ${outfit.shoes.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color}</span>
         </li>
         ${outfit.outerwear ? `
-        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>🧥 <strong>Abrigo:</strong> ${outfit.outerwear.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color}</span>
         </li>` : ''}
