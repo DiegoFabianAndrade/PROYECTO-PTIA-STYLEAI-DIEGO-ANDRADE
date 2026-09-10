@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StyleAI - Recomendador de Outfits & Gestión de Armario</title>
+  <title>StyleAI — Recomendador de Outfits & Armario Inteligente</title>
   <!-- Google Fonts: Outfit & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,9 +11,26 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Toast Notification System (Humane Feedback) -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Detail Modal Overlay (Mobbin Style Outfit Inspector) -->
+  <div id="detail-modal" class="modal-backdrop" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title" style="font-family: var(--font-display); font-size: 20px;">Detalle del Outfit</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div id="modal-body">
+        <!-- Detail content dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
   <div class="app-container">
     
-    <!-- Header -->
+    <!-- Header Navigation (Mobbin Glass Style) -->
     <header class="app-header">
       <div class="logo-area">
         <div class="logo-icon">✨</div>
@@ -22,77 +39,82 @@
           <p class="subtitle">Sistema de Recomendación de Outfits y Gestión de Armario</p>
         </div>
       </div>
-      <div class="header-badge">
-        <span>⚡ Real-Time Engine</span>
-        <span>• PTIA ECI</span>
+
+      <div class="header-controls">
+        <button class="view-toggle-btn active" id="btn-view-list" onclick="toggleViewMode('list')">☰ Lista</button>
+        <button class="view-toggle-btn" id="btn-view-grid" onclick="toggleViewMode('grid')">⊞ Grilla</button>
       </div>
     </header>
 
-    <!-- Main Content Grid -->
+    <!-- Hero Section (Humane by Design Spacing & Clarity) -->
+    <section class="hero-strip">
+      <h2 class="hero-title">Explora combinaciones perfeccionadas para tu día</h2>
+      <p class="hero-sub">Selecciona el clima, la ocasión y tu armario disponible. El motor analizará el abrigo térmico, la etiqueta de formalidad y la teoría del color para sugerirte los mejores outfits.</p>
+    </section>
+
+    <!-- Preset Capsule Bar (Mobbin Interactive Pills) -->
+    <div class="capsule-strip">
+      <span style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Armarios Cápsula:</span>
+      <button class="capsule-chip active" onclick="loadPresetPack('full', this)">✨ Armario Demo Completo</button>
+      <button class="capsule-chip" onclick="loadPresetPack('minimal', this)">📦 Cápsula Minimalista</button>
+      <button class="capsule-chip" onclick="loadPresetPack('executive', this)">💼 Ejecutivo & Formal</button>
+      <button class="capsule-chip" onclick="loadPresetPack('urban', this)">🌆 Urbano & Streetwear</button>
+    </div>
+
+    <!-- Main Content Grid (Spacious Humane Hierarchy) -->
     <main class="main-grid">
 
-      <!-- Left Column: Context Controls, Presets & Wardrobe Management -->
+      <!-- Left Column: Context Controls & Wardrobe Management -->
       <section class="left-panel">
         
-        <!-- Preset Packs Bar -->
-        <div class="card" style="padding: 16px;">
-          <div style="font-size: 12px; font-weight: 700; color: #94a3b8; margin-bottom: 8px;">📦 CARGAR ARMARIOS CÁPSULA RÁPIDOS:</div>
-          <div class="preset-packs-bar">
-            <button type="button" class="btn-preset" onclick="loadPresetPack('minimal')">✨ Cápsula Minimalista</button>
-            <button type="button" class="btn-preset" onclick="loadPresetPack('executive')">💼 Armario Ejecutivo</button>
-            <button type="button" class="btn-preset" onclick="loadPresetPack('urban')">🌆 Armario Urbano</button>
-            <button type="button" class="btn-preset" onclick="loadPresetPack('full')">🔄 Resetear Demo</button>
-          </div>
-        </div>
-
         <!-- Panel 1: Contexto (Clima, Entorno, Gustos) -->
-        <div class="card context-card">
-          <h2>🎯 Contexto y Preferencias</h2>
-          <p class="card-desc">Selecciona las condiciones de tu día para obtener la combinación ideal en tiempo real.</p>
+        <div class="card">
+          <h3 class="card-title">🎯 Contexto y Preferencias</h3>
+          <p class="card-subtitle">Configura las variables de tu jornada para personalizar el algoritmo.</p>
 
           <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
             
-            <!-- Clima (Visual Chips Grid) -->
+            <!-- Clima (Visual Pills Grid) -->
             <div class="form-group">
-              <label>🌤️ Clima / Temperatura:</label>
+              <div class="filter-group-label">🌤️ Clima / Temperatura</div>
               <input type="hidden" id="weather-select" value="templado">
-              <div class="option-chips-grid">
-                <div class="option-chip" data-value="frio" onclick="selectChipOption('weather', 'frio', this)">
-                  <span>❄️ Frío (&lt; 12°C)</span>
+              <div class="visual-pills-grid">
+                <div class="visual-pill" data-value="frio" onclick="selectPillOption('weather', 'frio', this)">
+                  <span>❄️ Frío (&lt;12°C)</span>
                 </div>
-                <div class="option-chip active" data-value="templado" onclick="selectChipOption('weather', 'templado', this)">
-                  <span>🌤️ Templado (12-20°C)</span>
+                <div class="visual-pill active" data-value="templado" onclick="selectPillOption('weather', 'templado', this)">
+                  <span>🌤️ Templado</span>
                 </div>
-                <div class="option-chip" data-value="calido" onclick="selectChipOption('weather', 'calido', this)">
-                  <span>☀️ Cálido (&gt; 20°C)</span>
+                <div class="visual-pill" data-value="calido" onclick="selectPillOption('weather', 'calido', this)">
+                  <span>☀️ Cálido (&gt;20°C)</span>
                 </div>
-                <div class="option-chip" data-value="lluvioso" onclick="selectChipOption('weather', 'lluvioso', this)">
+                <div class="visual-pill" data-value="lluvioso" onclick="selectPillOption('weather', 'lluvioso', this)">
                   <span>🌧️ Lluvioso</span>
                 </div>
               </div>
             </div>
 
-            <!-- Entorno / Ocasión (Visual Chips Grid) -->
+            <!-- Ocasión (Visual Pills Grid) -->
             <div class="form-group">
-              <label>📌 Ocasión / Entorno:</label>
+              <div class="filter-group-label">📌 Ocasión / Entorno</div>
               <input type="hidden" id="event-select" value="casual">
-              <div class="option-chips-grid">
-                <div class="option-chip active" data-value="casual" onclick="selectChipOption('event', 'casual', this)">
+              <div class="visual-pills-grid">
+                <div class="visual-pill active" data-value="casual" onclick="selectPillOption('event', 'casual', this)">
                   <span>👟 Universidad</span>
                 </div>
-                <div class="option-chip" data-value="trabajo" onclick="selectChipOption('event', 'trabajo', this)">
+                <div class="visual-pill" data-value="trabajo" onclick="selectPillOption('event', 'trabajo', this)">
                   <span>💼 Oficina</span>
                 </div>
-                <div class="option-chip" data-value="fiesta" onclick="selectChipOption('event', 'fiesta', this)">
+                <div class="visual-pill" data-value="fiesta" onclick="selectPillOption('event', 'fiesta', this)">
                   <span>🎉 Fiesta / Noche</span>
                 </div>
-                <div class="option-chip" data-value="formal" onclick="selectChipOption('event', 'formal', this)">
+                <div class="visual-pill" data-value="formal" onclick="selectPillOption('event', 'formal', this)">
                   <span>👔 Evento Formal</span>
                 </div>
-                <div class="option-chip" data-value="deporte" onclick="selectChipOption('event', 'deporte', this)">
+                <div class="visual-pill" data-value="deporte" onclick="selectPillOption('event', 'deporte', this)">
                   <span>🏃 Deporte</span>
                 </div>
-                <div class="option-chip" data-value="cita" onclick="selectChipOption('event', 'cita', this)">
+                <div class="visual-pill" data-value="cita" onclick="selectPillOption('event', 'cita', this)">
                   <span>🌹 Cita Especial</span>
                 </div>
               </div>
@@ -100,7 +122,7 @@
 
             <!-- Estilo Preferido -->
             <div class="form-group">
-              <label for="style-select">🎨 Estilo Preferido:</label>
+              <label for="style-select" style="font-size: 13px; font-weight: 600;">🎨 Estilo Preferido:</label>
               <select id="style-select" class="form-control">
                 <option value="casual" selected>Casual y Cómodo</option>
                 <option value="urbano">Urbano / Streetwear</option>
@@ -112,7 +134,7 @@
 
             <!-- Motor de Recomendación -->
             <div class="form-group">
-              <label for="engine-select">⚙️ Motor de Recomendación:</label>
+              <label for="engine-select" style="font-size: 13px; font-weight: 600;">⚙️ Motor de Recomendación:</label>
               <select id="engine-select" class="form-control">
                 <option value="llm" selected>⚡ Algoritmo Avanzado de Recomendación (Servidor API)</option>
                 <option value="rules">🛡️ Algoritmo Estándar por Reglas (Local)</option>
@@ -126,111 +148,107 @@
         </div>
 
         <!-- Panel 2: Agregar Prenda -->
-        <div class="card add-item-card">
-          <div class="card-header-flex">
-            <h2>👕 Agregar al Armario</h2>
-            <button type="button" class="btn-toggle" onclick="toggleAddForm()">+ Nueva Prenda</button>
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title">👕 Gestión de Armario</h3>
+            <button type="button" class="btn-action" onclick="toggleAddForm()">+ Nueva Prenda</button>
           </div>
 
-          <form id="add-item-form" class="hidden-form" onsubmit="handleAddItem(event)">
+          <form id="add-item-form" style="display: none;" onsubmit="handleAddItem(event)">
             <div class="form-group">
-              <label for="item-name">Nombre prenda:</label>
-              <input type="text" id="item-name" placeholder="Ej: Camisa Blanca Oxford" required class="form-control">
+              <label for="item-name">Nombre de la prenda:</label>
+              <input type="text" id="item-name" placeholder="Ej: Camisa Oxford Azul" required class="form-control">
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="item-category">Categoría:</label>
-                <select id="item-category" class="form-control">
-                  <option value="top">Superior (Camisa/Chaqueta/Buzo)</option>
-                  <option value="bottom">Inferior (Pantalón/Jeans/Short)</option>
-                  <option value="shoes">Calzado (Tenis/Zapatos)</option>
-                  <option value="outerwear">Abrigo Extra (Chaqueta/Saco)</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="item-color">Color Primario:</label>
-                <select id="item-color" class="form-control">
-                  <option value="negro">Negro</option>
-                  <option value="blanco">Blanco</option>
-                  <option value="azul">Azul / Jeans</option>
-                  <option value="gris">Gris</option>
-                  <option value="beige">Beige / Caqui</option>
-                  <option value="rojo">Rojo / Vino</option>
-                  <option value="verde">Verde / Olivo</option>
-                  <option value="cafe">Marrón / Café</option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="item-category">Categoría:</label>
+              <select id="item-category" class="form-control">
+                <option value="top">Superior (Camisa/Chaqueta/Buzo)</option>
+                <option value="bottom">Inferior (Pantalón/Jeans/Short)</option>
+                <option value="shoes">Calzado (Tenis/Zapatos)</option>
+                <option value="outerwear">Abrigo Extra (Chaqueta/Saco)</option>
+              </select>
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="item-warmth">Abrigo (1 Ligero - 5 Muy Cálido):</label>
-                <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-range" oninput="document.getElementById('warmth-val').innerText = this.value">
-                <span id="warmth-val" class="range-val">3</span>
-              </div>
-
-              <div class="form-group">
-                <label for="item-formality">Formalidad (1 Informal - 5 Formal):</label>
-                <input type="range" id="item-formality" min="1" max="5" value="2" class="form-range" oninput="document.getElementById('formality-val').innerText = this.value">
-                <span id="formality-val" class="range-val">2</span>
-              </div>
+            <div class="form-group">
+              <label for="item-color">Color Primario:</label>
+              <select id="item-color" class="form-control">
+                <option value="negro">Negro</option>
+                <option value="blanco">Blanco</option>
+                <option value="azul">Azul / Jeans</option>
+                <option value="gris">Gris</option>
+                <option value="beige">Beige / Caqui</option>
+                <option value="rojo">Rojo / Vino</option>
+                <option value="verde">Verde / Olivo</option>
+                <option value="cafe">Marrón / Café</option>
+              </select>
             </div>
 
-            <button type="submit" class="btn btn-secondary">Guardar en Armario</button>
+            <div class="form-group">
+              <label for="item-warmth">Abrigo Térmico (1 Ligero - 5 Muy Cálido):</label>
+              <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-control" oninput="document.getElementById('warmth-val').innerText = this.value">
+              <span id="warmth-val" style="font-size: 12px; color: var(--accent-pink); font-weight: 700;">3</span>
+            </div>
+
+            <div class="form-group">
+              <label for="item-formality">Formalidad Etiqueta (1 Informal - 5 Formal):</label>
+              <input type="range" id="item-formality" min="1" max="5" value="2" class="form-control" oninput="document.getElementById('formality-val').innerText = this.value">
+              <span id="formality-val" style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">2</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Guardar Prenda</button>
           </form>
         </div>
 
       </section>
 
-      <!-- Right Column: Wardrobe Catalog, Virtual Mannequin & Outfit Results -->
+      <!-- Right Column: Closet Stats & Feed -->
       <section class="right-panel">
 
-        <!-- Closet Analytics Banner -->
-        <div class="stats-banner">
-          <div class="stat-box">
-            <div id="stat-total" class="stat-val">0</div>
-            <div class="stat-lbl">Prendas Registradas</div>
+        <!-- Closet KPI Stats Banner (Humane Spacing) -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div id="stat-total" class="stat-value">0</div>
+            <div class="stat-label">Prendas en Armario</div>
           </div>
-          <div class="stat-box">
-            <div id="stat-color" class="stat-val" style="color: #c4b5fd;">-</div>
-            <div class="stat-lbl">Color Dominante</div>
+          <div class="stat-card">
+            <div id="stat-color" class="stat-value" style="color: #c4b5fd;">-</div>
+            <div class="stat-label">Color Dominante</div>
           </div>
-          <div class="stat-box">
-            <div id="stat-warmth" class="stat-val" style="color: #f472b6;">0.0/5</div>
-            <div class="stat-lbl">Nivel Térmico Medio</div>
+          <div class="stat-card">
+            <div id="stat-warmth" class="stat-value" style="color: #f472b6;">0.0/5</div>
+            <div class="stat-label">Abrigo Medio</div>
           </div>
-          <div class="stat-box">
-            <div id="stat-formality" class="stat-val" style="color: #34d399;">0.0/5</div>
-            <div class="stat-lbl">Formalidad Media</div>
+          <div class="stat-card">
+            <div id="stat-formality" class="stat-value" style="color: #34d399;">0.0/5</div>
+            <div class="stat-label">Formalidad Media</div>
           </div>
         </div>
 
-        <!-- Tabs Section -->
-        <div class="tabs-header">
+        <!-- Navigation Tabs -->
+        <div class="tabs-nav">
           <button id="tab-outfits-btn" class="tab-btn active" onclick="switchTab('outfits')">
-            💡 Combinaciones Recomendadas <span id="outfits-count-badge" class="badge">0</span>
+            💡 Combinaciones Recomendadas <span id="outfits-count-badge" class="tab-badge">0</span>
           </button>
           <button id="tab-wardrobe-btn" class="tab-btn" onclick="switchTab('wardrobe')">
-            👔 Mi Armario <span id="items-count-badge" class="badge">0</span>
+            👔 Catálogo de Armario <span id="items-count-badge" class="tab-badge">0</span>
           </button>
         </div>
 
-        <!-- Tab Content 1: Recommendations -->
-        <div id="tab-outfits" class="tab-content active">
-          <div id="outfits-container" class="outfits-grid">
+        <!-- Tab Content 1: Recommendations Feed (Mobbin Dynamic Cards) -->
+        <div id="tab-outfits" style="display: block;">
+          <div id="outfits-container" class="feed-grid">
             <div class="empty-state">
-              <div class="empty-icon">🧥</div>
-              <h3>Haz clic en "Generar Combinaciones"</h3>
-              <p>El motor de recomendación evaluará las prendas de tu armario con el clima y evento seleccionados.</p>
+              <div style="font-size: 48px; opacity: 0.8;">🧥</div>
+              <h3 style="font-family: var(--font-display); font-size: 18px; color: #fff;">Haz clic en "Generar Combinaciones"</h3>
+              <p>El motor evaluará las prendas registradas según la ocasión y el clima seleccionado.</p>
             </div>
           </div>
         </div>
 
         <!-- Tab Content 2: Wardrobe Catalog -->
-        <div id="tab-wardrobe" class="tab-content">
-          <div class="wardrobe-filter-bar">
+        <div id="tab-wardrobe" style="display: none;">
+          <div class="wardrobe-filter-strip">
             <button class="filter-chip active" onclick="filterCategory('all', this)">Todas</button>
             <button class="filter-chip" onclick="filterCategory('top', this)">Superiores</button>
             <button class="filter-chip" onclick="filterCategory('bottom', this)">Inferiores</button>
@@ -249,8 +267,9 @@
 
     <!-- Footer -->
     <footer class="app-footer">
-      <p>StyleAI — Proyecto de Curso PTIA | Escuela Colombiana de Ingeniería Julio Garavito | Diego Andrade</p>
+      <p>StyleAI — Proyecto PTIA | Escuela Colombiana de Ingeniería Julio Garavito | Diego Andrade</p>
     </footer>
+
   </div>
 
   <script src="app.js"></script>

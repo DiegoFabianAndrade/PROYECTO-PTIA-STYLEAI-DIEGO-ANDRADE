@@ -43,23 +43,12 @@ const PRESET_PACKS = {
 };
 
 let wardrobe = [];
+let generatedOutfits = [];
+let currentViewMode = 'list';
 
-// Icons map
-const CATEGORY_ICONS = {
-  top: '👔',
-  bottom: '👖',
-  shoes: '👟',
-  outerwear: '🧥'
-};
+const CATEGORY_ICONS = { top: '👔', bottom: '👖', shoes: '👟', outerwear: '🧥' };
+const CATEGORY_LABELS = { top: 'Superior', bottom: 'Inferior', shoes: 'Calzado', outerwear: 'Abrigo' };
 
-const CATEGORY_LABELS = {
-  top: 'Superior',
-  bottom: 'Inferior',
-  shoes: 'Calzado',
-  outerwear: 'Abrigo'
-};
-
-// Target parameters for context
 const OCCASION_CONFIG = {
   casual: { formality: 2, label: 'Universidad / Casual' },
   trabajo: { formality: 4, label: 'Oficina / Trabajo' },
@@ -76,25 +65,47 @@ const WEATHER_CONFIG = {
   lluvioso: { minWarmth: 4, maxWarmth: 5, label: 'Lluvioso' }
 };
 
-// Color compatibility matrix
 const NEUTRAL_COLORS = ['negro', 'blanco', 'gris', 'beige'];
 
 function checkColorHarmony(c1, c2, c3) {
-  let score = 70; // base score
+  let score = 70;
   let neutrals = [c1, c2, c3].filter(c => NEUTRAL_COLORS.includes(c)).length;
   if (neutrals >= 2) score += 20;
-
   if ((c1 === 'negro' && c2 === 'blanco') || (c1 === 'blanco' && c2 === 'negro')) score += 10;
   if ((c1 === 'azul' && c2 === 'beige') || (c1 === 'beige' && c2 === 'azul')) score += 10;
   if (c1 === c2) score += 10;
-
   return Math.min(100, score);
 }
 
-// Interactive Visual Chip Selection for Weather & Occasion
-function selectChipOption(type, value, element) {
+// Toast Feedback System
+function showToast(msg) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast-msg';
+  toast.innerText = msg;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}
+
+// Mobbin View Mode Toggle
+function toggleViewMode(mode) {
+  currentViewMode = mode;
+  document.getElementById('btn-view-list').classList.toggle('active', mode === 'list');
+  document.getElementById('btn-view-grid').classList.toggle('active', mode === 'grid');
+  
+  const container = document.getElementById('outfits-container');
+  if (container) {
+    container.classList.toggle('grid-mode', mode === 'grid');
+  }
+}
+
+// Visual Pills Option Selector
+function selectPillOption(type, value, element) {
   const container = element.parentElement;
-  container.querySelectorAll('.option-chip').forEach(chip => chip.classList.remove('active'));
+  container.querySelectorAll('.visual-pill').forEach(p => p.classList.remove('active'));
   element.classList.add('active');
 
   if (type === 'weather') {
@@ -104,27 +115,29 @@ function selectChipOption(type, value, element) {
   }
 }
 
-// Preset Loader
-function loadPresetPack(packType) {
+// Preset Capsule Pack Loader
+function loadPresetPack(packType, btnElement) {
+  if (btnElement) {
+    document.querySelectorAll('.capsule-chip').forEach(c => c.classList.remove('active'));
+    btnElement.classList.add('active');
+  }
+
   if (packType === 'full') {
     wardrobe = [...INITIAL_ITEMS];
   } else if (PRESET_PACKS[packType]) {
     wardrobe = [...PRESET_PACKS[packType]];
   }
+
   saveWardrobe();
   renderWardrobe('all');
-  alert(`¡Armario cargado con éxito! (${wardrobe.length} prendas)`);
+  showToast(`✓ Armario cargado (${wardrobe.length} prendas)`);
 }
 
 // Load Wardrobe
 function initWardrobe() {
   const saved = localStorage.getItem('styleai_wardrobe');
   if (saved) {
-    try {
-      wardrobe = JSON.parse(saved);
-    } catch(e) {
-      wardrobe = [...INITIAL_ITEMS];
-    }
+    try { wardrobe = JSON.parse(saved); } catch(e) { wardrobe = [...INITIAL_ITEMS]; }
   } else {
     wardrobe = [...INITIAL_ITEMS];
     saveWardrobe();
@@ -154,7 +167,6 @@ function updateStatsDashboard() {
     return;
   }
 
-  // Count colors
   const colorCounts = {};
   let totalWarmth = 0;
   let totalFormality = 0;
@@ -171,13 +183,13 @@ function updateStatsDashboard() {
   document.getElementById('stat-formality').innerText = (totalFormality / total).toFixed(1) + '/5';
 }
 
-// Toggle Add Item Form
 function toggleAddForm() {
   const form = document.getElementById('add-item-form');
-  form.classList.toggle('show');
+  const isHidden = form.style.display === 'none';
+  form.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) form.classList.add('fadeIn');
 }
 
-// Handle Add Item
 function handleAddItem(event) {
   event.preventDefault();
   const name = document.getElementById('item-name').value.trim();
@@ -202,29 +214,26 @@ function handleAddItem(event) {
 
   document.getElementById('add-item-form').reset();
   toggleAddForm();
-  alert(`¡Prenda "${name}" agregada exitosamente a tu armario!`);
+  showToast(`✓ Prenda "${name}" guardada`);
 }
 
-// Delete Item
 function deleteItem(id) {
   if (confirm('¿Deseas eliminar esta prenda del armario?')) {
     wardrobe = wardrobe.filter(i => i.id !== id);
     saveWardrobe();
     renderWardrobe('all');
+    showToast('✓ Prenda eliminada');
   }
 }
 
-// Filter and Render Wardrobe Catalog
 function renderWardrobe(categoryFilter = 'all') {
   const container = document.getElementById('wardrobe-container');
   container.innerHTML = '';
 
-  const filtered = categoryFilter === 'all' 
-    ? wardrobe 
-    : wardrobe.filter(i => i.category === categoryFilter);
+  const filtered = categoryFilter === 'all' ? wardrobe : wardrobe.filter(i => i.category === categoryFilter);
 
   if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">👕</div><p>No hay prendas registradas en esta categoría.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div style="font-size: 40px;">👕</div><p>No hay prendas en esta categoría.</p></div>`;
     return;
   }
 
@@ -232,10 +241,10 @@ function renderWardrobe(categoryFilter = 'all') {
     const card = document.createElement('div');
     card.className = 'item-card';
     card.innerHTML = `
-      <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Eliminar prenda">✕</button>
+      <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Eliminar">✕</button>
       <div class="item-icon-box">${CATEGORY_ICONS[item.category] || '👔'}</div>
-      <div class="item-title">${item.name}</div>
-      <div class="item-meta">
+      <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px;">
         <span class="tag">${CATEGORY_LABELS[item.category]}</span>
         <span class="tag">Color: ${item.color}</span>
         <span class="tag">Abrigo: ${item.warmth}/5</span>
@@ -252,26 +261,20 @@ function filterCategory(cat, btn) {
   renderWardrobe(cat);
 }
 
-// Switch Tabs
 function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  const isOutfits = tab === 'outfits';
+  document.getElementById('tab-outfits-btn').classList.toggle('active', isOutfits);
+  document.getElementById('tab-wardrobe-btn').classList.toggle('active', !isOutfits);
 
-  if (tab === 'outfits') {
-    document.getElementById('tab-outfits-btn').classList.add('active');
-    document.getElementById('tab-outfits').classList.add('active');
-  } else {
-    document.getElementById('tab-wardrobe-btn').classList.add('active');
-    document.getElementById('tab-wardrobe').classList.add('active');
-  }
+  document.getElementById('tab-outfits').style.display = isOutfits ? 'block' : 'none';
+  document.getElementById('tab-wardrobe').style.display = !isOutfits ? 'block' : 'none';
 }
 
-// Recommendation Engine
 async function generateOutfits() {
   const weatherKey = document.getElementById('weather-select').value;
   const occasionKey = document.getElementById('event-select').value;
   const preferredStyle = document.getElementById('style-select').value;
-  const engine = document.getElementById('engine-select') ? document.getElementById('engine-select').value : 'llm';
+  const engine = document.getElementById('engine-select').value;
 
   const targetFormality = OCCASION_CONFIG[occasionKey].formality;
   const weatherInfo = WEATHER_CONFIG[weatherKey];
@@ -282,26 +285,23 @@ async function generateOutfits() {
   const outerwears = wardrobe.filter(i => i.category === 'outerwear');
 
   if (tops.length === 0 || bottoms.length === 0 || shoes.length === 0) {
-    alert('Necesitas tener al menos una prenda Superior, una Inferior y Calzado en tu armario para generar combinaciones.');
+    alert('Necesitas al menos una prenda Superior, una Inferior y Calzado en tu armario.');
     switchTab('wardrobe');
     return;
   }
 
-  // Show Skeleton Shimmer Loading State
   switchTab('outfits');
   const container = document.getElementById('outfits-container');
   container.innerHTML = `
-    <div class="empty-state" style="padding: 40px;">
-      <div class="empty-icon" style="animation: spin 1.5s infinite linear;">⚙️</div>
-      <h3>Calculando mejores combinaciones...</h3>
-      <p>Evaluando balance térmico, formalidad y teoría de colores en tiempo real.</p>
+    <div class="empty-state" style="padding: 48px;">
+      <div style="font-size: 36px; animation: spin 1.2s infinite linear;">⚙️</div>
+      <h3 style="color: #fff; font-family: var(--font-display);">Calculando combinaciones ideales...</h3>
+      <p>Procesando balance térmico, formalidad y compatibilidad cromática.</p>
     </div>
   `;
 
-  // Simulate short animation delay for smooth UX feel
-  await new Promise(r => setTimeout(r, 350));
+  await new Promise(r => setTimeout(r, 300));
 
-  // If API Engine is selected, try calling backend API
   if (engine === 'llm') {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/recommend', {
@@ -318,26 +318,25 @@ async function generateOutfits() {
       if (response.ok) {
         const data = await response.json();
         if (data.outfit) {
-          const llmOutfit = {
+          generatedOutfits = [{
             top: data.outfit.top,
             bottom: data.outfit.bottom,
             shoes: data.outfit.shoes,
             outerwear: data.outfit.outerwear,
             score: data.matchScore,
             reasoning: data.aiReasoning
-          };
-          renderOutfits([llmOutfit], OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
+          }];
+          renderOutfits(generatedOutfits, OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
+          showToast('⚡ Recomendación calculada');
           return;
         }
       }
     } catch (err) {
-      console.warn('Servidor API no conectado. Utilizando motor de reglas local...', err);
+      console.warn('Servidor API no disponible. Utilizando motor por reglas local.', err);
     }
   }
 
-  // Local Rule-Based Engine
   const candidateCombinations = [];
-
   tops.forEach(t => {
     bottoms.forEach(b => {
       shoes.forEach(s => {
@@ -350,8 +349,9 @@ async function generateOutfits() {
   });
 
   candidateCombinations.sort((a, b) => b.score - a.score);
-  const topOutfits = candidateCombinations.slice(0, 4);
-  renderOutfits(topOutfits, OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
+  generatedOutfits = candidateCombinations.slice(0, 4);
+  renderOutfits(generatedOutfits, OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
+  showToast('⚡ Combinaciones calculadas');
 }
 
 function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weatherInfo, preferredStyle, list) {
@@ -383,33 +383,23 @@ function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weather
   );
 
   let reasoning = [];
-  if (formalityDiff <= 0.8) {
-    reasoning.push(`Cumple excelente el nivel de formalidad (${avgFormality.toFixed(1)}/5) para la ocasión.`);
-  }
-  if (warmthScore >= 85) {
-    reasoning.push(`Proporciona abrigo térmico óptimo para clima ${weatherInfo.label}.`);
-  }
-  if (colorScore >= 80) {
-    reasoning.push(`Excelente combinación de tonos (${top.color}, ${bottom.color} y ${shoes.color}).`);
-  }
+  if (formalityDiff <= 0.8) reasoning.push(`Cumple excelente el nivel de formalidad (${avgFormality.toFixed(1)}/5) para la ocasión.`);
+  if (warmthScore >= 85) reasoning.push(`Proporciona abrigo térmico óptimo para clima ${weatherInfo.label}.`);
+  if (colorScore >= 80) reasoning.push(`Excelente combinación de tonos (${top.color}, ${bottom.color} y ${shoes.color}).`);
 
   list.push({
-    top,
-    bottom,
-    shoes,
-    outerwear,
+    top, bottom, shoes, outerwear,
     score: Math.min(99, Math.max(60, totalScore)),
     reasoning: reasoning.join(' ') || 'Combinación equilibrada entre las prendas disponibles.'
   });
 }
 
-function renderOutfits(outfits, occasionLabel, weatherLabel, engineSuffix = '') {
-  switchTab('outfits');
+function renderOutfits(outfits, occasionLabel, weatherLabel) {
   const container = document.getElementById('outfits-container');
   document.getElementById('outfits-count-badge').innerText = outfits.length;
 
   if (outfits.length === 0) {
-    container.innerHTML = `<div class="empty-state"><p>No se encontraron combinaciones recomendadas.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><p>No se encontraron combinaciones.</p></div>`;
     return;
   }
 
@@ -417,65 +407,66 @@ function renderOutfits(outfits, occasionLabel, weatherLabel, engineSuffix = '') 
 
   outfits.forEach((outfit, index) => {
     const card = document.createElement('div');
-    card.className = 'outfit-card';
+    card.className = 'mobbin-card';
     
-    let itemsHtml = `
-      <div class="outfit-item-node">
-        <span style="font-size: 24px;">👔</span>
+    let piecesHtml = `
+      <div class="piece-item">
+        <div class="piece-icon">👔</div>
         <div>
-          <div style="font-size: 11px; color: #94a3b8;">Superior</div>
-          <div style="font-weight: 700; font-size: 13px;">${outfit.top.name}</div>
-          <div style="font-size: 10px; color: #64748b;">Color: ${outfit.top.color}</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Superior</div>
+          <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.top.name}</div>
         </div>
       </div>
 
-      <div class="outfit-item-node">
-        <span style="font-size: 24px;">👖</span>
+      <div class="piece-item">
+        <div class="piece-icon">👖</div>
         <div>
-          <div style="font-size: 11px; color: #94a3b8;">Inferior</div>
-          <div style="font-weight: 700; font-size: 13px;">${outfit.bottom.name}</div>
-          <div style="font-size: 10px; color: #64748b;">Color: ${outfit.bottom.color}</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Inferior</div>
+          <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.bottom.name}</div>
         </div>
       </div>
 
-      <div class="outfit-item-node">
-        <span style="font-size: 24px;">👟</span>
+      <div class="piece-item">
+        <div class="piece-icon">👟</div>
         <div>
-          <div style="font-size: 11px; color: #94a3b8;">Calzado</div>
-          <div style="font-weight: 700; font-size: 13px;">${outfit.shoes.name}</div>
-          <div style="font-size: 10px; color: #64748b;">Color: ${outfit.shoes.color}</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Calzado</div>
+          <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.shoes.name}</div>
         </div>
       </div>
     `;
 
     if (outfit.outerwear) {
-      itemsHtml += `
-        <div class="outfit-item-node">
-          <span style="font-size: 24px;">🧥</span>
+      piecesHtml += `
+        <div class="piece-item">
+          <div class="piece-icon">🧥</div>
           <div>
-            <div style="font-size: 11px; color: #94a3b8;">Abrigo Extra</div>
-            <div style="font-weight: 700; font-size: 13px;">${outfit.outerwear.name}</div>
-            <div style="font-size: 10px; color: #64748b;">Color: ${outfit.outerwear.color}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">Abrigo Extra</div>
+            <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.outerwear.name}</div>
           </div>
         </div>
       `;
     }
 
     card.innerHTML = `
-      <div class="outfit-header">
+      <div class="mobbin-card-header">
         <div>
-          <h3 style="font-size: 16px; font-weight: 700;">Outfit Recomendado #${index + 1}${engineSuffix}</h3>
-          <span style="font-size: 12px; color: #94a3b8;">${occasionLabel} • Clima ${weatherLabel}</span>
+          <h3 style="font-family: var(--font-display); font-size: 17px; font-weight: 700; color: #fff;">Outfit Recomendado #${index + 1}</h3>
+          <span style="font-size: 12px; color: var(--text-muted);">${occasionLabel} • Clima ${weatherLabel}</span>
         </div>
-        <div class="match-score-badge">${outfit.score}% Match</div>
+        <div class="match-badge">${outfit.score}% Match</div>
       </div>
 
-      <div class="outfit-items-flex">
-        ${itemsHtml}
+      <div class="outfit-pieces-grid">
+        ${piecesHtml}
       </div>
 
-      <div class="outfit-reasoning">
+      <div class="reasoning-box">
         <strong>💡 Justificación:</strong> ${outfit.reasoning}
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-action" onclick="copyOutfitToClipboard(${index})">📋 Copiar Outfit</button>
+        <button class="btn-action" onclick="openOutfitModal(${index})">🔍 Inspeccionar Detalle</button>
       </div>
     `;
 
@@ -483,7 +474,69 @@ function renderOutfits(outfits, occasionLabel, weatherLabel, engineSuffix = '') 
   });
 }
 
-// Initialize on page load
+// Mobbin Detailed Modal Inspector
+function openOutfitModal(index) {
+  const outfit = generatedOutfits[index];
+  if (!outfit) return;
+
+  document.getElementById('modal-title').innerText = `Outfit Recomendado #${index + 1} (${outfit.score}% Match)`;
+  
+  let modalHtml = `
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 14px; border-radius: 14px;">
+        <strong style="color: #c4b5fd;">💡 Justificación Completa:</strong>
+        <p style="margin-top: 4px; font-size: 13.5px; color: #e2e8f0;">${outfit.reasoning}</p>
+      </div>
+
+      <h4 style="font-family: var(--font-display); font-size: 15px; color: #fff; margin-top: 8px;">Prendas del Conjunto:</h4>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
+        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span>👔 <strong>Superior:</strong> ${outfit.top.name}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color} | Formalidad: ${outfit.top.formality}/5</span>
+        </li>
+        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span>👖 <strong>Inferior:</strong> ${outfit.bottom.name}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color} | Formalidad: ${outfit.bottom.formality}/5</span>
+        </li>
+        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span>👟 <strong>Calzado:</strong> ${outfit.shoes.name}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color} | Formalidad: ${outfit.shoes.formality}/5</span>
+        </li>
+        ${outfit.outerwear ? `
+        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span>🧥 <strong>Abrigo:</strong> ${outfit.outerwear.name}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color} | Formalidad: ${outfit.outerwear.formality}/5</span>
+        </li>` : ''}
+      </ul>
+
+      <button class="btn btn-primary" onclick="copyOutfitToClipboard(${index})" style="margin-top: 12px;">
+        📋 Copiar al Portapapeles
+      </button>
+    </div>
+  `;
+
+  document.getElementById('modal-body').innerHTML = modalHtml;
+  document.getElementById('detail-modal').classList.add('open');
+}
+
+function closeModal(event) {
+  if (event && event.target !== document.getElementById('detail-modal')) return;
+  document.getElementById('detail-modal').classList.remove('open');
+}
+
+function copyOutfitToClipboard(index) {
+  const outfit = generatedOutfits[index];
+  if (!outfit) return;
+
+  const text = `Outfit Recomendado StyleAI (${outfit.score}% Match):\n- Superior: ${outfit.top.name}\n- Inferior: ${outfit.bottom.name}\n- Calzado: ${outfit.shoes.name}${outfit.outerwear ? '\n- Abrigo: ' + outfit.outerwear.name : ''}\n\nJustificación: ${outfit.reasoning}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('📋 Outfit copiado al portapapeles');
+  }).catch(() => {
+    showToast('📋 Outfit copiado');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initWardrobe();
 });
