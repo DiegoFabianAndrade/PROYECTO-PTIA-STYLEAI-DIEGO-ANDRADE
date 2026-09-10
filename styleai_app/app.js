@@ -14,7 +14,6 @@ const INITIAL_ITEMS = [
   { id: '12', name: 'Sudadera Deportiva Gris', category: 'bottom', color: 'gris', warmth: 2, formality: 1, style: 'deportivo' }
 ];
 
-// Presets Packs
 const PRESET_PACKS = {
   minimal: [
     { id: 'm1', name: 'Camiseta Blanca Básica', category: 'top', color: 'blanco', warmth: 1, formality: 1, style: 'casual' },
@@ -44,7 +43,7 @@ const PRESET_PACKS = {
 
 let wardrobe = [];
 let generatedOutfits = [];
-let currentViewMode = 'list';
+let favoriteOutfits = [];
 
 const CATEGORY_ICONS = { top: '👔', bottom: '👖', shoes: '👟', outerwear: '🧥' };
 const CATEGORY_LABELS = { top: 'Superior', bottom: 'Inferior', shoes: 'Calzado', outerwear: 'Abrigo' };
@@ -90,19 +89,100 @@ function showToast(msg) {
   }, 2500);
 }
 
-// Mobbin View Mode Toggle
-function toggleViewMode(mode) {
-  currentViewMode = mode;
-  document.getElementById('btn-view-list').classList.toggle('active', mode === 'list');
-  document.getElementById('btn-view-grid').classList.toggle('active', mode === 'grid');
+// Mobbin Trending Outfits Carousel
+function renderTrendingCarousel() {
+  const track = document.getElementById('carousel-track');
+  if (!track) return;
+  track.innerHTML = '';
+
+  const trendingSamples = [
+    { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: '💼 Oficina' },
+    { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: '👟 Casual' },
+    { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: '🎉 Fiesta' },
+    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: '🌆 Urbano' },
+    { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: '🌹 Cita' }
+  ];
+
+  trendingSamples.forEach(sample => {
+    const card = document.createElement('div');
+    card.className = 'carousel-card';
+    card.onclick = () => {
+      showToast(`🔥 Viendo tendencia: ${sample.name}`);
+      generateOutfits();
+    };
+    card.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 11px; font-weight: 700; background: rgba(139, 92, 246, 0.2); color: #c4b5fd; padding: 4px 10px; border-radius: 20px;">${sample.tag}</span>
+        <span style="font-family: var(--font-display); font-weight: 800; font-size: 12px; color: #10b981;">${sample.score}% Match</span>
+      </div>
+      <div style="font-weight: 700; font-size: 14px; color: #fff; margin-top: 4px;">${sample.name}</div>
+      <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px;">
+        <span>👔 ${sample.top}</span>
+        <span>👖 ${sample.bottom}</span>
+        <span>👟 ${sample.shoes}</span>
+      </div>
+    `;
+    track.appendChild(card);
+  });
+}
+
+// Mobbin "🎲 Sorpréndeme" Random Outfit Generator
+function generateSurpriseOutfit() {
+  const weatherKeys = Object.keys(WEATHER_CONFIG);
+  const occasionKeys = Object.keys(OCCASION_CONFIG);
   
-  const container = document.getElementById('outfits-container');
-  if (container) {
-    container.classList.toggle('grid-mode', mode === 'grid');
+  const randomWeather = weatherKeys[Math.floor(Math.random() * weatherKeys.length)];
+  const randomOccasion = occasionKeys[Math.floor(Math.random() * occasionKeys.length)];
+
+  document.getElementById('weather-select').value = randomWeather;
+  document.getElementById('event-select').value = randomOccasion;
+
+  // Update visual pills UI
+  document.querySelectorAll('.visual-pill').forEach(pill => {
+    if (pill.dataset.value === randomWeather || pill.dataset.value === randomOccasion) {
+      pill.classList.add('active');
+    }
+  });
+
+  generateOutfits();
+  showToast(`🎲 Outfit Sorpresa generado para ${OCCASION_CONFIG[randomOccasion].label}!`);
+}
+
+// Live Search Filter
+function handleLiveSearch(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) {
+    renderWardrobe('all');
+    if (generatedOutfits.length > 0) {
+      renderOutfits(generatedOutfits, 'Filtro', 'En vivo');
+    }
+    return;
+  }
+
+  // Filter Wardrobe
+  const filteredItems = wardrobe.filter(i => 
+    i.name.toLowerCase().includes(q) || 
+    i.color.toLowerCase().includes(q) || 
+    i.category.toLowerCase().includes(q)
+  );
+  
+  const wContainer = document.getElementById('wardrobe-container');
+  if (wContainer) {
+    wContainer.innerHTML = '';
+    filteredItems.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.innerHTML = `
+        <div class="item-icon-box">${CATEGORY_ICONS[item.category] || '👔'}</div>
+        <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
+        <div style="font-size: 11px; color: var(--text-muted);">Color: ${item.color} | ${CATEGORY_LABELS[item.category]}</div>
+      `;
+      wContainer.appendChild(card);
+    });
   }
 }
 
-// Visual Pills Option Selector
+// Visual Pills Selector
 function selectPillOption(type, value, element) {
   const container = element.parentElement;
   container.querySelectorAll('.visual-pill').forEach(p => p.classList.remove('active'));
@@ -115,13 +195,8 @@ function selectPillOption(type, value, element) {
   }
 }
 
-// Preset Capsule Pack Loader
+// Preset Loader
 function loadPresetPack(packType, btnElement) {
-  if (btnElement) {
-    document.querySelectorAll('.capsule-chip').forEach(c => c.classList.remove('active'));
-    btnElement.classList.add('active');
-  }
-
   if (packType === 'full') {
     wardrobe = [...INITIAL_ITEMS];
   } else if (PRESET_PACKS[packType]) {
@@ -133,7 +208,7 @@ function loadPresetPack(packType, btnElement) {
   showToast(`✓ Armario cargado (${wardrobe.length} prendas)`);
 }
 
-// Load Wardrobe
+// Init Wardrobe
 function initWardrobe() {
   const saved = localStorage.getItem('styleai_wardrobe');
   if (saved) {
@@ -142,8 +217,15 @@ function initWardrobe() {
     wardrobe = [...INITIAL_ITEMS];
     saveWardrobe();
   }
+
+  const savedFavs = localStorage.getItem('styleai_favs');
+  if (savedFavs) {
+    try { favoriteOutfits = JSON.parse(savedFavs); } catch(e) { favoriteOutfits = []; }
+  }
+
   renderWardrobe('all');
   updateBadges();
+  renderTrendingCarousel();
 }
 
 function saveWardrobe() {
@@ -153,6 +235,7 @@ function saveWardrobe() {
 
 function updateBadges() {
   document.getElementById('items-count-badge').innerText = wardrobe.length;
+  document.getElementById('favs-count-badge').innerText = favoriteOutfits.length;
   updateStatsDashboard();
 }
 
@@ -185,9 +268,7 @@ function updateStatsDashboard() {
 
 function toggleAddForm() {
   const form = document.getElementById('add-item-form');
-  const isHidden = form.style.display === 'none';
-  form.style.display = isHidden ? 'flex' : 'none';
-  if (isHidden) form.classList.add('fadeIn');
+  form.style.display = form.style.display === 'none' ? 'flex' : 'none';
 }
 
 function handleAddItem(event) {
@@ -228,6 +309,7 @@ function deleteItem(id) {
 
 function renderWardrobe(categoryFilter = 'all') {
   const container = document.getElementById('wardrobe-container');
+  if (!container) return;
   container.innerHTML = '';
 
   const filtered = categoryFilter === 'all' ? wardrobe : wardrobe.filter(i => i.category === categoryFilter);
@@ -245,10 +327,7 @@ function renderWardrobe(categoryFilter = 'all') {
       <div class="item-icon-box">${CATEGORY_ICONS[item.category] || '👔'}</div>
       <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
       <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-        <span class="tag">${CATEGORY_LABELS[item.category]}</span>
-        <span class="tag">Color: ${item.color}</span>
-        <span class="tag">Abrigo: ${item.warmth}/5</span>
-        <span class="tag">Formal: ${item.formality}/5</span>
+        <span style="font-size: 11px; color: var(--text-muted);">${CATEGORY_LABELS[item.category]} • ${item.color}</span>
       </div>
     `;
     container.appendChild(card);
@@ -256,18 +335,23 @@ function renderWardrobe(categoryFilter = 'all') {
 }
 
 function filterCategory(cat, btn) {
-  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.visual-pill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderWardrobe(cat);
 }
 
 function switchTab(tab) {
-  const isOutfits = tab === 'outfits';
-  document.getElementById('tab-outfits-btn').classList.toggle('active', isOutfits);
-  document.getElementById('tab-wardrobe-btn').classList.toggle('active', !isOutfits);
+  document.getElementById('tab-outfits-btn').classList.toggle('active', tab === 'outfits');
+  document.getElementById('tab-wardrobe-btn').classList.toggle('active', tab === 'wardrobe');
+  document.getElementById('tab-favs-btn').classList.toggle('active', tab === 'favs');
 
-  document.getElementById('tab-outfits').style.display = isOutfits ? 'block' : 'none';
-  document.getElementById('tab-wardrobe').style.display = !isOutfits ? 'block' : 'none';
+  document.getElementById('tab-outfits').style.display = tab === 'outfits' ? 'block' : 'none';
+  document.getElementById('tab-wardrobe').style.display = tab === 'wardrobe' ? 'block' : 'none';
+  document.getElementById('tab-favs').style.display = tab === 'favs' ? 'block' : 'none';
+
+  if (tab === 'favs') {
+    renderFavorites();
+  }
 }
 
 async function generateOutfits() {
@@ -295,12 +379,12 @@ async function generateOutfits() {
   container.innerHTML = `
     <div class="empty-state" style="padding: 48px;">
       <div style="font-size: 36px; animation: spin 1.2s infinite linear;">⚙️</div>
-      <h3 style="color: #fff; font-family: var(--font-display);">Calculando combinaciones ideales...</h3>
-      <p>Procesando balance térmico, formalidad y compatibilidad cromática.</p>
+      <h3 style="color: #fff; font-family: var(--font-display);">Calculando combinaciones...</h3>
+      <p>Analizando abrigo térmico, formalidad y colores.</p>
     </div>
   `;
 
-  await new Promise(r => setTimeout(r, 300));
+  await new Promise(r => setTimeout(r, 250));
 
   if (engine === 'llm') {
     try {
@@ -465,8 +549,9 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       </div>
 
       <div class="card-actions">
-        <button class="btn-action" onclick="copyOutfitToClipboard(${index})">📋 Copiar Outfit</button>
-        <button class="btn-action" onclick="openOutfitModal(${index})">🔍 Inspeccionar Detalle</button>
+        <button class="btn-action btn-fav" onclick="toggleFavorite(${index})">⭐ Guardar Favorito</button>
+        <button class="btn-action" onclick="copyOutfitToClipboard(${index})">📋 Copiar</button>
+        <button class="btn-action" onclick="openOutfitModal(${index})">🔍 Inspeccionar</button>
       </div>
     `;
 
@@ -474,7 +559,48 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
   });
 }
 
-// Mobbin Detailed Modal Inspector
+function toggleFavorite(index) {
+  const outfit = generatedOutfits[index];
+  if (!outfit) return;
+
+  const exists = favoriteOutfits.some(f => f.top.name === outfit.top.name && f.bottom.name === outfit.bottom.name);
+  if (exists) {
+    favoriteOutfits = favoriteOutfits.filter(f => !(f.top.name === outfit.top.name && f.bottom.name === outfit.bottom.name));
+    showToast('⭐ Eliminado de Favoritos');
+  } else {
+    favoriteOutfits.push(outfit);
+    showToast('⭐ Guardado en Favoritos!');
+  }
+  localStorage.setItem('styleai_favs', JSON.stringify(favoriteOutfits));
+  updateBadges();
+}
+
+function renderFavorites() {
+  const container = document.getElementById('favs-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (favoriteOutfits.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div style="font-size: 40px;">⭐</div><p>No has guardado outfits favoritos aún.</p></div>`;
+    return;
+  }
+
+  favoriteOutfits.forEach((outfit, index) => {
+    const card = document.createElement('div');
+    card.className = 'mobbin-card';
+    card.innerHTML = `
+      <div class="mobbin-card-header">
+        <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff;">Favorito #${index + 1}</h3>
+        <div class="match-badge">${outfit.score}% Match</div>
+      </div>
+      <div style="font-size: 13px; color: var(--text-main);">
+        👔 ${outfit.top.name} • 👖 ${outfit.bottom.name} • 👟 ${outfit.shoes.name}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
 function openOutfitModal(index) {
   const outfit = generatedOutfits[index];
   if (!outfit) return;
@@ -483,33 +609,33 @@ function openOutfitModal(index) {
   
   let modalHtml = `
     <div style="display: flex; flex-direction: column; gap: 16px;">
-      <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 14px; border-radius: 14px;">
+      <div style="background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.3); padding: 16px; border-radius: 14px;">
         <strong style="color: #c4b5fd;">💡 Justificación Completa:</strong>
-        <p style="margin-top: 4px; font-size: 13.5px; color: #e2e8f0;">${outfit.reasoning}</p>
+        <p style="margin-top: 6px; font-size: 14px; color: #e2e8f0;">${outfit.reasoning}</p>
       </div>
 
-      <h4 style="font-family: var(--font-display); font-size: 15px; color: #fff; margin-top: 8px;">Prendas del Conjunto:</h4>
+      <h4 style="font-family: var(--font-display); font-size: 16px; color: #fff;">Prendas del Conjunto:</h4>
       <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
-        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>👔 <strong>Superior:</strong> ${outfit.top.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color} | Formalidad: ${outfit.top.formality}/5</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color}</span>
         </li>
-        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>👖 <strong>Inferior:</strong> ${outfit.bottom.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color} | Formalidad: ${outfit.bottom.formality}/5</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color}</span>
         </li>
-        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>👟 <strong>Calzado:</strong> ${outfit.shoes.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color} | Formalidad: ${outfit.shoes.formality}/5</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color}</span>
         </li>
         ${outfit.outerwear ? `
-        <li style="background: rgba(15, 23, 42, 0.6); padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(12, 18, 30, 0.7); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
           <span>🧥 <strong>Abrigo:</strong> ${outfit.outerwear.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color} | Formalidad: ${outfit.outerwear.formality}/5</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color}</span>
         </li>` : ''}
       </ul>
 
-      <button class="btn btn-primary" onclick="copyOutfitToClipboard(${index})" style="margin-top: 12px;">
+      <button class="btn btn-primary" onclick="copyOutfitToClipboard(${index})" style="margin-top: 8px;">
         📋 Copiar al Portapapeles
       </button>
     </div>
@@ -528,7 +654,7 @@ function copyOutfitToClipboard(index) {
   const outfit = generatedOutfits[index];
   if (!outfit) return;
 
-  const text = `Outfit Recomendado StyleAI (${outfit.score}% Match):\n- Superior: ${outfit.top.name}\n- Inferior: ${outfit.bottom.name}\n- Calzado: ${outfit.shoes.name}${outfit.outerwear ? '\n- Abrigo: ' + outfit.outerwear.name : ''}\n\nJustificación: ${outfit.reasoning}`;
+  const text = `Outfit StyleAI (${outfit.score}% Match):\n- Superior: ${outfit.top.name}\n- Inferior: ${outfit.bottom.name}\n- Calzado: ${outfit.shoes.name}${outfit.outerwear ? '\n- Abrigo: ' + outfit.outerwear.name : ''}\n\nJustificación: ${outfit.reasoning}`;
 
   navigator.clipboard.writeText(text).then(() => {
     showToast('📋 Outfit copiado al portapapeles');
