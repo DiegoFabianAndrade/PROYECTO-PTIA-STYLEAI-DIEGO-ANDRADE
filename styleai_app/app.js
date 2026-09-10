@@ -45,7 +45,12 @@ let wardrobe = [];
 let generatedOutfits = [];
 let favoriteOutfits = [];
 
-const CATEGORY_ICONS = { top: '👔', bottom: '👖', shoes: '👟', outerwear: '🧥' };
+const CATEGORY_ICONS = {
+  top: '<img src="assets/top.svg" class="cat-icon-img" alt="Superior">',
+  bottom: '<img src="assets/bottom.svg" class="cat-icon-img" alt="Inferior">',
+  shoes: '<img src="assets/shoes.svg" class="cat-icon-img" alt="Calzado">',
+  outerwear: '<img src="assets/outerwear.svg" class="cat-icon-img" alt="Abrigo">'
+};
 const CATEGORY_LABELS = { top: 'Superior', bottom: 'Inferior', shoes: 'Calzado', outerwear: 'Abrigo' };
 
 const OCCASION_CONFIG = {
@@ -495,7 +500,7 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
     
     let piecesHtml = `
       <div class="piece-item">
-        <div class="piece-icon">👔</div>
+        <div class="piece-icon">${CATEGORY_ICONS.top}</div>
         <div>
           <div style="font-size: 11px; color: var(--text-muted);">Superior</div>
           <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.top.name}</div>
@@ -503,7 +508,7 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       </div>
 
       <div class="piece-item">
-        <div class="piece-icon">👖</div>
+        <div class="piece-icon">${CATEGORY_ICONS.bottom}</div>
         <div>
           <div style="font-size: 11px; color: var(--text-muted);">Inferior</div>
           <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.bottom.name}</div>
@@ -511,7 +516,7 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       </div>
 
       <div class="piece-item">
-        <div class="piece-icon">👟</div>
+        <div class="piece-icon">${CATEGORY_ICONS.shoes}</div>
         <div>
           <div style="font-size: 11px; color: var(--text-muted);">Calzado</div>
           <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.shoes.name}</div>
@@ -522,7 +527,7 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
     if (outfit.outerwear) {
       piecesHtml += `
         <div class="piece-item">
-          <div class="piece-icon">🧥</div>
+          <div class="piece-icon">${CATEGORY_ICONS.outerwear}</div>
           <div>
             <div style="font-size: 11px; color: var(--text-muted);">Abrigo Extra</div>
             <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.outerwear.name}</div>
