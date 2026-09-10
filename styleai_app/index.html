@@ -15,7 +15,7 @@
   <!-- Toast Notification System -->
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- Detail Modal Inspector Overlay (Mobbin Style) -->
+  <!-- Detail Modal Inspector Overlay -->
   <div id="detail-modal" class="modal-backdrop" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -28,7 +28,7 @@
 
   <div class="app-container">
     
-    <!-- Top Sticky Header Bar -->
+    <!-- Top Header Bar -->
     <header class="app-header">
       <div class="logo-area">
         <img src="assets/logo.png" alt="StyleAI Logo" class="logo-img">
@@ -52,19 +52,17 @@
       </div>
     </header>
 
-    <!-- Mobbin Trending Outfits Carousel Section -->
+    <!-- Mobbin Trending Outfits Carousel -->
     <section class="carousel-section">
-      <div class="carousel-title-bar">
-        <h3 style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff;">🔥 Combinaciones Destacadas de Hoy</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: #fff;">🔥 Combinaciones Destacadas de Hoy</h3>
         <span style="font-size: 12px; color: var(--text-muted);">Desliza para explorar →</span>
       </div>
-      <div id="carousel-track" class="carousel-track">
-        <!-- Dynamic carousel cards inserted here -->
-      </div>
+      <div id="carousel-track" class="carousel-track"></div>
     </section>
 
-    <!-- Preset Capsule Bar -->
-    <div style="display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 4px 0;">
+    <!-- Preset Capsule Strip -->
+    <div style="display: flex; align-items: center; gap: 10px; overflow-x: auto; padding: 4px 0;">
       <span style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; white-space: nowrap;">Cápsulas de Estilo:</span>
       <button class="visual-pill active" onclick="loadPresetPack('full', this)">✨ Armario Demo Completo</button>
       <button class="visual-pill" onclick="loadPresetPack('minimal', this)">📦 Cápsula Minimalista</button>
@@ -72,143 +70,152 @@
       <button class="visual-pill" onclick="loadPresetPack('urban', this)">🌆 Urbano & Streetwear</button>
     </div>
 
-    <!-- Main Content Grid with Generous Spacing -->
+    <!-- Main Grid Layout -->
     <main class="main-grid">
 
-      <!-- Left Column: Context Controls & Wardrobe Management -->
+      <!-- Left Column: Accordion Desplegables -->
       <section class="left-panel">
         
-        <!-- Panel 1: Contexto (Clima, Entorno, Gustos) -->
+        <!-- Desplegable 1: Contexto y Preferencias -->
         <div class="card">
-          <h3 class="card-title">🎯 Contexto y Preferencias</h3>
-          <p style="color: var(--text-muted); font-size: 13px; margin-top: -12px;">Selecciona el clima y evento para personalizar la recomendación.</p>
-
-          <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
-            
-            <!-- Clima (Visual Pills Grid) -->
-            <div class="form-group">
-              <label style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">🌤️ Clima / Temperatura</label>
-              <input type="hidden" id="weather-select" value="templado">
-              <div class="visual-pills-grid">
-                <div class="visual-pill" data-value="frio" onclick="selectPillOption('weather', 'frio', this)">
-                  <span>❄️ Frío (&lt;12°C)</span>
-                </div>
-                <div class="visual-pill active" data-value="templado" onclick="selectPillOption('weather', 'templado', this)">
-                  <span>🌤️ Templado</span>
-                </div>
-                <div class="visual-pill" data-value="calido" onclick="selectPillOption('weather', 'calido', this)">
-                  <span>☀️ Cálido (&gt;20°C)</span>
-                </div>
-                <div class="visual-pill" data-value="lluvioso" onclick="selectPillOption('weather', 'lluvioso', this)">
-                  <span>🌧️ Lluvioso</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Ocasión (Visual Pills Grid) -->
-            <div class="form-group">
-              <label style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">📌 Ocasión / Entorno</label>
-              <input type="hidden" id="event-select" value="casual">
-              <div class="visual-pills-grid">
-                <div class="visual-pill active" data-value="casual" onclick="selectPillOption('event', 'casual', this)">
-                  <span>👟 Universidad</span>
-                </div>
-                <div class="visual-pill" data-value="trabajo" onclick="selectPillOption('event', 'trabajo', this)">
-                  <span>💼 Oficina</span>
-                </div>
-                <div class="visual-pill" data-value="fiesta" onclick="selectPillOption('event', 'fiesta', this)">
-                  <span>🎉 Fiesta / Noche</span>
-                </div>
-                <div class="visual-pill" data-value="formal" onclick="selectPillOption('event', 'formal', this)">
-                  <span>👔 Evento Formal</span>
-                </div>
-                <div class="visual-pill" data-value="deporte" onclick="selectPillOption('event', 'deporte', this)">
-                  <span>🏃 Deporte</span>
-                </div>
-                <div class="visual-pill" data-value="cita" onclick="selectPillOption('event', 'cita', this)">
-                  <span>🌹 Cita Especial</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Estilo Preferido -->
-            <div class="form-group">
-              <label for="style-select" style="font-size: 13px; font-weight: 600;">🎨 Estilo Preferido:</label>
-              <select id="style-select" class="form-control">
-                <option value="casual" selected>Casual y Cómodo</option>
-                <option value="urbano">Urbano / Streetwear</option>
-                <option value="elegante">Elegante / Sofisticado</option>
-                <option value="minimalista">Minimalista</option>
-                <option value="deportivo">Deportivo</option>
-              </select>
-            </div>
-
-            <!-- Motor de Recomendación -->
-            <div class="form-group">
-              <label for="engine-select" style="font-size: 13px; font-weight: 600;">⚙️ Motor de Recomendación:</label>
-              <select id="engine-select" class="form-control">
-                <option value="llm" selected>⚡ Algoritmo Avanzado de Recomendación (Servidor API)</option>
-                <option value="rules">🛡️ Algoritmo Estándar por Reglas (Local)</option>
-              </select>
-            </div>
-
-            <button type="submit" id="btn-recommend" class="btn btn-primary">
-              ✨ Generar Combinaciones
-            </button>
-          </form>
-        </div>
-
-        <!-- Panel 2: Agregar Prenda -->
-        <div class="card">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 class="card-title">👕 Gestión de Armario</h3>
-            <button type="button" class="btn-action" onclick="toggleAddForm()">+ Nueva Prenda</button>
+          <div class="card-header-toggle" onclick="toggleAccordion('context-body', 'context-arrow')">
+            <h3 class="card-title">🎯 Contexto y Preferencias</h3>
+            <span id="context-arrow" class="accordion-arrow">▼</span>
           </div>
 
-          <form id="add-item-form" style="display: none;" onsubmit="handleAddItem(event)">
-            <div class="form-group">
-              <label for="item-name">Nombre de la prenda:</label>
-              <input type="text" id="item-name" placeholder="Ej: Camisa Oxford Azul" required class="form-control">
-            </div>
+          <div id="context-body" class="accordion-body">
+            <p style="color: var(--text-muted); font-size: 13px;">Selecciona el clima y evento para personalizar la recomendación.</p>
 
-            <div class="form-group">
-              <label for="item-category">Categoría:</label>
-              <select id="item-category" class="form-control">
-                <option value="top">Superior (Camisa/Chaqueta/Buzo)</option>
-                <option value="bottom">Inferior (Pantalón/Jeans/Short)</option>
-                <option value="shoes">Calzado (Tenis/Zapatos)</option>
-                <option value="outerwear">Abrigo Extra (Chaqueta/Saco)</option>
-              </select>
-            </div>
+            <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
+              
+              <!-- Clima -->
+              <div class="form-group">
+                <label>🌤️ Clima / Temperatura</label>
+                <input type="hidden" id="weather-select" value="templado">
+                <div class="visual-pills-grid">
+                  <div class="visual-pill" data-value="frio" onclick="selectPillOption('weather', 'frio', this)">
+                    <span>❄️ Frío (&lt;12°C)</span>
+                  </div>
+                  <div class="visual-pill active" data-value="templado" onclick="selectPillOption('weather', 'templado', this)">
+                    <span>🌤️ Templado</span>
+                  </div>
+                  <div class="visual-pill" data-value="calido" onclick="selectPillOption('weather', 'calido', this)">
+                    <span>☀️ Cálido (&gt;20°C)</span>
+                  </div>
+                  <div class="visual-pill" data-value="lluvioso" onclick="selectPillOption('weather', 'lluvioso', this)">
+                    <span>🌧️ Lluvioso</span>
+                  </div>
+                </div>
+              </div>
 
-            <div class="form-group">
-              <label for="item-color">Color Primario:</label>
-              <select id="item-color" class="form-control">
-                <option value="negro">Negro</option>
-                <option value="blanco">Blanco</option>
-                <option value="azul">Azul / Jeans</option>
-                <option value="gris">Gris</option>
-                <option value="beige">Beige / Caqui</option>
-                <option value="rojo">Rojo / Vino</option>
-                <option value="verde">Verde / Olivo</option>
-                <option value="cafe">Marrón / Café</option>
-              </select>
-            </div>
+              <!-- Ocasión -->
+              <div class="form-group">
+                <label>📌 Ocasión / Entorno</label>
+                <input type="hidden" id="event-select" value="casual">
+                <div class="visual-pills-grid">
+                  <div class="visual-pill active" data-value="casual" onclick="selectPillOption('event', 'casual', this)">
+                    <span>👟 Universidad</span>
+                  </div>
+                  <div class="visual-pill" data-value="trabajo" onclick="selectPillOption('event', 'trabajo', this)">
+                    <span>💼 Oficina</span>
+                  </div>
+                  <div class="visual-pill" data-value="fiesta" onclick="selectPillOption('event', 'fiesta', this)">
+                    <span>🎉 Fiesta / Noche</span>
+                  </div>
+                  <div class="visual-pill" data-value="formal" onclick="selectPillOption('event', 'formal', this)">
+                    <span>👔 Evento Formal</span>
+                  </div>
+                  <div class="visual-pill" data-value="deporte" onclick="selectPillOption('event', 'deporte', this)">
+                    <span>🏃 Deporte</span>
+                  </div>
+                  <div class="visual-pill" data-value="cita" onclick="selectPillOption('event', 'cita', this)">
+                    <span>🌹 Cita Especial</span>
+                  </div>
+                </div>
+              </div>
 
-            <div class="form-group">
-              <label for="item-warmth">Abrigo Térmico (1-5):</label>
-              <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-control" oninput="document.getElementById('warmth-val').innerText = this.value">
-              <span id="warmth-val" style="font-size: 12px; color: var(--accent-pink); font-weight: 700;">3</span>
-            </div>
+              <!-- Estilo Preferido -->
+              <div class="form-group">
+                <label for="style-select">🎨 Estilo Preferido:</label>
+                <select id="style-select" class="form-control">
+                  <option value="casual" selected>Casual y Cómodo</option>
+                  <option value="urbano">Urbano / Streetwear</option>
+                  <option value="elegante">Elegante / Sofisticado</option>
+                  <option value="minimalista">Minimalista</option>
+                  <option value="deportivo">Deportivo</option>
+                </select>
+              </div>
 
-            <div class="form-group">
-              <label for="item-formality">Formalidad Etiqueta (1-5):</label>
-              <input type="range" id="item-formality" min="1" max="5" value="2" class="form-control" oninput="document.getElementById('formality-val').innerText = this.value">
-              <span id="formality-val" style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">2</span>
-            </div>
+              <!-- Motor de Recomendación -->
+              <div class="form-group">
+                <label for="engine-select">⚙️ Motor de Recomendación:</label>
+                <select id="engine-select" class="form-control">
+                  <option value="llm" selected>⚡ Algoritmo Avanzado de Recomendación (Servidor API)</option>
+                  <option value="rules">🛡️ Algoritmo Estándar por Reglas (Local)</option>
+                </select>
+              </div>
 
-            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Guardar Prenda</button>
-          </form>
+              <button type="submit" id="btn-recommend" class="btn btn-primary">
+                ✨ Generar Combinaciones
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Desplegable 2: Agregar Prenda -->
+        <div class="card">
+          <div class="card-header-toggle" onclick="toggleAccordion('add-body', 'add-arrow')">
+            <h3 class="card-title">👕 Gestión de Armario</h3>
+            <span id="add-arrow" class="accordion-arrow">▼</span>
+          </div>
+
+          <div id="add-body" class="accordion-body">
+            <p style="color: var(--text-muted); font-size: 13px;">Registra nuevas prendas para ampliar tus sugerencias.</p>
+            <form id="add-item-form" onsubmit="handleAddItem(event)">
+              <div class="form-group">
+                <label for="item-name">Nombre de la prenda:</label>
+                <input type="text" id="item-name" placeholder="Ej: Camisa Oxford Azul" required class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label for="item-category">Categoría:</label>
+                <select id="item-category" class="form-control">
+                  <option value="top">Superior (Camisa/Chaqueta/Buzo)</option>
+                  <option value="bottom">Inferior (Pantalón/Jeans/Short)</option>
+                  <option value="shoes">Calzado (Tenis/Zapatos)</option>
+                  <option value="outerwear">Abrigo Extra (Chaqueta/Saco)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="item-color">Color Primario:</label>
+                <select id="item-color" class="form-control">
+                  <option value="negro">Negro</option>
+                  <option value="blanco">Blanco</option>
+                  <option value="azul">Azul / Jeans</option>
+                  <option value="gris">Gris</option>
+                  <option value="beige">Beige / Caqui</option>
+                  <option value="rojo">Rojo / Vino</option>
+                  <option value="verde">Verde / Olivo</option>
+                  <option value="cafe">Marrón / Café</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="item-warmth">Abrigo Térmico (1-5):</label>
+                <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-control" oninput="document.getElementById('warmth-val').innerText = this.value">
+                <span id="warmth-val" style="font-size: 12px; color: var(--accent-pink); font-weight: 700;">3</span>
+              </div>
+
+              <div class="form-group">
+                <label for="item-formality">Formalidad Etiqueta (1-5):</label>
+                <input type="range" id="item-formality" min="1" max="5" value="2" class="form-control" oninput="document.getElementById('formality-val').innerText = this.value">
+                <span id="formality-val" style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">2</span>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Guardar Prenda</button>
+            </form>
+          </div>
         </div>
 
       </section>
@@ -236,13 +243,13 @@
           </div>
         </div>
 
-        <!-- Navigation Tabs (With Favorites) -->
-        <div style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <!-- Navigation Tabs -->
+        <div style="display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
           <button id="tab-outfits-btn" class="visual-pill active" onclick="switchTab('outfits')">
-            💡 Combinaciones <span id="outfits-count-badge" style="background: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
+            💡 Combinaciones <span id="outfits-count-badge" style="background: var(--primary-dark); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
           </button>
           <button id="tab-wardrobe-btn" class="visual-pill" onclick="switchTab('wardrobe')">
-            👔 Catálogo <span id="items-count-badge" style="background: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
+            👔 Catálogo <span id="items-count-badge" style="background: var(--primary-dark); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
           </button>
           <button id="tab-favs-btn" class="visual-pill" onclick="switchTab('favs')">
             ⭐ Mis Favoritos <span id="favs-count-badge" style="background: var(--accent-pink); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
