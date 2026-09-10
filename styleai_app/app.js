@@ -81,7 +81,7 @@ function checkColorHarmony(c1, c2, c3) {
   return Math.min(100, score);
 }
 
-// Collapsible Accordion Toggle
+// Collapsible Accordion Card Toggle
 function toggleAccordion(bodyId, arrowId) {
   const body = document.getElementById(bodyId);
   const arrow = document.getElementById(arrowId);
@@ -96,6 +96,43 @@ function toggleAccordion(bodyId, arrowId) {
     if (arrow) arrow.classList.add('collapsed');
   }
 }
+
+// Custom Accordion Dropdown Component (100% Contained, Zero Native Overflow)
+function toggleCustomDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  if (!dropdown) return;
+  
+  // Close other dropdowns first
+  document.querySelectorAll('.custom-dropdown').forEach(d => {
+    if (d !== dropdown) d.classList.remove('open');
+  });
+
+  dropdown.classList.toggle('open');
+}
+
+function selectCustomOption(type, value, labelText, dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+  if (!dropdown) return;
+
+  if (type === 'style') {
+    document.getElementById('style-select').value = value;
+    document.getElementById('label-style').innerText = labelText;
+  } else if (type === 'engine') {
+    document.getElementById('engine-select').value = value;
+    document.getElementById('label-engine').innerText = labelText;
+  }
+
+  dropdown.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('active'));
+  event.target.classList.add('active');
+  dropdown.classList.remove('open');
+}
+
+// Global click outside listener for dropdowns
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.custom-dropdown')) {
+    document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
 
 // Toast Feedback System
 function showToast(msg) {
@@ -120,7 +157,7 @@ function renderTrendingCarousel() {
     { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: '💼 Oficina' },
     { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: '👟 Casual' },
     { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: '🎉 Fiesta' },
-    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: '<ctrl42> Urbano' },
+    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: '🌆 Urbano' },
     { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: '🌹 Cita' }
   ];
 
@@ -335,7 +372,7 @@ function renderWardrobe(categoryFilter = 'all') {
   filtered.forEach(item => {
     const card = document.createElement('div');
     card.className = 'item-card';
-    card.style.cssText = 'background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 14px; position: relative; display: flex; flex-direction: column; gap: 8px;';
+    card.style.cssText = 'background: var(--bg-surface); border: 1.5px solid var(--border-subtle); padding: 16px; border-radius: 16px; position: relative; display: flex; flex-direction: column; gap: 8px;';
     card.innerHTML = `
       <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Eliminar">✕</button>
       <div style="font-size: 28px;">${CATEGORY_ICONS[item.category] || '👔'}</div>
@@ -509,24 +546,24 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       <div class="piece-item">
         <div class="piece-icon">${CATEGORY_ICONS.top}</div>
         <div>
-          <div style="font-size: 11px; color: var(--text-muted);">Superior</div>
-          <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.top.name}</div>
+          <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 600;">Superior</div>
+          <div style="font-weight: 800; font-size: 14px; color: #fff;">${outfit.top.name}</div>
         </div>
       </div>
 
       <div class="piece-item">
         <div class="piece-icon">${CATEGORY_ICONS.bottom}</div>
         <div>
-          <div style="font-size: 11px; color: var(--text-muted);">Inferior</div>
-          <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.bottom.name}</div>
+          <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 600;">Inferior</div>
+          <div style="font-weight: 800; font-size: 14px; color: #fff;">${outfit.bottom.name}</div>
         </div>
       </div>
 
       <div class="piece-item">
         <div class="piece-icon">${CATEGORY_ICONS.shoes}</div>
         <div>
-          <div style="font-size: 11px; color: var(--text-muted);">Calzado</div>
-          <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.shoes.name}</div>
+          <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 600;">Calzado</div>
+          <div style="font-weight: 800; font-size: 14px; color: #fff;">${outfit.shoes.name}</div>
         </div>
       </div>
     `;
@@ -536,18 +573,21 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
         <div class="piece-item">
           <div class="piece-icon">${CATEGORY_ICONS.outerwear}</div>
           <div>
-            <div style="font-size: 11px; color: var(--text-muted);">Abrigo Extra</div>
-            <div style="font-weight: 700; font-size: 13px; color: #fff;">${outfit.outerwear.name}</div>
+            <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 600;">Abrigo Extra</div>
+            <div style="font-weight: 800; font-size: 14px; color: #fff;">${outfit.outerwear.name}</div>
           </div>
         </div>
       `;
     }
 
+    const techBodyId = `tech-body-${index}`;
+    const techArrowId = `tech-arrow-${index}`;
+
     card.innerHTML = `
       <div class="mobbin-card-header">
         <div>
-          <h3 style="font-family: var(--font-display); font-size: 17px; font-weight: 700; color: #fff;">Outfit Recomendado #${index + 1}</h3>
-          <span style="font-size: 12px; color: var(--text-muted);">${occasionLabel} • Clima ${weatherLabel}</span>
+          <h3 style="font-family: var(--font-display); font-size: 19px; font-weight: 800; color: #fff;">Outfit Recomendado #${index + 1}</h3>
+          <span style="font-size: 13px; color: var(--accent-cyan); font-weight: 600;">${occasionLabel} • Clima ${weatherLabel}</span>
         </div>
         <div class="match-badge">${outfit.score}% Match</div>
       </div>
@@ -558,6 +598,33 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
 
       <div class="reasoning-box">
         <strong>💡 Justificación:</strong> ${outfit.reasoning}
+      </div>
+
+      <!-- Desplegable Técnico Interno -->
+      <div style="border-top: 1.5px solid rgba(255, 255, 255, 0.1); padding-top: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleAccordion('${techBodyId}', '${techArrowId}')">
+          <span style="font-size: 13px; font-weight: 800; color: var(--accent-cyan); display: flex; align-items: center; gap: 6px;">
+            📊 Desglose de Compatibilidad Térmica & Formalidad
+          </span>
+          <span id="${techArrowId}" class="accordion-arrow collapsed">▼</span>
+        </div>
+
+        <div id="${techBodyId}" class="accordion-body collapsed" style="margin-top: 12px; gap: 10px;">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <div style="background: rgba(8, 13, 25, 0.8); padding: 12px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+              <div style="font-size: 11.5px; color: var(--text-dim);">Nivel Térmico Promedio</div>
+              <div style="font-size: 15px; font-weight: 800; color: var(--accent-pink);">
+                ${((outfit.top.warmth + outfit.bottom.warmth + outfit.shoes.warmth + (outfit.outerwear ? outfit.outerwear.warmth : 0)) / (outfit.outerwear ? 4 : 3)).toFixed(1)} / 5.0
+              </div>
+            </div>
+            <div style="background: rgba(8, 13, 25, 0.8); padding: 12px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+              <div style="font-size: 11.5px; color: var(--text-dim);">Formalidad Promedio</div>
+              <div style="font-size: 15px; font-weight: 800; color: var(--accent-emerald);">
+                ${((outfit.top.formality + outfit.bottom.formality + outfit.shoes.formality + (outfit.outerwear ? outfit.outerwear.formality : 0)) / (outfit.outerwear ? 4 : 3)).toFixed(1)} / 5.0
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="card-actions">
@@ -621,7 +688,7 @@ function openOutfitModal(index) {
   
   let modalHtml = `
     <div style="display: flex; flex-direction: column; gap: 16px;">
-      <div style="background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.3); padding: 16px; border-radius: 14px;">
+      <div style="background: rgba(168, 85, 247, 0.12); border: 1.5px solid rgba(168, 85, 247, 0.35); padding: 16px; border-radius: 14px;">
         <strong style="color: #c084fc;">💡 Justificación Completa:</strong>
         <p style="margin-top: 6px; font-size: 14px; color: #e2e8f0;">${outfit.reasoning}</p>
       </div>

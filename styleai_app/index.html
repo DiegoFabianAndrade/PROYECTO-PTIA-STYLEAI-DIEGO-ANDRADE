@@ -20,7 +20,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3 id="modal-title" style="font-family: var(--font-display); font-size: 22px; color: #fff;">Detalle del Outfit</h3>
-        <button style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;" onclick="closeModal()">✕</button>
+        <button style="background: rgba(255,255,255,0.15); border: none; color: #fff; width: 34px; height: 34px; border-radius: 50%; cursor: pointer;" onclick="closeModal()">✕</button>
       </div>
       <div id="modal-body"></div>
     </div>
@@ -55,15 +55,15 @@
     <!-- Mobbin Trending Outfits Carousel -->
     <section class="carousel-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h3 style="font-family: var(--font-display); font-size: 18px; font-weight: 800; color: #fff;">🔥 Combinaciones Destacadas de Hoy</h3>
-        <span style="font-size: 12px; color: var(--text-muted);">Desliza para explorar →</span>
+        <h3 style="font-family: var(--font-display); font-size: 19px; font-weight: 800; color: #fff;">🔥 Combinaciones Destacadas de Hoy</h3>
+        <span style="font-size: 12.5px; color: var(--accent-cyan); font-weight: 600;">Desliza para explorar →</span>
       </div>
       <div id="carousel-track" class="carousel-track"></div>
     </section>
 
     <!-- Preset Capsule Strip -->
-    <div style="display: flex; align-items: center; gap: 10px; overflow-x: auto; padding: 4px 0;">
-      <span style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; white-space: nowrap;">Cápsulas de Estilo:</span>
+    <div style="display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 6px 0;">
+      <span style="font-size: 12px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; white-space: nowrap;">Cápsulas de Estilo:</span>
       <button class="visual-pill active" onclick="loadPresetPack('full', this)">✨ Armario Demo Completo</button>
       <button class="visual-pill" onclick="loadPresetPack('minimal', this)">📦 Cápsula Minimalista</button>
       <button class="visual-pill" onclick="loadPresetPack('executive', this)">💼 Ejecutivo & Formal</button>
@@ -84,7 +84,7 @@
           </div>
 
           <div id="context-body" class="accordion-body">
-            <p style="color: var(--text-muted); font-size: 13px;">Selecciona el clima y evento para personalizar la recomendación.</p>
+            <p style="color: var(--text-muted); font-size: 14px; font-weight: 500;">Selecciona el clima y evento para personalizar la recomendación.</p>
 
             <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
               
@@ -134,28 +134,42 @@
                 </div>
               </div>
 
-              <!-- Estilo Preferido -->
+              <!-- Estilo Preferido (Custom Accordion Dropdown) -->
               <div class="form-group">
-                <label for="style-select">🎨 Estilo Preferido:</label>
-                <select id="style-select" class="form-control">
-                  <option value="casual" selected>Casual y Cómodo</option>
-                  <option value="urbano">Urbano / Streetwear</option>
-                  <option value="elegante">Elegante / Sofisticado</option>
-                  <option value="minimalista">Minimalista</option>
-                  <option value="deportivo">Deportivo</option>
-                </select>
+                <label>🎨 Estilo Preferido:</label>
+                <input type="hidden" id="style-select" value="casual">
+                <div class="custom-dropdown" id="dropdown-style">
+                  <div class="dropdown-trigger" onclick="toggleCustomDropdown('dropdown-style')">
+                    <span id="label-style">Casual y Cómodo</span>
+                    <span style="font-size: 14px; color: var(--accent-cyan);">▼</span>
+                  </div>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-option active" onclick="selectCustomOption('style', 'casual', 'Casual y Cómodo', 'dropdown-style')">Casual y Cómodo</div>
+                    <div class="dropdown-option" onclick="selectCustomOption('style', 'urbano', 'Urbano / Streetwear', 'dropdown-style')">Urbano / Streetwear</div>
+                    <div class="dropdown-option" onclick="selectCustomOption('style', 'elegante', 'Elegante / Sofisticado', 'dropdown-style')">Elegante / Sofisticado</div>
+                    <div class="dropdown-option" onclick="selectCustomOption('style', 'minimalista', 'Minimalista', 'dropdown-style')">Minimalista</div>
+                    <div class="dropdown-option" onclick="selectCustomOption('style', 'deportivo', 'Deportivo', 'dropdown-style')">Deportivo</div>
+                  </div>
+                </div>
               </div>
 
-              <!-- Motor de Recomendación -->
+              <!-- Motor de Recomendación (Custom Accordion Dropdown) -->
               <div class="form-group">
-                <label for="engine-select">⚙️ Motor de Recomendación:</label>
-                <select id="engine-select" class="form-control">
-                  <option value="llm" selected>⚡ Algoritmo Avanzado de Recomendación (Servidor API)</option>
-                  <option value="rules">🛡️ Algoritmo Estándar por Reglas (Local)</option>
-                </select>
+                <label>⚙️ Motor de Recomendación:</label>
+                <input type="hidden" id="engine-select" value="llm">
+                <div class="custom-dropdown" id="dropdown-engine">
+                  <div class="dropdown-trigger" onclick="toggleCustomDropdown('dropdown-engine')">
+                    <span id="label-engine">⚡ Algoritmo Avanzado de Recomendación</span>
+                    <span style="font-size: 14px; color: var(--accent-cyan);">▼</span>
+                  </div>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-option active" onclick="selectCustomOption('engine', 'llm', '⚡ Algoritmo Avanzado de Recomendación', 'dropdown-engine')">⚡ Algoritmo Avanzado de Recomendación</div>
+                    <div class="dropdown-option" onclick="selectCustomOption('engine', 'rules', '🛡️ Algoritmo Estándar por Reglas', 'dropdown-engine')">🛡️ Algoritmo Estándar por Reglas</div>
+                  </div>
+                </div>
               </div>
 
-              <button type="submit" id="btn-recommend" class="btn btn-primary">
+              <button type="submit" id="btn-recommend" class="btn btn-primary" style="margin-top: 12px;">
                 ✨ Generar Combinaciones
               </button>
             </form>
@@ -170,7 +184,7 @@
           </div>
 
           <div id="add-body" class="accordion-body">
-            <p style="color: var(--text-muted); font-size: 13px;">Registra nuevas prendas para ampliar tus sugerencias.</p>
+            <p style="color: var(--text-muted); font-size: 14px; font-weight: 500;">Registra nuevas prendas para ampliar tus sugerencias.</p>
             <form id="add-item-form" onsubmit="handleAddItem(event)">
               <div class="form-group">
                 <label for="item-name">Nombre de la prenda:</label>
@@ -204,17 +218,37 @@
               <div class="form-group">
                 <label for="item-warmth">Abrigo Térmico (1-5):</label>
                 <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-control" oninput="document.getElementById('warmth-val').innerText = this.value">
-                <span id="warmth-val" style="font-size: 12px; color: var(--accent-pink); font-weight: 700;">3</span>
+                <span id="warmth-val" style="font-size: 14px; color: var(--accent-pink); font-weight: 900;">3</span>
               </div>
 
               <div class="form-group">
                 <label for="item-formality">Formalidad Etiqueta (1-5):</label>
                 <input type="range" id="item-formality" min="1" max="5" value="2" class="form-control" oninput="document.getElementById('formality-val').innerText = this.value">
-                <span id="formality-val" style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">2</span>
+                <span id="formality-val" style="font-size: 14px; color: var(--accent-emerald); font-weight: 900;">2</span>
               </div>
 
-              <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Guardar Prenda</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 12px;">Guardar Prenda</button>
             </form>
+          </div>
+        </div>
+
+        <!-- Desplegable 3: Guía & Consejos de Estilo -->
+        <div class="card">
+          <div class="card-header-toggle" onclick="toggleAccordion('tips-body', 'tips-arrow')">
+            <h3 class="card-title">💡 Guía de Estilo Inteligente</h3>
+            <span id="tips-arrow" class="accordion-arrow collapsed">▼</span>
+          </div>
+
+          <div id="tips-body" class="accordion-body collapsed">
+            <div style="background: rgba(0, 240, 255, 0.08); border: 1.5px solid var(--accent-cyan); border-radius: var(--radius-sm); padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+              <h4 style="font-size: 15px; color: var(--accent-cyan); font-weight: 800;">🎨 Regla de Armonía 60-30-10</h4>
+              <p style="font-size: 13.5px; color: var(--text-muted);">El 60% del outfit debe ser el color base (generalmente pantalón/abrigo), 30% el color secundario (camisa) y 10% el acento (calzado o accesorios).</p>
+            </div>
+
+            <div style="background: rgba(255, 42, 109, 0.08); border: 1.5px solid var(--accent-pink); border-radius: var(--radius-sm); padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+              <h4 style="font-size: 15px; color: var(--accent-pink); font-weight: 800;">❄️ Ajuste Térmico de Capas</h4>
+              <p style="font-size: 13.5px; color: var(--text-muted);">En climas cambiantes o fríos (&lt;15°C), activa abrigos con nivel de abrigo térmico 4 o 5 para lograr una recomendación balanceada.</p>
+            </div>
           </div>
         </div>
 
@@ -223,18 +257,18 @@
       <!-- Right Column: Closet Stats & Feed -->
       <section class="right-panel">
 
-        <!-- Closet KPI Stats Banner -->
+        <!-- Prominent Closet KPI Stats Banner -->
         <div class="stats-grid">
           <div class="stat-card">
             <div id="stat-total" class="stat-value">0</div>
             <div class="stat-label">Prendas en Armario</div>
           </div>
           <div class="stat-card">
-            <div id="stat-color" class="stat-value" style="color: #c4b5fd;">-</div>
+            <div id="stat-color" class="stat-value" style="color: #c084fc;">-</div>
             <div class="stat-label">Color Dominante</div>
           </div>
           <div class="stat-card">
-            <div id="stat-warmth" class="stat-value" style="color: #f472b6;">0.0/5</div>
+            <div id="stat-warmth" class="stat-value" style="color: #fb7185;">0.0/5</div>
             <div class="stat-label">Abrigo Medio</div>
           </div>
           <div class="stat-card">
@@ -244,15 +278,15 @@
         </div>
 
         <!-- Navigation Tabs -->
-        <div style="display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1.5px solid var(--border-subtle); padding-bottom: 14px;">
           <button id="tab-outfits-btn" class="visual-pill active" onclick="switchTab('outfits')">
-            💡 Combinaciones <span id="outfits-count-badge" style="background: var(--primary-dark); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
+            💡 Combinaciones <span id="outfits-count-badge" style="background: var(--primary-dark); padding: 2px 10px; border-radius: 10px; font-size: 11.5px;">0</span>
           </button>
           <button id="tab-wardrobe-btn" class="visual-pill" onclick="switchTab('wardrobe')">
-            👔 Catálogo <span id="items-count-badge" style="background: var(--primary-dark); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
+            👔 Catálogo <span id="items-count-badge" style="background: var(--primary-dark); padding: 2px 10px; border-radius: 10px; font-size: 11.5px;">0</span>
           </button>
           <button id="tab-favs-btn" class="visual-pill" onclick="switchTab('favs')">
-            ⭐ Mis Favoritos <span id="favs-count-badge" style="background: var(--accent-pink); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
+            ⭐ Mis Favoritos <span id="favs-count-badge" style="background: var(--accent-pink); padding: 2px 10px; border-radius: 10px; font-size: 11.5px;">0</span>
           </button>
         </div>
 
@@ -261,7 +295,7 @@
           <div id="outfits-container" class="feed-grid">
             <div class="empty-state">
               <div style="font-size: 48px; opacity: 0.8;">🧥</div>
-              <h3 style="font-family: var(--font-display); font-size: 18px; color: #fff;">Haz clic en "Generar Combinaciones"</h3>
+              <h3 style="font-family: var(--font-display); font-size: 19px; color: #fff;">Haz clic en "Generar Combinaciones"</h3>
               <p>El motor evaluará las prendas registradas según la ocasión y el clima seleccionado.</p>
             </div>
           </div>
@@ -269,7 +303,7 @@
 
         <!-- Tab Content 2: Wardrobe Catalog -->
         <div id="tab-wardrobe" style="display: none;">
-          <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto;">
+          <div style="display: flex; gap: 10px; margin-bottom: 22px; overflow-x: auto;">
             <button class="visual-pill active" onclick="filterCategory('all', this)">Todas</button>
             <button class="visual-pill" onclick="filterCategory('top', this)">Superiores</button>
             <button class="visual-pill" onclick="filterCategory('bottom', this)">Inferiores</button>
@@ -277,7 +311,7 @@
             <button class="visual-pill" onclick="filterCategory('outerwear', this)">Abrigos</button>
           </div>
 
-          <div id="wardrobe-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px;"></div>
+          <div id="wardrobe-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 16px;"></div>
         </div>
 
         <!-- Tab Content 3: Favorites -->
