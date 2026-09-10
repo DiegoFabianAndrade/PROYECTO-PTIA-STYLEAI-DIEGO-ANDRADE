@@ -12,6 +12,7 @@
 </head>
 <body>
   <div class="app-container">
+    
     <!-- Header -->
     <header class="app-header">
       <div class="logo-area">
@@ -21,47 +22,83 @@
           <p class="subtitle">Sistema de Recomendación de Outfits y Gestión de Armario</p>
         </div>
       </div>
-      <div class="header-badge">PTIA - Proyecto ECI</div>
+      <div class="header-badge">
+        <span>⚡ Real-Time Engine</span>
+        <span>• PTIA ECI</span>
+      </div>
     </header>
 
     <!-- Main Content Grid -->
     <main class="main-grid">
 
-      <!-- Left Column: Context Controls & Wardrobe Management -->
+      <!-- Left Column: Context Controls, Presets & Wardrobe Management -->
       <section class="left-panel">
         
+        <!-- Preset Packs Bar -->
+        <div class="card" style="padding: 16px;">
+          <div style="font-size: 12px; font-weight: 700; color: #94a3b8; margin-bottom: 8px;">📦 CARGAR ARMARIOS CÁPSULA RÁPIDOS:</div>
+          <div class="preset-packs-bar">
+            <button type="button" class="btn-preset" onclick="loadPresetPack('minimal')">✨ Cápsula Minimalista</button>
+            <button type="button" class="btn-preset" onclick="loadPresetPack('executive')">💼 Armario Ejecutivo</button>
+            <button type="button" class="btn-preset" onclick="loadPresetPack('urban')">🌆 Armario Urbano</button>
+            <button type="button" class="btn-preset" onclick="loadPresetPack('full')">🔄 Resetear Demo</button>
+          </div>
+        </div>
+
         <!-- Panel 1: Contexto (Clima, Entorno, Gustos) -->
         <div class="card context-card">
           <h2>🎯 Contexto y Preferencias</h2>
-          <p class="card-desc">Selecciona las condiciones de tu día para obtener la combinación ideal.</p>
+          <p class="card-desc">Selecciona las condiciones de tu día para obtener la combinación ideal en tiempo real.</p>
 
           <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
             
-            <!-- Clima -->
+            <!-- Clima (Visual Chips Grid) -->
             <div class="form-group">
-              <label for="weather-select">🌤️ Clima / Temperatura:</label>
-              <select id="weather-select" class="form-control">
-                <option value="frio">❄️ Frío (&lt; 12°C)</option>
-                <option value="templado" selected>🌤️ Templado (12°C - 20°C)</option>
-                <option value="calido">☀️ Cálido (&gt; 20°C)</option>
-                <option value="lluvioso">🌧️ Lluvioso</option>
-              </select>
+              <label>🌤️ Clima / Temperatura:</label>
+              <input type="hidden" id="weather-select" value="templado">
+              <div class="option-chips-grid">
+                <div class="option-chip" data-value="frio" onclick="selectChipOption('weather', 'frio', this)">
+                  <span>❄️ Frío (&lt; 12°C)</span>
+                </div>
+                <div class="option-chip active" data-value="templado" onclick="selectChipOption('weather', 'templado', this)">
+                  <span>🌤️ Templado (12-20°C)</span>
+                </div>
+                <div class="option-chip" data-value="calido" onclick="selectChipOption('weather', 'calido', this)">
+                  <span>☀️ Cálido (&gt; 20°C)</span>
+                </div>
+                <div class="option-chip" data-value="lluvioso" onclick="selectChipOption('weather', 'lluvioso', this)">
+                  <span>🌧️ Lluvioso</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Entorno / Evento -->
+            <!-- Entorno / Ocasión (Visual Chips Grid) -->
             <div class="form-group">
-              <label for="event-select">📌 Ocasión / Entorno:</label>
-              <select id="event-select" class="form-control">
-                <option value="casual" selected>👟 Universidad / Casual</option>
-                <option value="trabajo">💼 Oficina / Trabajo</option>
-                <option value="fiesta">🎉 Fiesta / Noche</option>
-                <option value="formal">👔 Evento Formal / Elegante</option>
-                <option value="deporte">🏃 Deporte / Ejercicio</option>
-                <option value="cita">🌹 Cita / Salida Especial</option>
-              </select>
+              <label>📌 Ocasión / Entorno:</label>
+              <input type="hidden" id="event-select" value="casual">
+              <div class="option-chips-grid">
+                <div class="option-chip active" data-value="casual" onclick="selectChipOption('event', 'casual', this)">
+                  <span>👟 Universidad</span>
+                </div>
+                <div class="option-chip" data-value="trabajo" onclick="selectChipOption('event', 'trabajo', this)">
+                  <span>💼 Oficina</span>
+                </div>
+                <div class="option-chip" data-value="fiesta" onclick="selectChipOption('event', 'fiesta', this)">
+                  <span>🎉 Fiesta / Noche</span>
+                </div>
+                <div class="option-chip" data-value="formal" onclick="selectChipOption('event', 'formal', this)">
+                  <span>👔 Evento Formal</span>
+                </div>
+                <div class="option-chip" data-value="deporte" onclick="selectChipOption('event', 'deporte', this)">
+                  <span>🏃 Deporte</span>
+                </div>
+                <div class="option-chip" data-value="cita" onclick="selectChipOption('event', 'cita', this)">
+                  <span>🌹 Cita Especial</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Gusto / Estilo Preferido -->
+            <!-- Estilo Preferido -->
             <div class="form-group">
               <label for="style-select">🎨 Estilo Preferido:</label>
               <select id="style-select" class="form-control">
@@ -147,8 +184,28 @@
 
       </section>
 
-      <!-- Right Column: Wardrobe Catalog & AI Outfit Results -->
+      <!-- Right Column: Wardrobe Catalog, Virtual Mannequin & Outfit Results -->
       <section class="right-panel">
+
+        <!-- Closet Analytics Banner -->
+        <div class="stats-banner">
+          <div class="stat-box">
+            <div id="stat-total" class="stat-val">0</div>
+            <div class="stat-lbl">Prendas Registradas</div>
+          </div>
+          <div class="stat-box">
+            <div id="stat-color" class="stat-val" style="color: #c4b5fd;">-</div>
+            <div class="stat-lbl">Color Dominante</div>
+          </div>
+          <div class="stat-box">
+            <div id="stat-warmth" class="stat-val" style="color: #f472b6;">0.0/5</div>
+            <div class="stat-lbl">Nivel Térmico Medio</div>
+          </div>
+          <div class="stat-box">
+            <div id="stat-formality" class="stat-val" style="color: #34d399;">0.0/5</div>
+            <div class="stat-lbl">Formalidad Media</div>
+          </div>
+        </div>
 
         <!-- Tabs Section -->
         <div class="tabs-header">

@@ -14,6 +14,34 @@ const INITIAL_ITEMS = [
   { id: '12', name: 'Sudadera Deportiva Gris', category: 'bottom', color: 'gris', warmth: 2, formality: 1, style: 'deportivo' }
 ];
 
+// Presets Packs
+const PRESET_PACKS = {
+  minimal: [
+    { id: 'm1', name: 'Camiseta Blanca Básica', category: 'top', color: 'blanco', warmth: 1, formality: 1, style: 'casual' },
+    { id: 'm2', name: 'Camisa Oxford Gris', category: 'top', color: 'gris', warmth: 2, formality: 3, style: 'elegante' },
+    { id: 'm3', name: 'Jeans Negros Minimal', category: 'bottom', color: 'negro', warmth: 3, formality: 2, style: 'minimalista' },
+    { id: 'm4', name: 'Pantalón Chino Beige', category: 'bottom', color: 'beige', warmth: 2, formality: 3, style: 'casual' },
+    { id: 'm5', name: 'Tenis Blancos Minimal', category: 'shoes', color: 'blanco', warmth: 2, formality: 1, style: 'urbano' },
+    { id: 'm6', name: 'Chaqueta Ligera Negra', category: 'outerwear', color: 'negro', warmth: 3, formality: 3, style: 'minimalista' }
+  ],
+  executive: [
+    { id: 'e1', name: 'Camisa Oxford Azul', category: 'top', color: 'azul', warmth: 2, formality: 4, style: 'elegante' },
+    { id: 'e2', name: 'Camisa Blanco Formal', category: 'top', color: 'blanco', warmth: 2, formality: 5, style: 'elegante' },
+    { id: 'e3', name: 'Pantalón de Vestir Azul Marino', category: 'bottom', color: 'azul', warmth: 3, formality: 5, style: 'elegante' },
+    { id: 'e4', name: 'Pantalón de Vestir Negro', category: 'bottom', color: 'negro', warmth: 3, formality: 5, style: 'elegante' },
+    { id: 'e5', name: 'Zapatos de Cuero Café', category: 'shoes', color: 'cafe', warmth: 3, formality: 5, style: 'elegante' },
+    { id: 'e6', name: 'Abrigo Elegante Paño Negro', category: 'outerwear', color: 'negro', warmth: 5, formality: 5, style: 'elegante' }
+  ],
+  urban: [
+    { id: 'u1', name: 'Buzo Oversize Negro', category: 'top', color: 'negro', warmth: 3, formality: 1, style: 'urbano' },
+    { id: 'u2', name: 'Camiseta Estampada Streetwear', category: 'top', color: 'blanco', warmth: 1, formality: 1, style: 'urbano' },
+    { id: 'u3', name: 'Jeans Rasgados Azules', category: 'bottom', color: 'azul', warmth: 3, formality: 1, style: 'urbano' },
+    { id: 'u4', name: 'Pantalón Cargo Beige', category: 'bottom', color: 'beige', warmth: 3, formality: 2, style: 'urbano' },
+    { id: 'u5', name: 'Tenis High Top Negros', category: 'shoes', color: 'negro', warmth: 2, formality: 1, style: 'urbano' },
+    { id: 'u6', name: 'Chaqueta de Jean Azul', category: 'outerwear', color: 'azul', warmth: 3, formality: 2, style: 'urbano' }
+  ]
+};
+
 let wardrobe = [];
 
 // Icons map
@@ -38,7 +66,7 @@ const OCCASION_CONFIG = {
   fiesta: { formality: 3, label: 'Fiesta / Noche' },
   formal: { formality: 5, label: 'Evento Formal' },
   deporte: { formality: 1, label: 'Deporte' },
-  cita: { formality: 4, label: 'Cita / Salida' }
+  cita: { formality: 4, label: 'Cita / Salida Especial' }
 };
 
 const WEATHER_CONFIG = {
@@ -53,19 +81,39 @@ const NEUTRAL_COLORS = ['negro', 'blanco', 'gris', 'beige'];
 
 function checkColorHarmony(c1, c2, c3) {
   let score = 70; // base score
-  
-  // Neutrals always pair well with anything
   let neutrals = [c1, c2, c3].filter(c => NEUTRAL_COLORS.includes(c)).length;
   if (neutrals >= 2) score += 20;
 
-  // Classic contrast (black & white, navy & beige, etc)
   if ((c1 === 'negro' && c2 === 'blanco') || (c1 === 'blanco' && c2 === 'negro')) score += 10;
   if ((c1 === 'azul' && c2 === 'beige') || (c1 === 'beige' && c2 === 'azul')) score += 10;
-
-  // Monochromatic
   if (c1 === c2) score += 10;
 
   return Math.min(100, score);
+}
+
+// Interactive Visual Chip Selection for Weather & Occasion
+function selectChipOption(type, value, element) {
+  const container = element.parentElement;
+  container.querySelectorAll('.option-chip').forEach(chip => chip.classList.remove('active'));
+  element.classList.add('active');
+
+  if (type === 'weather') {
+    document.getElementById('weather-select').value = value;
+  } else if (type === 'event') {
+    document.getElementById('event-select').value = value;
+  }
+}
+
+// Preset Loader
+function loadPresetPack(packType) {
+  if (packType === 'full') {
+    wardrobe = [...INITIAL_ITEMS];
+  } else if (PRESET_PACKS[packType]) {
+    wardrobe = [...PRESET_PACKS[packType]];
+  }
+  saveWardrobe();
+  renderWardrobe('all');
+  alert(`¡Armario cargado con éxito! (${wardrobe.length} prendas)`);
 }
 
 // Load Wardrobe
@@ -92,6 +140,35 @@ function saveWardrobe() {
 
 function updateBadges() {
   document.getElementById('items-count-badge').innerText = wardrobe.length;
+  updateStatsDashboard();
+}
+
+function updateStatsDashboard() {
+  const total = wardrobe.length;
+  document.getElementById('stat-total').innerText = total;
+
+  if (total === 0) {
+    document.getElementById('stat-color').innerText = '-';
+    document.getElementById('stat-warmth').innerText = '0.0/5';
+    document.getElementById('stat-formality').innerText = '0.0/5';
+    return;
+  }
+
+  // Count colors
+  const colorCounts = {};
+  let totalWarmth = 0;
+  let totalFormality = 0;
+
+  wardrobe.forEach(i => {
+    colorCounts[i.color] = (colorCounts[i.color] || 0) + 1;
+    totalWarmth += i.warmth;
+    totalFormality += i.formality;
+  });
+
+  const dominantColor = Object.keys(colorCounts).reduce((a, b) => colorCounts[a] > colorCounts[b] ? a : b);
+  document.getElementById('stat-color').innerText = dominantColor.toUpperCase();
+  document.getElementById('stat-warmth').innerText = (totalWarmth / total).toFixed(1) + '/5';
+  document.getElementById('stat-formality').innerText = (totalFormality / total).toFixed(1) + '/5';
 }
 
 // Toggle Add Item Form
@@ -147,7 +224,7 @@ function renderWardrobe(categoryFilter = 'all') {
     : wardrobe.filter(i => i.category === categoryFilter);
 
   if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state"><p>No hay prendas registradas en esta categoría.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">👕</div><p>No hay prendas registradas en esta categoría.</p></div>`;
     return;
   }
 
@@ -189,7 +266,7 @@ function switchTab(tab) {
   }
 }
 
-// AI Outfit Recommendation Engine
+// Recommendation Engine
 async function generateOutfits() {
   const weatherKey = document.getElementById('weather-select').value;
   const occasionKey = document.getElementById('event-select').value;
@@ -210,7 +287,21 @@ async function generateOutfits() {
     return;
   }
 
-  // If LLM Engine is selected, try calling backend API
+  // Show Skeleton Shimmer Loading State
+  switchTab('outfits');
+  const container = document.getElementById('outfits-container');
+  container.innerHTML = `
+    <div class="empty-state" style="padding: 40px;">
+      <div class="empty-icon" style="animation: spin 1.5s infinite linear;">⚙️</div>
+      <h3>Calculando mejores combinaciones...</h3>
+      <p>Evaluando balance térmico, formalidad y teoría de colores en tiempo real.</p>
+    </div>
+  `;
+
+  // Simulate short animation delay for smooth UX feel
+  await new Promise(r => setTimeout(r, 350));
+
+  // If API Engine is selected, try calling backend API
   if (engine === 'llm') {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/recommend', {
@@ -235,26 +326,22 @@ async function generateOutfits() {
             score: data.matchScore,
             reasoning: data.aiReasoning
           };
-          renderOutfits([llmOutfit], OCCASION_CONFIG[occasionKey].label, weatherInfo.label, " (Motor LLM Fine-Tuned Hugging Face)");
+          renderOutfits([llmOutfit], OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
           return;
         }
       }
     } catch (err) {
-      console.warn('API LLM no conectada o backend fuera de línea. Utilizando motor de reglas local...', err);
+      console.warn('Servidor API no conectado. Utilizando motor de reglas local...', err);
     }
   }
 
   // Local Rule-Based Engine
   const candidateCombinations = [];
 
-  // Generate combinations (Tops x Bottoms x Shoes x Optional Outerwear)
   tops.forEach(t => {
     bottoms.forEach(b => {
       shoes.forEach(s => {
-        // Base combination without extra coat
         evaluateAndPush(t, b, s, null, targetFormality, weatherInfo, preferredStyle, candidateCombinations);
-
-        // Combinations with extra coat if available
         outerwears.forEach(o => {
           evaluateAndPush(t, b, s, o, targetFormality, weatherInfo, preferredStyle, candidateCombinations);
         });
@@ -262,17 +349,12 @@ async function generateOutfits() {
     });
   });
 
-  // Sort by match score descending
   candidateCombinations.sort((a, b) => b.score - a.score);
-
-  // Take top 4 unique combinations
   const topOutfits = candidateCombinations.slice(0, 4);
-
   renderOutfits(topOutfits, OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
 }
 
 function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weatherInfo, preferredStyle, list) {
-  // 1. Formality Score (35%)
   const items = [top, bottom, shoes];
   if (outerwear) items.push(outerwear);
 
@@ -280,7 +362,6 @@ function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weather
   const formalityDiff = Math.abs(avgFormality - targetFormality);
   const formalityScore = Math.max(0, 100 - formalityDiff * 25);
 
-  // 2. Thermal / Warmth Score (35%)
   const totalWarmth = items.reduce((acc, i) => acc + i.warmth, 0) / items.length;
   let warmthScore = 80;
   if (totalWarmth >= weatherInfo.minWarmth && totalWarmth <= weatherInfo.maxWarmth + 1) {
@@ -290,14 +371,10 @@ function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weather
     warmthScore = Math.max(20, 100 - warmthDiff * 25);
   }
 
-  // 3. Color Harmony Score (20%)
   const colorScore = checkColorHarmony(top.color, bottom.color, shoes.color);
-
-  // 4. Style Match Bonus (10%)
   const styleMatches = items.filter(i => i.style === preferredStyle).length;
   const styleBonus = (styleMatches / items.length) * 100;
 
-  // Final Weighted Score
   const totalScore = Math.round(
     formalityScore * 0.35 +
     warmthScore * 0.35 +
@@ -305,13 +382,12 @@ function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weather
     styleBonus * 0.10
   );
 
-  // Reasoning text
   let reasoning = [];
   if (formalityDiff <= 0.8) {
-    reasoning.push(`Cumple perfecto el nivel de formalidad (${avgFormality.toFixed(1)}/5) para la ocasión.`);
+    reasoning.push(`Cumple excelente el nivel de formalidad (${avgFormality.toFixed(1)}/5) para la ocasión.`);
   }
   if (warmthScore >= 85) {
-    reasoning.push(`Mantiene un abrigo térmico óptimo para el clima ${weatherInfo.label}.`);
+    reasoning.push(`Proporciona abrigo térmico óptimo para clima ${weatherInfo.label}.`);
   }
   if (colorScore >= 80) {
     reasoning.push(`Excelente combinación de tonos (${top.color}, ${bottom.color} y ${shoes.color}).`);
@@ -323,7 +399,7 @@ function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weather
     shoes,
     outerwear,
     score: Math.min(99, Math.max(60, totalScore)),
-    reasoning: reasoning.join(' ') || 'Combinación equilibrada entre prendas disponibles.'
+    reasoning: reasoning.join(' ') || 'Combinación equilibrada entre las prendas disponibles.'
   });
 }
 
@@ -345,26 +421,29 @@ function renderOutfits(outfits, occasionLabel, weatherLabel, engineSuffix = '') 
     
     let itemsHtml = `
       <div class="outfit-item-node">
-        <span style="font-size: 20px;">👔</span>
+        <span style="font-size: 24px;">👔</span>
         <div>
           <div style="font-size: 11px; color: #94a3b8;">Superior</div>
-          <div style="font-weight: 600; font-size: 13px;">${outfit.top.name}</div>
+          <div style="font-weight: 700; font-size: 13px;">${outfit.top.name}</div>
+          <div style="font-size: 10px; color: #64748b;">Color: ${outfit.top.color}</div>
         </div>
       </div>
 
       <div class="outfit-item-node">
-        <span style="font-size: 20px;">👖</span>
+        <span style="font-size: 24px;">👖</span>
         <div>
           <div style="font-size: 11px; color: #94a3b8;">Inferior</div>
-          <div style="font-weight: 600; font-size: 13px;">${outfit.bottom.name}</div>
+          <div style="font-weight: 700; font-size: 13px;">${outfit.bottom.name}</div>
+          <div style="font-size: 10px; color: #64748b;">Color: ${outfit.bottom.color}</div>
         </div>
       </div>
 
       <div class="outfit-item-node">
-        <span style="font-size: 20px;">👟</span>
+        <span style="font-size: 24px;">👟</span>
         <div>
           <div style="font-size: 11px; color: #94a3b8;">Calzado</div>
-          <div style="font-weight: 600; font-size: 13px;">${outfit.shoes.name}</div>
+          <div style="font-weight: 700; font-size: 13px;">${outfit.shoes.name}</div>
+          <div style="font-size: 10px; color: #64748b;">Color: ${outfit.shoes.color}</div>
         </div>
       </div>
     `;
@@ -372,10 +451,11 @@ function renderOutfits(outfits, occasionLabel, weatherLabel, engineSuffix = '') 
     if (outfit.outerwear) {
       itemsHtml += `
         <div class="outfit-item-node">
-          <span style="font-size: 20px;">🧥</span>
+          <span style="font-size: 24px;">🧥</span>
           <div>
-            <div style="font-size: 11px; color: #94a3b8;">Abrigo</div>
-            <div style="font-weight: 600; font-size: 13px;">${outfit.outerwear.name}</div>
+            <div style="font-size: 11px; color: #94a3b8;">Abrigo Extra</div>
+            <div style="font-weight: 700; font-size: 13px;">${outfit.outerwear.name}</div>
+            <div style="font-size: 10px; color: #64748b;">Color: ${outfit.outerwear.color}</div>
           </div>
         </div>
       `;
