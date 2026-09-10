@@ -12,25 +12,23 @@
 </head>
 <body>
 
-  <!-- Toast Notification System (Humane Feedback) -->
+  <!-- Toast Notification System -->
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- Detail Modal Overlay (Mobbin Style Outfit Inspector) -->
+  <!-- Detail Modal Inspector Overlay (Mobbin Style) -->
   <div id="detail-modal" class="modal-backdrop" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3 id="modal-title" style="font-family: var(--font-display); font-size: 20px;">Detalle del Outfit</h3>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 id="modal-title" style="font-family: var(--font-display); font-size: 22px; color: #fff;">Detalle del Outfit</h3>
+        <button style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;" onclick="closeModal()">✕</button>
       </div>
-      <div id="modal-body">
-        <!-- Detail content dynamically inserted here -->
-      </div>
+      <div id="modal-body"></div>
     </div>
   </div>
 
   <div class="app-container">
     
-    <!-- Header Navigation (Mobbin Glass Style) -->
+    <!-- Top Sticky Header Bar -->
     <header class="app-header">
       <div class="logo-area">
         <div class="logo-icon">✨</div>
@@ -40,28 +38,41 @@
         </div>
       </div>
 
-      <div class="header-controls">
-        <button class="view-toggle-btn active" id="btn-view-list" onclick="toggleViewMode('list')">☰ Lista</button>
-        <button class="view-toggle-btn" id="btn-view-grid" onclick="toggleViewMode('grid')">⊞ Grilla</button>
+      <div class="header-actions">
+        <!-- Live Search Box -->
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar prenda o color..." oninput="handleLiveSearch(this.value)">
+        </div>
+
+        <!-- Surprise Me Button -->
+        <button type="button" class="btn-surprise" onclick="generateSurpriseOutfit()">
+          🎲 Sorpréndeme
+        </button>
       </div>
     </header>
 
-    <!-- Hero Section (Humane by Design Spacing & Clarity) -->
-    <section class="hero-strip">
-      <h2 class="hero-title">Explora combinaciones perfeccionadas para tu día</h2>
-      <p class="hero-sub">Selecciona el clima, la ocasión y tu armario disponible. El motor analizará el abrigo térmico, la etiqueta de formalidad y la teoría del color para sugerirte los mejores outfits.</p>
+    <!-- Mobbin Trending Outfits Carousel Section -->
+    <section class="carousel-section">
+      <div class="carousel-title-bar">
+        <h3 style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff;">🔥 Combinaciones Destacadas de Hoy</h3>
+        <span style="font-size: 12px; color: var(--text-muted);">Desliza para explorar →</span>
+      </div>
+      <div id="carousel-track" class="carousel-track">
+        <!-- Dynamic carousel cards inserted here -->
+      </div>
     </section>
 
-    <!-- Preset Capsule Bar (Mobbin Interactive Pills) -->
-    <div class="capsule-strip">
-      <span style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Armarios Cápsula:</span>
-      <button class="capsule-chip active" onclick="loadPresetPack('full', this)">✨ Armario Demo Completo</button>
-      <button class="capsule-chip" onclick="loadPresetPack('minimal', this)">📦 Cápsula Minimalista</button>
-      <button class="capsule-chip" onclick="loadPresetPack('executive', this)">💼 Ejecutivo & Formal</button>
-      <button class="capsule-chip" onclick="loadPresetPack('urban', this)">🌆 Urbano & Streetwear</button>
+    <!-- Preset Capsule Bar -->
+    <div style="display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 4px 0;">
+      <span style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; white-space: nowrap;">Cápsulas de Estilo:</span>
+      <button class="visual-pill active" onclick="loadPresetPack('full', this)">✨ Armario Demo Completo</button>
+      <button class="visual-pill" onclick="loadPresetPack('minimal', this)">📦 Cápsula Minimalista</button>
+      <button class="visual-pill" onclick="loadPresetPack('executive', this)">💼 Ejecutivo & Formal</button>
+      <button class="visual-pill" onclick="loadPresetPack('urban', this)">🌆 Urbano & Streetwear</button>
     </div>
 
-    <!-- Main Content Grid (Spacious Humane Hierarchy) -->
+    <!-- Main Content Grid with Generous Spacing -->
     <main class="main-grid">
 
       <!-- Left Column: Context Controls & Wardrobe Management -->
@@ -70,13 +81,13 @@
         <!-- Panel 1: Contexto (Clima, Entorno, Gustos) -->
         <div class="card">
           <h3 class="card-title">🎯 Contexto y Preferencias</h3>
-          <p class="card-subtitle">Configura las variables de tu jornada para personalizar el algoritmo.</p>
+          <p style="color: var(--text-muted); font-size: 13px; margin-top: -12px;">Selecciona el clima y evento para personalizar la recomendación.</p>
 
           <form id="context-form" onsubmit="event.preventDefault(); generateOutfits();">
             
             <!-- Clima (Visual Pills Grid) -->
             <div class="form-group">
-              <div class="filter-group-label">🌤️ Clima / Temperatura</div>
+              <label style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">🌤️ Clima / Temperatura</label>
               <input type="hidden" id="weather-select" value="templado">
               <div class="visual-pills-grid">
                 <div class="visual-pill" data-value="frio" onclick="selectPillOption('weather', 'frio', this)">
@@ -96,7 +107,7 @@
 
             <!-- Ocasión (Visual Pills Grid) -->
             <div class="form-group">
-              <div class="filter-group-label">📌 Ocasión / Entorno</div>
+              <label style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">📌 Ocasión / Entorno</label>
               <input type="hidden" id="event-select" value="casual">
               <div class="visual-pills-grid">
                 <div class="visual-pill active" data-value="casual" onclick="selectPillOption('event', 'casual', this)">
@@ -185,13 +196,13 @@
             </div>
 
             <div class="form-group">
-              <label for="item-warmth">Abrigo Térmico (1 Ligero - 5 Muy Cálido):</label>
+              <label for="item-warmth">Abrigo Térmico (1-5):</label>
               <input type="range" id="item-warmth" min="1" max="5" value="3" class="form-control" oninput="document.getElementById('warmth-val').innerText = this.value">
               <span id="warmth-val" style="font-size: 12px; color: var(--accent-pink); font-weight: 700;">3</span>
             </div>
 
             <div class="form-group">
-              <label for="item-formality">Formalidad Etiqueta (1 Informal - 5 Formal):</label>
+              <label for="item-formality">Formalidad Etiqueta (1-5):</label>
               <input type="range" id="item-formality" min="1" max="5" value="2" class="form-control" oninput="document.getElementById('formality-val').innerText = this.value">
               <span id="formality-val" style="font-size: 12px; color: var(--accent-emerald); font-weight: 700;">2</span>
             </div>
@@ -205,7 +216,7 @@
       <!-- Right Column: Closet Stats & Feed -->
       <section class="right-panel">
 
-        <!-- Closet KPI Stats Banner (Humane Spacing) -->
+        <!-- Closet KPI Stats Banner -->
         <div class="stats-grid">
           <div class="stat-card">
             <div id="stat-total" class="stat-value">0</div>
@@ -225,17 +236,20 @@
           </div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="tabs-nav">
-          <button id="tab-outfits-btn" class="tab-btn active" onclick="switchTab('outfits')">
-            💡 Combinaciones Recomendadas <span id="outfits-count-badge" class="tab-badge">0</span>
+        <!-- Navigation Tabs (With Favorites) -->
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+          <button id="tab-outfits-btn" class="visual-pill active" onclick="switchTab('outfits')">
+            💡 Combinaciones <span id="outfits-count-badge" style="background: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
           </button>
-          <button id="tab-wardrobe-btn" class="tab-btn" onclick="switchTab('wardrobe')">
-            👔 Catálogo de Armario <span id="items-count-badge" class="tab-badge">0</span>
+          <button id="tab-wardrobe-btn" class="visual-pill" onclick="switchTab('wardrobe')">
+            👔 Catálogo <span id="items-count-badge" style="background: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
+          </button>
+          <button id="tab-favs-btn" class="visual-pill" onclick="switchTab('favs')">
+            ⭐ Mis Favoritos <span id="favs-count-badge" style="background: var(--accent-pink); padding: 2px 8px; border-radius: 10px; font-size: 11px;">0</span>
           </button>
         </div>
 
-        <!-- Tab Content 1: Recommendations Feed (Mobbin Dynamic Cards) -->
+        <!-- Tab Content 1: Recommendations Feed -->
         <div id="tab-outfits" style="display: block;">
           <div id="outfits-container" class="feed-grid">
             <div class="empty-state">
@@ -248,17 +262,20 @@
 
         <!-- Tab Content 2: Wardrobe Catalog -->
         <div id="tab-wardrobe" style="display: none;">
-          <div class="wardrobe-filter-strip">
-            <button class="filter-chip active" onclick="filterCategory('all', this)">Todas</button>
-            <button class="filter-chip" onclick="filterCategory('top', this)">Superiores</button>
-            <button class="filter-chip" onclick="filterCategory('bottom', this)">Inferiores</button>
-            <button class="filter-chip" onclick="filterCategory('shoes', this)">Calzado</button>
-            <button class="filter-chip" onclick="filterCategory('outerwear', this)">Abrigos</button>
+          <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto;">
+            <button class="visual-pill active" onclick="filterCategory('all', this)">Todas</button>
+            <button class="visual-pill" onclick="filterCategory('top', this)">Superiores</button>
+            <button class="visual-pill" onclick="filterCategory('bottom', this)">Inferiores</button>
+            <button class="visual-pill" onclick="filterCategory('shoes', this)">Calzado</button>
+            <button class="visual-pill" onclick="filterCategory('outerwear', this)">Abrigos</button>
           </div>
 
-          <div id="wardrobe-container" class="wardrobe-grid">
-            <!-- Wardrobe items render here -->
-          </div>
+          <div id="wardrobe-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px;"></div>
+        </div>
+
+        <!-- Tab Content 3: Favorites -->
+        <div id="tab-favs" style="display: none;">
+          <div id="favs-container" class="feed-grid"></div>
         </div>
 
       </section>
