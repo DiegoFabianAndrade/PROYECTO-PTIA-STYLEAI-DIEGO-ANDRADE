@@ -151,7 +151,7 @@ def generate_dataset(num_samples=600, output_path="data/styleai_dataset.jsonl"):
         
         # Assistant response format
         outer_str = f"\n- Abrigo: {outer_item['name']}" if outer_item else ""
-        assistant_text = f"**Outfit Recomendado (Match: {best_score}%):**\n- Prenda Superior: {top_item['name']}\n- Prenda Inferior: {bottom_item['name']}\n- Calzado: {shoes_item['name']}{outer_str}\n\n**Razonamiento de IA:**\n{best_reason}"
+        assistant_text = f"**Outfit Recomendado (Match: {best_score}%):**\n- Prenda Superior: {top_item['name']}\n- Prenda Inferior: {bottom_item['name']}\n- Calzado: {shoes_item['name']}{outer_str}\n\n**Justificación:**\n{best_reason}"
         
         sample = {
             "messages": [
