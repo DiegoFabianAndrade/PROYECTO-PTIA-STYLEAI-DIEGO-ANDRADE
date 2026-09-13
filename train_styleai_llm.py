@@ -1,11 +1,3 @@
-"""
-train_styleai_llm.py
---------------------
-Script de entrenamiento (Fine-Tuning) para el proyecto StyleAI usando Hugging Face PEFT / QLoRA.
-Entrena un LLM (ej. Qwen/Qwen2.5-1.5B-Instruct, meta-llama/Llama-3.2-1B-Instruct o TinyLlama/TinyLlama-1.1B-Chat-v1.0)
-utilizando cuantización de 4-bits y adaptadores LoRA.
-"""
-
 import os
 import torch
 from datasets import load_dataset

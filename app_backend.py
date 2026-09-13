@@ -1,10 +1,3 @@
-"""
-app_backend.py
---------------
-Servidor Backend API en Python (FastAPI) para servir el modelo LLM reentrenado del proyecto StyleAI.
-Expone el endpoint POST /api/recommend para comunicarse con la interfaz Web (styleai_app).
-"""
-
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware

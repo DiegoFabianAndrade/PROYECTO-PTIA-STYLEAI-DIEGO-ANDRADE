@@ -1,9 +1,3 @@
-"""
-inference_llm.py
-----------------
-Script de inferencia para evaluar la calidad del modelo reentrenado o base en los casos de prueba del proyecto StyleAI.
-"""
-
 import sys
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -30,7 +24,7 @@ def generate_recommendation(user_prompt: str, use_adapter: bool = True):
         model = PeftModel.from_pretrained(model, ADAPTER_PATH)
 
     messages = [
-        {"role": "system", "content": "Eres StyleAI, un asistente experto en estilismo, teoría del color y recomendación inteligente de vestuario. Tu objetivo es analizar el armario disponible del usuario y su contexto (clima y ocasión) para seleccionar la mejor combinación de outfits calculando un puntaje de match (%) y justificando la decisión de forma clara y lógica."},
+        {"role": "system", "content": "Eres StyleAI, un asistente experto en recomendación inteligente de vestuario. Analiza el armario del usuario y su contexto (clima y ocasión) para seleccionar la mejor combinación de outfits calculando un puntaje de match (%) y justificando la decisión de forma clara y lógica."},
         {"role": "user", "content": user_prompt}
     ]
 
@@ -49,7 +43,6 @@ def generate_recommendation(user_prompt: str, use_adapter: bool = True):
     return response
 
 if __name__ == "__main__":
-    # Caso de Prueba 1: Oficina en Día Frío (Sección 7.a del documento .docx)
     test_prompt = """Por favor recomienda el mejor outfit con las prendas de mi armario:
 
 Armario del Usuario:
@@ -72,3 +65,4 @@ Contexto:
     result = generate_recommendation(test_prompt, use_adapter=False)
     print("=== Resultado de Inferencia StyleAI ===")
     print(result)
+
