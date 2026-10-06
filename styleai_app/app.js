@@ -729,19 +729,27 @@ function closeModal(event) {
   document.getElementById('detail-modal').classList.remove('open');
 }
 
-function copyOutfitToClipboard(index) {
-  const outfit = generatedOutfits[index];
-  if (!outfit) return;
-
-  const text = `Outfit StyleAI (${outfit.score}% Match):\n- Superior: ${outfit.top.name}\n- Inferior: ${outfit.bottom.name}\n- Calzado: ${outfit.shoes.name}${outfit.outerwear ? '\n- Abrigo: ' + outfit.outerwear.name : ''}\n\nJustificación: ${outfit.reasoning}`;
-
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('📋 Outfit copiado al portapapeles');
-  }).catch(() => {
-    showToast('📋 Outfit copiado');
-  });
+function openVideoModal() {
+  document.getElementById('modal-title').innerText = '🎥 Video de Presentación de Avances (Hito 2)';
+  document.getElementById('modal-body').innerHTML = `
+    <div style="text-align: center; padding: 16px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+      <div style="font-size: 48px;">🎬</div>
+      <h3 style="color: #fff; font-family: var(--font-display); font-size: 19px;">Demostración en Video del Prototipo Navegable</h3>
+      <p style="color: var(--text-muted); font-size: 14px; max-width: 520px; line-height: 1.6;">
+        El video corto de presentación de avances (máximo 5 minutos) explicando la arquitectura metodológica, el entrenamiento del modelo y el recorrido navegable por la interfaz se encuentra <strong>en proceso de edición final por el equipo</strong>.
+      </p>
+      <div style="background: rgba(0, 240, 255, 0.12); border: 1.5px solid var(--accent-cyan); padding: 14px 22px; border-radius: 12px; color: var(--accent-cyan); font-weight: 700; font-size: 14px;">
+        📌 Estado: Pendiente de adjuntar enlace público antes de la evaluación final
+      </div>
+      <button class="btn btn-primary" onclick="closeModal()" style="margin-top: 10px; width: auto; padding: 12px 32px;">
+        Entendido
+      </button>
+    </div>
+  `;
+  document.getElementById('detail-modal').classList.add('open');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   initWardrobe();
 });
+
