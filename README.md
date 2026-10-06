@@ -68,8 +68,11 @@ PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE/
 ```
 
 ### 🎬 D. Video Corto de Presentación de Avances (Máx 5 Minutos)
+- **Propósito del Video:** Presentar de manera integral la totalidad de los desarrollos y resultados alcanzados en el **Hito 2**, abarcando:
+  1. **Justificación Metodológica y Técnica:** Explicación de la arquitectura del modelo de recomendación, el pipeline de generación del dataset instruccional JSONL, la cuantización a 4-bits (**QLoRA / PEFT**) y el servidor backend en **FastAPI**.
+  2. **Demostración Navegable del Prototipo:** Recorrido interactivo por la interfaz web (`styleai_app/`), validación de la experiencia de usuario (UX/UI), interacción con los desplegables acordeón, carrusel de tendencias, filtros en vivo y simulación de funciones.
+  3. **Revisión de Fuentes:** Exposición de la estructura de código fuente y fuentes de diseño desarrolladas en el repositorio.
 - **Estado:** *[Pendiente de adjuntar enlace público por el equipo de trabajo]*
-- *Nota:* El enlace a la grabación en video mostrando el funcionamiento del prototipo navegable y la explicación técnica se incorporará en este apartado antes del cierre de evaluación.
 
 ---
 

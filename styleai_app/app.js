@@ -734,9 +734,9 @@ function openVideoModal() {
   document.getElementById('modal-body').innerHTML = `
     <div style="text-align: center; padding: 16px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
       <div style="font-size: 48px;">🎬</div>
-      <h3 style="color: #fff; font-family: var(--font-display); font-size: 19px;">Demostración en Video del Prototipo Navegable</h3>
-      <p style="color: var(--text-muted); font-size: 14px; max-width: 520px; line-height: 1.6;">
-        El video corto de presentación de avances (máximo 5 minutos) explicando la arquitectura metodológica, el entrenamiento del modelo y el recorrido navegable por la interfaz se encuentra <strong>en proceso de edición final por el equipo</strong>.
+      <h3 style="color: #fff; font-family: var(--font-display); font-size: 19px;">Presentación Integral de Avances del Hito 2</h3>
+      <p style="color: var(--text-muted); font-size: 14px; max-width: 530px; line-height: 1.6;">
+        El video corto de presentación (máximo 5 minutos) expondrá la <strong>totalidad de los avances realizados en este hito</strong>: la justificación metodológica y técnica (modelo, dataset instruccional JSONL y API FastAPI), la demostración del prototipo de interfaz navegable y la explicación de las fuentes del código desarrollado.
       </p>
       <div style="background: rgba(0, 240, 255, 0.12); border: 1.5px solid var(--accent-cyan); padding: 14px 22px; border-radius: 12px; color: var(--accent-cyan); font-weight: 700; font-size: 14px;">
         📌 Estado: Pendiente de adjuntar enlace público antes de la evaluación final
