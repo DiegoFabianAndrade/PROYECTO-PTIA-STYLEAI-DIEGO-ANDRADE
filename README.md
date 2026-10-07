@@ -28,6 +28,7 @@ StyleAI ofrece un entorno digital integral compuesto por:
 Este repositorio contiene la evidencia completa de los entregables del **Hito 2**:
 
 ### 📄 A. Documento y Justificación Metodológica y Técnica
+- **Documento Adjunto de la Entrega:** [`Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx`](Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx)
 - **Arquitectura de Recomendación:** Integración de un modelo en Python con cuantización de 4-bits (**QLoRA**) y adaptadores **PEFT** sobre arquitecturas de lenguaje instruccionales (`Qwen2.5-1.5B-Instruct` / `Llama-3.2-1B`).
 - **Dataset Sintético Instruccional:** Generación automatizada de 500 muestras en formato JSONL (`data/styleai_dataset.jsonl`) simulando armarios de usuarios y contextos diversos.
 - **Servidor Backend API:** Servicio web dinámico en **FastAPI** (`app_backend.py`) que expone el endpoint `POST /api/recommend` para inferencias remota/local.
@@ -68,11 +69,11 @@ PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE/
 ```
 
 ### 🎬 D. Video Corto de Presentación de Avances (Máx 5 Minutos)
-- **Propósito del Video:** Presentar de manera integral la totalidad de los desarrollos y resultados alcanzados en el **Hito 2**, abarcando:
-  1. **Justificación Metodológica y Técnica:** Explicación de la arquitectura del modelo de recomendación, el pipeline de generación del dataset instruccional JSONL, la cuantización a 4-bits (**QLoRA / PEFT**) y el servidor backend en **FastAPI**.
-  2. **Demostración Navegable del Prototipo:** Recorrido interactivo por la interfaz web (`styleai_app/`), validación de la experiencia de usuario (UX/UI), interacción con los desplegables acordeón, carrusel de tendencias, filtros en vivo y simulación de funciones.
+- **Archivo de Video Adjunto:** [`DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4`](DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4)
+- **Contenido del Video:** Presentación integral de la totalidad de los desarrollos del Hito 2:
+  1. **Justificación Metodológica y Técnica:** Explicación del modelo de recomendación, dataset instruccional JSONL y API FastAPI.
+  2. **Demostración Navegable del Prototipo:** Recorrido interactivo por la interfaz web (`styleai_app/`), desplegables acordeón, carrusel de tendencias, filtros en vivo y simulación de funciones.
   3. **Revisión de Fuentes:** Exposición de la estructura de código fuente y fuentes de diseño desarrolladas en el repositorio.
-- **Estado:** *[Pendiente de adjuntar enlace público por el equipo de trabajo]*
 
 ---
 

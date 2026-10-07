@@ -732,18 +732,28 @@ function closeModal(event) {
 function openVideoModal() {
   document.getElementById('modal-title').innerText = '🎥 Video de Presentación de Avances (Hito 2)';
   document.getElementById('modal-body').innerHTML = `
-    <div style="text-align: center; padding: 16px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
-      <div style="font-size: 48px;">🎬</div>
-      <h3 style="color: #fff; font-family: var(--font-display); font-size: 19px;">Presentación Integral de Avances del Hito 2</h3>
-      <p style="color: var(--text-muted); font-size: 14px; max-width: 530px; line-height: 1.6;">
-        El video corto de presentación (máximo 5 minutos) expondrá la <strong>totalidad de los avances realizados en este hito</strong>: la justificación metodológica y técnica (modelo, dataset instruccional JSONL y API FastAPI), la demostración del prototipo de interfaz navegable y la explicación de las fuentes del código desarrollado.
-      </p>
-      <div style="background: rgba(0, 240, 255, 0.12); border: 1.5px solid var(--accent-cyan); padding: 14px 22px; border-radius: 12px; color: var(--accent-cyan); font-weight: 700; font-size: 14px;">
-        📌 Estado: Pendiente de adjuntar enlace público antes de la evaluación final
+    <div style="text-align: center; padding: 10px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+      <h3 style="color: #fff; font-family: var(--font-display); font-size: 18px;">Presentación Integral de Avances — Hito 2 (Diego Andrade)</h3>
+      
+      <div style="width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid var(--accent-cyan); background: #000; box-shadow: 0 10px 30px rgba(0,240,255,0.25);">
+        <video controls style="width: 100%; max-height: 360px; display: block;" poster="assets/logo.png">
+          <source src="../DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4" type="video/mp4">
+          Tu navegador no soporta el reproductor de video HTML5.
+        </video>
       </div>
-      <button class="btn btn-primary" onclick="closeModal()" style="margin-top: 10px; width: auto; padding: 12px 32px;">
-        Entendido
-      </button>
+
+      <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5; max-width: 580px;">
+        Este video presenta la justificación metodológica y técnica, el recorrido navegable por la interfaz y la estructura de fuentes del proyecto.
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <a href="../DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4" target="_blank" class="btn btn-primary" style="width: auto; padding: 10px 24px; text-decoration: none;">
+          ▶️ Abrir Video en Pestaña Nueva
+        </a>
+        <button class="btn btn-action" onclick="closeModal()" style="padding: 10px 20px;">
+          Cerrar
+        </button>
+      </div>
     </div>
   `;
   document.getElementById('detail-modal').classList.add('open');
