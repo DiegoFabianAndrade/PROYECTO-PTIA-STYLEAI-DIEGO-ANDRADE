@@ -111,10 +111,10 @@ El servidor backend se iniciará en `http://127.0.0.1:8000` exponiendo los endpo
 
 | Criterio Evaluado | Estado | Evidencia en el Repositorio |
 | :--- | :---: | :--- |
-| **Documento y Justificación Técnica** | ✅ Completo | Implementación del servidor API (`app_backend.py`), scripts de entrenamiento (`train_styleai_llm.py`) y dataset (`styleai_dataset.jsonl`). |
-| **Prototipo de Interfaz Navegable** | ✅ Completo | Interfaz web interactiva en `styleai_app/index.html` con simulación de funciones y validación de UX. |
-| **Avances en la Solución (Fuentes)** | ✅ Completo | Código fuente organizado en `styleai_app/` (diseño) y scripts `.py` (lógica del modelo). |
-| **Video Corto de Avances (5 min)** | ⏳ Pendiente | Reservado para adjuntar enlace final. |
+| **Documento y Justificación Técnica** | ✅ Completo | Documento adjunto en [`Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx`](Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx), backend en `app_backend.py` y dataset en `data/styleai_dataset.jsonl`. |
+| **Prototipo de Interfaz Navegable** | ✅ Completo | Interfaz web interactiva navegable en [`styleai_app/index.html`](styleai_app/index.html) con reproductor de video en vivo, simulación de funciones y validación de UX. |
+| **Avances en la Solución (Fuentes)** | ✅ Completo | Código fuente organizado en `styleai_app/` (fuentes del diseño) y scripts `.py` (fuentes del código). |
+| **Video Corto de Avances (5 min)** | ✅ Completo | Archivo de video adjunto e integrado: [`DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4`](DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4). |
 
 ---
 
