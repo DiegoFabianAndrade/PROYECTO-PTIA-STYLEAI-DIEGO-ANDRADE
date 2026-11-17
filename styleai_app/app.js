@@ -156,18 +156,18 @@ function renderTrendingCarousel() {
   track.innerHTML = '';
 
   const trendingSamples = [
-    { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: '💼 Oficina' },
-    { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: '👟 Casual' },
-    { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: '🎉 Fiesta' },
-    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: '🌆 Urbano' },
-    { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: '🌹 Cita' }
+    { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: 'Oficina' },
+    { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: 'Casual' },
+    { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: 'Fiesta' },
+    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: 'Urbano' },
+    { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: 'Cita' }
   ];
 
   trendingSamples.forEach(sample => {
     const card = document.createElement('div');
     card.className = 'carousel-card';
     card.onclick = () => {
-      showToast(`🔥 Viendo tendencia: ${sample.name}`);
+      showToast(`Viendo combinación: ${sample.name}`);
       generateOutfits();
     };
     card.innerHTML = `
@@ -177,9 +177,9 @@ function renderTrendingCarousel() {
       </div>
       <div class="carousel-card-item" style="font-weight: 800; font-size: 15px; color: #fff; margin-top: 2px;">${sample.name}</div>
       <div style="font-size: 12.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; overflow: hidden;">
-        <span class="carousel-card-item">👔 ${sample.top}</span>
-        <span class="carousel-card-item">👖 ${sample.bottom}</span>
-        <span class="carousel-card-item">👟 ${sample.shoes}</span>
+        <span class="carousel-card-item">Superior: ${sample.top}</span>
+        <span class="carousel-card-item">Inferior: ${sample.bottom}</span>
+        <span class="carousel-card-item">Calzado: ${sample.shoes}</span>
       </div>
     `;
     track.appendChild(card);
@@ -204,7 +204,7 @@ function generateSurpriseOutfit() {
   });
 
   generateOutfits();
-  showToast(`🎲 Outfit Sorpresa generado para ${OCCASION_CONFIG[randomOccasion].label}!`);
+  showToast(`Combinación sugerida para ${OCCASION_CONFIG[randomOccasion].label}`);
 }
 
 // Filtro de búsqueda en tiempo real
@@ -231,7 +231,7 @@ function handleLiveSearch(query) {
       const card = document.createElement('div');
       card.className = 'item-card';
       card.innerHTML = `
-        <div class="piece-icon">${CATEGORY_ICONS[item.category] || '👔'}</div>
+        <div class="piece-icon">${CATEGORY_ICONS[item.category] || ''}</div>
         <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
         <div style="font-size: 11px; color: var(--text-muted);">Color: ${item.color} | ${CATEGORY_LABELS[item.category]}</div>
       `;
@@ -276,7 +276,7 @@ async function checkBackendConnection(manual = false) {
         text.innerText = `API Activa (v${data.version || '2.0'})`;
       }
       refreshMetricsDashboard();
-      if (manual) showToast('✓ Conexión establecida con la API local (v2.0.0)');
+      if (manual) showToast('Conexión establecida con la API local');
       return true;
     }
   } catch (e) {
@@ -288,7 +288,7 @@ async function checkBackendConnection(manual = false) {
     pill.className = 'status-pill status-offline';
     text.innerText = 'Modo Local (Autónomo)';
   }
-  if (manual) showToast('ℹ️ Modo autónomo sin conexión API');
+  if (manual) showToast('Modo local autónomo activo');
   return false;
 }
 
@@ -299,7 +299,7 @@ function exportWardrobe() {
   dlAnchorElem.setAttribute('href', dataStr);
   dlAnchorElem.setAttribute('download', 'armario_styleai.json');
   dlAnchorElem.click();
-  showToast('📥 Catálogo exportado como JSON');
+  showToast('Catálogo exportado como JSON');
 }
 
 function importWardrobe(event) {
@@ -314,7 +314,7 @@ function importWardrobe(event) {
         wardrobe = imported;
         saveWardrobe();
         renderWardrobe('all');
-        showToast(`✓ Se importaron ${imported.length} prendas`);
+        showToast(`Se importaron ${imported.length} prendas`);
       } else {
         alert('El archivo no contiene una estructura de prendas válida.');
       }
@@ -331,7 +331,7 @@ function resetToDefaultWardrobe() {
     wardrobe = [...INITIAL_ITEMS];
     saveWardrobe();
     renderWardrobe('all');
-    showToast('🔄 Catálogo restablecido al estado original');
+    showToast('Catálogo restablecido al estado original');
   }
 }
 
@@ -345,7 +345,7 @@ function loadPresetPack(packType, btnElement) {
 
   saveWardrobe();
   renderWardrobe('all');
-  showToast(`✓ Armario cargado (${wardrobe.length} prendas)`);
+  showToast(`Armario cargado (${wardrobe.length} prendas)`);
 }
 
 // Inicialización del catálogo en el arranque
@@ -431,7 +431,7 @@ function handleAddItem(event) {
   renderWardrobe('all');
 
   document.getElementById('add-item-form').reset();
-  showToast(`✓ Prenda "${name}" guardada`);
+  showToast(`Prenda "${name}" guardada`);
 }
 
 function deleteItem(id) {
@@ -439,7 +439,7 @@ function deleteItem(id) {
     wardrobe = wardrobe.filter(i => i.id !== id);
     saveWardrobe();
     renderWardrobe('all');
-    showToast('✓ Prenda eliminada');
+    showToast('Prenda eliminada');
   }
 }
 
@@ -451,7 +451,7 @@ function renderWardrobe(categoryFilter = 'all') {
   const filtered = categoryFilter === 'all' ? wardrobe : wardrobe.filter(i => i.category === categoryFilter);
 
   if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div style="font-size: 40px;">👕</div><p>No hay prendas en esta categoría.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><p>No hay prendas en esta categoría.</p></div>`;
     return;
   }
 
@@ -461,7 +461,7 @@ function renderWardrobe(categoryFilter = 'all') {
     card.style.cssText = 'background: var(--bg-surface); border: 1.5px solid var(--border-subtle); padding: 16px; border-radius: 16px; position: relative; display: flex; flex-direction: column; gap: 8px;';
     card.innerHTML = `
       <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Eliminar">✕</button>
-      <div style="font-size: 28px;">${CATEGORY_ICONS[item.category] || '👔'}</div>
+      <div style="font-size: 28px;">${CATEGORY_ICONS[item.category] || ''}</div>
       <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
       <div style="font-size: 11px; color: var(--text-muted);">${CATEGORY_LABELS[item.category]} • ${item.color}</div>
     `;
@@ -519,7 +519,7 @@ async function generateOutfits() {
   const container = document.getElementById('outfits-container');
   container.innerHTML = `
     <div class="empty-state" style="padding: 48px;">
-      <div style="font-size: 36px; animation: spin 1.2s infinite linear;">⚙️</div>
+      <div style="width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.15); border-top-color: var(--accent-cyan); border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto 16px;"></div>
       <h3 style="color: #fff; font-family: var(--font-display);">Calculando combinaciones...</h3>
       <p>Analizando abrigo térmico, formalidad y colores.</p>
     </div>
@@ -571,7 +571,7 @@ async function generateOutfits() {
           renderOutfits(generatedOutfits, OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
           const latencyVal = data.latencyMs || data.latency_ms;
           const latency = latencyVal ? ` (${latencyVal} ms)` : '';
-          showToast(`⚡ ${generatedOutfits.length} combinaciones generadas${latency}`);
+          showToast(`${generatedOutfits.length} combinaciones generadas${latency}`);
           refreshMetricsDashboard();
           return;
         }
@@ -596,7 +596,7 @@ async function generateOutfits() {
   candidateCombinations.sort((a, b) => b.score - a.score);
   generatedOutfits = candidateCombinations.slice(0, 4);
   renderOutfits(generatedOutfits, OCCASION_CONFIG[occasionKey].label, weatherInfo.label);
-  showToast('⚡ Combinaciones calculadas');
+  showToast('Combinaciones calculadas');
 }
 
 function evaluateAndPush(top, bottom, shoes, outerwear, targetFormality, weatherInfo, preferredStyle, list) {
@@ -710,14 +710,14 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       </div>
 
       <div class="reasoning-box">
-        <strong>💡 Justificación:</strong> ${outfit.reasoning}
+        <strong>Justificación:</strong> ${outfit.reasoning}
       </div>
 
       <!-- Desplegable Técnico Interno -->
       <div style="border-top: 1.5px solid rgba(255, 255, 255, 0.1); padding-top: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleAccordion('${techBodyId}', '${techArrowId}')">
           <span style="font-size: 13px; font-weight: 800; color: var(--accent-cyan); display: flex; align-items: center; gap: 6px;">
-            📊 Desglose de Compatibilidad Térmica & Formalidad
+            Desglose de Compatibilidad Térmica y Formalidad
           </span>
           <span id="${techArrowId}" class="accordion-arrow collapsed">▼</span>
         </div>
@@ -744,15 +744,15 @@ function renderOutfits(outfits, occasionLabel, weatherLabel) {
       <div class="outfit-feedback-bar">
         <span style="font-size: 12px; color: var(--text-dim); font-weight: 600;">¿Te convence este resultado?</span>
         <div class="feedback-buttons">
-          <button id="fb-like-${index}" class="btn-feedback ${currentFb && currentFb.rating === 'like' ? 'active-like' : ''}" onclick="submitFeedback(${index}, 'like')">👍 Me gusta</button>
-          <button id="fb-dislike-${index}" class="btn-feedback ${currentFb && currentFb.rating === 'dislike' ? 'active-dislike' : ''}" onclick="submitFeedback(${index}, 'dislike')">👎 Ajustar</button>
+          <button id="fb-like-${index}" class="btn-feedback ${currentFb && currentFb.rating === 'like' ? 'active-like' : ''}" onclick="submitFeedback(${index}, 'like')">Aprobar</button>
+          <button id="fb-dislike-${index}" class="btn-feedback ${currentFb && currentFb.rating === 'dislike' ? 'active-dislike' : ''}" onclick="submitFeedback(${index}, 'dislike')">Reajustar</button>
         </div>
       </div>
 
       <div class="card-actions">
-        <button class="btn-action btn-fav" onclick="toggleFavorite(${index})">⭐ Favorito</button>
-        <button class="btn-action" onclick="copyOutfitToClipboard(${index})">📋 Copiar</button>
-        <button class="btn-action" onclick="openOutfitModal(${index})">🔍 Detalle</button>
+        <button class="btn-action btn-fav" onclick="toggleFavorite(${index})">Favorito</button>
+        <button class="btn-action" onclick="copyOutfitToClipboard(${index})">Copiar</button>
+        <button class="btn-action" onclick="openOutfitModal(${index})">Detalle</button>
       </div>
     `;
 
@@ -796,7 +796,7 @@ async function submitFeedback(index, rating) {
   }
 
   refreshMetricsDashboard();
-  showToast(rating === 'like' ? '✓ Calificación registrada (Positiva)' : '✓ Sugerencia registrada para reajuste');
+  showToast(rating === 'like' ? 'Calificación registrada' : 'Sugerencia registrada');
 }
 
 // Ejecución de la suite de validación técnica
@@ -861,7 +861,7 @@ async function runLiveValidation() {
     if (progressBox) progressBox.style.display = 'none';
   }, 1200);
 
-  showToast('✓ Validación técnica completada: 100% aprobado');
+  showToast('Validación técnica completada: 100% de pruebas aprobadas');
 }
 
 function renderValidationResults(results) {
@@ -908,7 +908,7 @@ async function refreshMetricsDashboard() {
 
   const satElem = document.getElementById('kpi-satisfaction');
   const fbCountElem = document.getElementById('kpi-feedback-count');
-  if (satElem) satElem.innerText = `${satisfactionPct}% 👍`;
+  if (satElem) satElem.innerText = `${satisfactionPct}%`;
   if (fbCountElem) fbCountElem.innerText = `${totalFeedback} calificaciones registradas`;
 
   if (isBackendConnected) {
@@ -923,7 +923,7 @@ async function refreshMetricsDashboard() {
         if (affinityElem && avgAffinity > 0) affinityElem.innerText = `${avgAffinity}%`;
         if (latencyElem && avgLat > 0) latencyElem.innerText = `${avgLat} ms`;
         if (data.totalFeedback > 0) {
-          if (satElem) satElem.innerText = `${data.satisfactionRate}% 👍`;
+          if (satElem) satElem.innerText = `${data.satisfactionRate}%`;
           if (fbCountElem) fbCountElem.innerText = `${data.totalFeedback} calificaciones registradas`;
         }
       }
@@ -940,10 +940,10 @@ function toggleFavorite(index) {
   const exists = favoriteOutfits.some(f => f.top.name === outfit.top.name && f.bottom.name === outfit.bottom.name);
   if (exists) {
     favoriteOutfits = favoriteOutfits.filter(f => !(f.top.name === outfit.top.name && f.bottom.name === outfit.bottom.name));
-    showToast('⭐ Eliminado de Favoritos');
+    showToast('Eliminado de favoritos');
   } else {
     favoriteOutfits.push(outfit);
-    showToast('⭐ Guardado en Favoritos!');
+    showToast('Guardado en favoritos');
   }
   localStorage.setItem('styleai_favs', JSON.stringify(favoriteOutfits));
   updateBadges();
@@ -955,7 +955,7 @@ function renderFavorites() {
   container.innerHTML = '';
 
   if (favoriteOutfits.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div style="font-size: 40px;">⭐</div><p>No has guardado outfits favoritos aún.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><p>No has guardado outfits favoritos aún.</p></div>`;
     return;
   }
 
@@ -968,7 +968,7 @@ function renderFavorites() {
         <div class="match-badge">${outfit.score}% Match</div>
       </div>
       <div style="font-size: 13px; color: var(--text-main);">
-        👔 ${outfit.top.name} • 👖 ${outfit.bottom.name} • 👟 ${outfit.shoes.name}
+        ${outfit.top.name} • ${outfit.bottom.name} • ${outfit.shoes.name}
       </div>
     `;
     container.appendChild(card);
@@ -984,33 +984,33 @@ function openOutfitModal(index) {
   let modalHtml = `
     <div style="display: flex; flex-direction: column; gap: 16px;">
       <div style="background: rgba(168, 85, 247, 0.12); border: 1.5px solid rgba(168, 85, 247, 0.35); padding: 16px; border-radius: 14px;">
-        <strong style="color: #c084fc;">💡 Justificación Completa:</strong>
+        <strong style="color: #c084fc;">Justificación Completa:</strong>
         <p style="margin-top: 6px; font-size: 14px; color: #e2e8f0;">${outfit.reasoning}</p>
       </div>
 
       <h4 style="font-family: var(--font-display); font-size: 16px; color: #fff;">Prendas del Conjunto:</h4>
       <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
         <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <span>👔 <strong>Superior:</strong> ${outfit.top.name}</span>
+          <span><strong>Superior:</strong> ${outfit.top.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color}</span>
         </li>
         <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <span>👖 <strong>Inferior:</strong> ${outfit.bottom.name}</span>
+          <span><strong>Inferior:</strong> ${outfit.bottom.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color}</span>
         </li>
         <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <span>👟 <strong>Calzado:</strong> ${outfit.shoes.name}</span>
+          <span><strong>Calzado:</strong> ${outfit.shoes.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color}</span>
         </li>
         ${outfit.outerwear ? `
         <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-          <span>🧥 <strong>Abrigo:</strong> ${outfit.outerwear.name}</span>
+          <span><strong>Abrigo:</strong> ${outfit.outerwear.name}</span>
           <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color}</span>
         </li>` : ''}
       </ul>
 
       <button class="btn btn-primary" onclick="copyOutfitToClipboard(${index})" style="margin-top: 8px;">
-        📋 Copiar al Portapapeles
+        Copiar al Portapapeles
       </button>
     </div>
   `;
@@ -1025,7 +1025,7 @@ function closeModal(event) {
 }
 
 function openVideoModal() {
-  document.getElementById('modal-title').innerText = '🎥 Video Demostración del MVP (Hito 3)';
+  document.getElementById('modal-title').innerText = 'Video Demostración del MVP (Hito 3)';
   document.getElementById('modal-body').innerHTML = `
     <div style="text-align: center; padding: 10px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
       <h3 style="color: #fff; font-family: var(--font-display); font-size: 18px;">Demostración del MVP y Validación Técnica — Hito 3 (Diego Andrade)</h3>
@@ -1043,6 +1043,8 @@ function openVideoModal() {
 
       <div style="display: flex; gap: 12px;">
         <a href="../DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4" target="_blank" class="btn btn-primary" style="width: auto; padding: 10px 24px; text-decoration: none;">
+          Abrir Video en Pestaña Nueva
+        </a>
           ▶️ Abrir Video en Pestaña Nueva
         </a>
         <button class="btn btn-action" onclick="closeModal()" style="padding: 10px 20px;">

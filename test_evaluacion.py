@@ -199,7 +199,7 @@ def run_all_tests():
     pass_rate = round((passed / total) * 100, 1)
 
     for i, t in enumerate(tests, 1):
-        status = "✅ APROBADO" if t["passed"] else "❌ FALLIDO"
+        status = "[OK] APROBADO" if t["passed"] else "[FALLO] FALLIDO"
         print(f"[{i}/{total}] {t['name']:<32} {status}")
 
     print("-" * 65)
