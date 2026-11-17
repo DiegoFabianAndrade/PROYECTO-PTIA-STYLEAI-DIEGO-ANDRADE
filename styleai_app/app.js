@@ -1,4 +1,4 @@
-// Sample pre-loaded wardrobe items
+// Catálogo inicial de prendas predeterminadas
 const INITIAL_ITEMS = [
   { id: '1', name: 'Camisa Oxford Blanca', category: 'top', color: 'blanco', warmth: 2, formality: 4, style: 'elegante' },
   { id: '2', name: 'Camiseta Negra Básica', category: 'top', color: 'negro', warmth: 1, formality: 1, style: 'casual' },
@@ -83,7 +83,7 @@ function checkColorHarmony(c1, c2, c3) {
   return Math.min(100, score);
 }
 
-// Collapsible Accordion Card Toggle
+// Control de secciones colapsables (acordeón)
 function toggleAccordion(bodyId, arrowId) {
   const body = document.getElementById(bodyId);
   const arrow = document.getElementById(arrowId);
@@ -99,12 +99,12 @@ function toggleAccordion(bodyId, arrowId) {
   }
 }
 
-// Custom Accordion Dropdown Component (100% Contained, Zero Native Overflow)
+// Desplegables personalizados contenidos
 function toggleCustomDropdown(dropdownId) {
   const dropdown = document.getElementById(dropdownId);
   if (!dropdown) return;
   
-  // Close other dropdowns first
+  // Cierra otros desplegables activos
   document.querySelectorAll('.custom-dropdown').forEach(d => {
     if (d !== dropdown) d.classList.remove('open');
   });
@@ -129,14 +129,14 @@ function selectCustomOption(type, value, labelText, dropdownId) {
   dropdown.classList.remove('open');
 }
 
-// Global click outside listener for dropdowns
+// Cierre al hacer clic fuera del desplegable
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.custom-dropdown')) {
     document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
   }
 });
 
-// Toast Feedback System
+// Notificaciones visuales en pantalla
 function showToast(msg) {
   const container = document.getElementById('toast-container');
   const toast = document.createElement('div');
@@ -149,7 +149,7 @@ function showToast(msg) {
   }, 2500);
 }
 
-// Mobbin Trending Outfits Carousel
+// Carrusel de combinaciones destacadas
 function renderTrendingCarousel() {
   const track = document.getElementById('carousel-track');
   if (!track) return;
@@ -186,7 +186,7 @@ function renderTrendingCarousel() {
   });
 }
 
-// Mobbin "🎲 Sorpréndeme" Random Outfit Generator
+// Generador aleatorio de combinaciones ("Sorpréndeme")
 function generateSurpriseOutfit() {
   const weatherKeys = Object.keys(WEATHER_CONFIG);
   const occasionKeys = Object.keys(OCCASION_CONFIG);
@@ -207,7 +207,7 @@ function generateSurpriseOutfit() {
   showToast(`🎲 Outfit Sorpresa generado para ${OCCASION_CONFIG[randomOccasion].label}!`);
 }
 
-// Live Search Filter
+// Filtro de búsqueda en tiempo real
 function handleLiveSearch(query) {
   const q = query.toLowerCase().trim();
   if (!q) {
@@ -240,7 +240,7 @@ function handleLiveSearch(query) {
   }
 }
 
-// Visual Pills Selector
+// Selector de opciones rápidas por píldoras
 function selectPillOption(type, value, element) {
   const container = element.parentElement;
   container.querySelectorAll('.visual-pill').forEach(p => p.classList.remove('active'));
@@ -253,7 +253,7 @@ function selectPillOption(type, value, element) {
   }
 }
 
-// Backend Connection Check
+// Comprobación de estado del servicio API backend
 async function checkBackendConnection(manual = false) {
   const pill = document.getElementById('backend-status-pill');
   const text = document.getElementById('backend-status-text');
@@ -280,7 +280,7 @@ async function checkBackendConnection(manual = false) {
       return true;
     }
   } catch (e) {
-    // API offline
+    // Servicio API desconectado
   }
 
   isBackendConnected = false;
@@ -292,7 +292,7 @@ async function checkBackendConnection(manual = false) {
   return false;
 }
 
-// Wardrobe Backup & Restore
+// Respaldo y restauración del catálogo de prendas
 function exportWardrobe() {
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(wardrobe, null, 2));
   const dlAnchorElem = document.createElement('a');
@@ -335,7 +335,7 @@ function resetToDefaultWardrobe() {
   }
 }
 
-// Preset Loader
+// Carga de paquetes y cápsulas de estilo preconfiguradas
 function loadPresetPack(packType, btnElement) {
   if (packType === 'full') {
     wardrobe = [...INITIAL_ITEMS];
@@ -348,7 +348,7 @@ function loadPresetPack(packType, btnElement) {
   showToast(`✓ Armario cargado (${wardrobe.length} prendas)`);
 }
 
-// Init Wardrobe
+// Inicialización del catálogo en el arranque
 function initWardrobe() {
   const saved = localStorage.getItem('styleai_wardrobe');
   if (saved) {
@@ -527,7 +527,7 @@ async function generateOutfits() {
 
   await new Promise(r => setTimeout(r, 200));
 
-  if (engine === 'llm' || isBackendConnected) {
+  if (engine === 'api' || engine === 'llm' || isBackendConnected) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3500);
@@ -799,7 +799,7 @@ async function submitFeedback(index, rating) {
   showToast(rating === 'like' ? '✓ Calificación registrada (Positiva)' : '✓ Sugerencia registrada para reajuste');
 }
 
-// Live Validation Suite Runner
+// Ejecución de la suite de validación técnica
 async function runLiveValidation() {
   const btn = document.getElementById('btn-run-validation');
   const progressBox = document.getElementById('validation-progress-box');
@@ -838,7 +838,7 @@ async function runLiveValidation() {
   }
 
   if (!results) {
-    // Local evaluation results
+    // Resultados locales de contingencia
     results = {
       pass_rate: '100%',
       passed: 5,

@@ -1,13 +1,10 @@
 /* 
-  StyleAI — Master High-Contrast & Dynamic Interactive Design System
-  - Ultra High Contrast Palette: Obsidian Dark (#03050c) & Pitch Slate Cards (#0f172a)
-  - Bold Object Sizing & Visual Hierarchy
-  - Interactive Accordions & Custom Contained Dropdowns
-  - Glowing Micro-animations & Mobbin Aesthetics
+  StyleAI — Sistema de diseño y hojas de estilo
+  Paleta de alto contraste, tipografía, componentes interactivos y animaciones
 */
 
 :root {
-  /* Ultra High Contrast Color Tokens */
+  /* Paleta de colores y tokens de diseño */
   --bg-dark: #03050d;
   --bg-card: #0d1527;
   --bg-card-alt: #131f37;
@@ -33,7 +30,7 @@
   --text-muted: #f1f5f9;
   --text-dim: #cbd5e1;
   
-  /* Sizing Grid & Hierarchy */
+  /* Dimensiones y jerarquía espacial */
   --space-xs: 12px;
   --space-sm: 20px;
   --space-md: 28px;
@@ -84,7 +81,7 @@ body {
   gap: var(--space-md);
 }
 
-/* Header with Prominent Logo and Dynamic Search */
+/* Encabezado principal y barra superior */
 .app-header {
   position: sticky;
   top: 16px;
@@ -146,7 +143,7 @@ body {
   gap: 18px;
 }
 
-/* Search Box */
+/* Buscador de prendas */
 .search-box {
   position: relative;
   display: flex;
@@ -180,7 +177,7 @@ body {
   pointer-events: none;
 }
 
-/* Mobbin Hero Carousel - Anti-clipping padding */
+/* Carrusel de combinaciones destacadas */
 .carousel-section {
   display: flex;
   flex-direction: column;
@@ -230,7 +227,7 @@ body {
   max-width: 100%;
 }
 
-/* Surprise Button */
+/* Botón de recomendación rápida */
 .btn-surprise {
   background: linear-gradient(135deg, var(--accent-amber), var(--accent-pink));
   color: #ffffff;
@@ -253,7 +250,7 @@ body {
   box-shadow: 0 12px 35px rgba(255, 42, 109, 0.7);
 }
 
-/* Main Grid Layout */
+/* Estructura de cuadrícula principal */
 .main-grid {
   display: grid;
   grid-template-columns: minmax(380px, 440px) 1fr;
@@ -281,7 +278,7 @@ body {
   width: 100%;
 }
 
-/* High Contrast Cards & Desplegables */
+/* Tarjetas y módulos desplegables */
 .card {
   background: var(--bg-card);
   backdrop-filter: blur(32px);
@@ -367,7 +364,7 @@ body {
   display: none;
 }
 
-/* Custom Accordion Dropdown Component (100% Contained, Zero Native Overflow) */
+/* Menús desplegables contenidos */
 .custom-dropdown {
   position: relative;
   width: 100%;
@@ -481,7 +478,7 @@ body {
   box-shadow: 0 6px 24px rgba(176, 87, 255, 0.5), 0 0 0 1.5px #ffffff;
 }
 
-/* Form Controls */
+/* Controles de formulario e inputs */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -517,7 +514,7 @@ body {
   box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
 }
 
-/* Buttons */
+/* Botones de acción */
 .btn {
   width: 100%;
   box-sizing: border-box;
@@ -546,7 +543,7 @@ body {
   box-shadow: 0 16px 42px rgba(255, 42, 109, 0.65);
 }
 
-/* Prominent KPI Stats Banner */
+/* Indicadores clave del armario */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -592,7 +589,7 @@ body {
   font-weight: 700;
 }
 
-/* Mobbin Outfit Cards */
+/* Tarjetas de combinaciones recomendadas */
 .feed-grid {
   display: flex;
   flex-direction: column;
@@ -713,7 +710,7 @@ body {
   box-shadow: 0 6px 22px rgba(255, 42, 109, 0.6);
 }
 
-/* Modal Overlay */
+/* Ventana modal */
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -753,7 +750,7 @@ body {
   transform: scale(1);
 }
 
-/* Toast */
+/* Notificaciones flotantes */
 .toast-container {
   position: fixed;
   bottom: 32px; right: 32px;
@@ -800,7 +797,7 @@ body {
   margin-top: var(--space-xl);
 }
 
-/* Live Backend Status Pill */
+/* Indicador de estado del backend */
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -858,7 +855,7 @@ body {
   background: var(--accent-cyan);
 }
 
-/* Outfit Card Feedback Actions */
+/* Acciones de calificación de usuario */
 .outfit-feedback-bar {
   display: flex;
   align-items: center;
@@ -907,7 +904,7 @@ body {
   color: var(--accent-pink);
 }
 
-/* Metrics & Technical Validation (Hito 3) */
+/* Panel de métricas y validación técnica (Hito 3) */
 .metrics-panel {
   background: var(--bg-card);
   border: 2px solid var(--border-subtle);
