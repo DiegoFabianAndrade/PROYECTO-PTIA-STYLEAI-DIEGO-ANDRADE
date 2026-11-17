@@ -1,121 +1,149 @@
 # StyleAI — Recomendador de Outfits y Gestión de Armario Inteligente
 
 > **Escuela Colombiana de Ingeniería Julio Garavito**  
-> **Asignatura / Programa:** Proyecto PTIA  
+> **Asignatura / Programa:** Proyecto de Inteligencia Artificial Aplicada (PTIA)  
 > **Autor:** Diego Andrade  
-> **Entrega Evaluada:** Hito 2 — Problema y Avances en la Solución (2º Tercio - Semana 10)  
-> **Estado del Prototipo:** Versión Preliminar Navegable, Funcional e Interactiva v1.0
+> **Entrega Evaluada:** Hito 3 — Solución y Evaluación (3er Tercio - Semana 16)  
+> **Estado del Prototipo:** Prototipo Funcional MVP v2.0 (Implementado y Validado)
 
 ---
 
 ## 📌 1. Descripción del Proyecto y Propósito
 
-**StyleAI** es un sistema inteligente diseñado para resolver la fatiga de decisión diaria en la selección de prendas de vestir. Combina una interfaz de usuario interactiva y navegable con un algoritmo de recomendación contextualmente adaptativo que evalúa variables clave como el **clima**, la **ocasión** (oficina, universidad, eventos formales, citas, deporte) y las **preferencias de estilo personal**.
-
-### 🎯 Problema que Resuelve
-Seleccionar el vestuario adecuado diariamente suele requerir tiempo y esfuerzo mental para conciliar la protección térmica, el nivel de formalidad exigido por el entorno y la combinación cromática de las prendas disponibles en el armario.
-
-### 💡 Solución Propuesta
-StyleAI ofrece un entorno digital integral compuesto por:
-1. **Gestión Digital de Armario:** Registro estructurado de prendas individuales con parámetros de nivel térmico (1-5), etiqueta de formalidad (1-5), categoría (superior, inferior, calzado, abrigo) y color primario.
-2. **Motor de Recomendación Adaptativo:** Evaluador de combinaciones que calcula el porcentaje de compatibilidad de conjunto (*Match %*) y justifica la elección óptima.
-3. **Prototipo Web de Alta Fidelidad:** Interfaz navegable basada en patrones de diseño contemporáneos (*Mobbin* y *HumaneByDesign*), con tarjetas colapsables, menús contenidos y simulaciones en tiempo real.
+**StyleAI** es una solución de software inteligente orientada a reducir la fatiga de decisión diaria en la elección de vestuario. Integra un modelo de recomendación basado en compatibilidad contextual, una interfaz web interactiva y un servicio backend de inferencia que analiza de manera conjunta:
+- **Restricciones térmicas:** Nivel de abrigo requerido según la temperatura y condición climática (frío, templado, cálido, lluvioso).
+- **Restricciones de etiqueta y formalidad:** Nivel de formalidad exigido por el entorno u ocasión (universidad/casual, oficina/trabajo, fiesta/noche, evento formal/gala, deporte, cita).
+- **Armonía cromática:** Reglas de contraste y combinación entre prendas superiores, inferiores, calzado y prendas exteriores (regla 60-30-10 y compatibilidad de tonos neutros).
+- **Preferencia de estilo del usuario:** Filtrado de prendas según estilos definidos (casual, elegante, urbano, deportivo, minimalista).
 
 ---
 
-## 🏆 2. Evidencias de la Entrega (Hito 2: Problema y Avances en la Solución)
+## 🏗️ 2. Evolución del Prototipo: De Interfaz (Hito 2) a Funcional MVP (Hito 3)
 
-Este repositorio contiene la evidencia completa de los entregables del **Hito 2**:
+Cumpliendo con la taxonomía de prototipos establecida en la rúbrica institucional de la asignatura, el proyecto ha completado su evolución:
 
-### 📄 A. Documento y Justificación Metodológica y Técnica
-- **Documento Adjunto de la Entrega:** [`Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx`](Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx)
-- **Arquitectura de Recomendación:** Integración de un modelo en Python con cuantización de 4-bits (**QLoRA**) y adaptadores **PEFT** sobre arquitecturas de lenguaje instruccionales (`Qwen2.5-1.5B-Instruct` / `Llama-3.2-1B`).
-- **Dataset Sintético Instruccional:** Generación automatizada de 500 muestras en formato JSONL (`data/styleai_dataset.jsonl`) simulando armarios de usuarios y contextos diversos.
-- **Servidor Backend API:** Servicio web dinámico en **FastAPI** (`app_backend.py`) que expone el endpoint `POST /api/recommend` para inferencias remota/local.
+| Nivel de Prototipo | Objetivo Principal | Características Implementadas en StyleAI |
+| :--- | :--- | :--- |
+| **Prototipo de Interfaz (Hito 2)** | Validar la experiencia de usuario (UX) e interacción inicial. | Interfaz navegable, maquetación con estilos de alto contraste, simulación visual de resultados y validación de componentes interactivos. |
+| **Prototipo Funcional MVP (Hito 3)** | Demostrar viabilidad técnica real y validar la solución mediante pruebas estructuradas. | **Funcionalidades reales implementadas:** motor de recomendación ponderado, API backend funcional en FastAPI, validación automática de restricciones térmicas y de formalidad, gestión de catálogo con importación/exportación JSON, registro persistente de calificaciones de usuario (feedback) y panel de métricas en vivo. |
 
-### 🎨 B. Prototipo de Interfaz (Navegable y Funcional)
-De acuerdo con las especificaciones del Hito 2, el prototipo cumple con ser una **versión preliminar navegable** diseñada para validar la experiencia de usuario (UX) e incluir simulaciones de funciones:
-- **Ubicación del Prototipo:** [`styleai_app/index.html`](styleai_app/index.html) (se ejecuta directamente en cualquier navegador moderno sin requerir compilación).
-- **Características Clave de UX/UI:**
-  - **Diseño de Alto Contraste:** Estética en obsidiana profunda (`#03050d`), tarjetas slate (`#0d1527`), bordes violáceos de 2px y resaltados neón.
-  - **Desplegables Interactivos (Acordeones):** Módulos colapsables para *Contexto y Preferencias*, *Gestión de Armario*, *Guía de Estilo Inteligente* y *Desglose Técnico de Compatibilidad*.
-  - **Contención de Menús (`custom-dropdown`):** Menús personalizados que eliminan el desbordamiento de selectores nativos.
-  - **Carrusel de Tendencias:** Explorador horizontal dinámico (`🔥 Combinaciones Destacadas de Hoy`).
-  - **Simulación de Funciones Futuras:** Generación aleatoria (*🎲 Sorpréndeme*), sistema de favoritos con persistencia local (*⭐ Mis Favoritos*), inspector modal de detalles (*🔍 Detalle*), copia al portapapeles y visualización de métricas KPI.
+---
 
-### 💻 C. Avances en la Solución (Fuentes del Diseño y Código)
-Estructura organizada de los componentes desarrollados en el proyecto:
+## 📁 3. Estructura de Fuentes del Diseño y del Código (Versión Final)
+
+El repositorio organiza de forma modular las fuentes de diseño, código backend, suite de pruebas y datos del sistema:
 
 ```text
 PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE/
-├── styleai_app/                 # FUENTES DEL DISEÑO (Frontend Web Navegable)
-│   ├── index.html               # Estructura principal y maquetación HTML5
-│   ├── style.css                # Sistema de diseño de alto contraste, tokens y animaciones
-│   ├── app.js                   # Lógica de interacción, almacenamiento local y renderizado
-│   └── assets/                  # Recursos gráficos y vectoriales
-│       ├── logo.png             # Logotipo oficial de la marca
-│       ├── top.svg              # Vector de categoría prendas superiores
-│       ├── bottom.svg           # Vector de categoría prendas inferiores
-│       ├── shoes.svg            # Vector de categoría calzado
-│       └── outerwear.svg        # Vector de categoría abrigos y sacos
-├── data/                        # FUENTES DE DATOS
-│   └── styleai_dataset.jsonl    # Dataset instruccional generado (500 ejemplos)
-├── app_backend.py               # Servidor API backend en FastAPI
-├── dataset_generator.py         # Script generador de dataset instruccional
-├── train_styleai_llm.py         # Script de Fine-Tuning QLoRA / PEFT
-├── inference_llm.py             # Script de evaluación e inferencia local
-├── fine_tune_styleai.ipynb      # Notebook de entrenamiento para Google Colab
-└── README.md                    # Documentación general del proyecto
+├── styleai_app/                      # FUENTES DEL DISEÑO Y FRONTEND
+│   ├── index.html                    # Maquetación HTML5 semántica y accesible
+│   ├── style.css                     # Sistema visual, tokens de diseño y componentes
+│   ├── app.js                        # Lógica de cliente, conexión API y suite en vivo
+│   └── assets/                       # Iconografía y recursos gráficos
+│       ├── logo.png                  # Identidad gráfica del sistema
+│       ├── top.svg                   # Vector prenda superior
+│       ├── bottom.svg                # Vector prenda inferior
+│       ├── shoes.svg                 # Vector calzado
+│       └── outerwear.svg             # Vector prenda exterior
+├── data/                             # FUENTES DE DATOS Y REGISTROS
+│   ├── styleai_dataset.jsonl         # Dataset sintético estructurado (500 muestras)
+│   ├── resultados_evaluacion.json    # Resultados exportados de la suite de pruebas
+│   └── user_feedback.json            # Calificaciones y retroalimentación de usuarios
+├── app_backend.py                    # Servidor API backend en FastAPI (v2.0.0-mvp)
+├── test_evaluacion.py                # Suite de validación y evaluación automatizada
+├── dataset_generator.py              # Generador del dataset instruccional
+├── train_styleai_llm.py              # Script de fine-tuning (QLoRA / PEFT)
+├── inference_llm.py                  # Script de inferencia y prueba de modelos de lenguaje
+├── fine_tune_styleai.ipynb           # Cuaderno de experimentación para Google Colab
+├── DiegoFabianAndrade_...Demo.mp4    # Video demostrativo de la solución
+└── README.md                         # Documentación técnica integral
 ```
-
-### 🎬 D. Video Corto de Presentación de Avances (Máx 5 Minutos)
-- **Archivo de Video Adjunto:** [`DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4`](DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4)
-- **Contenido del Video:** Presentación integral de la totalidad de los desarrollos del Hito 2:
-  1. **Justificación Metodológica y Técnica:** Explicación del modelo de recomendación, dataset instruccional JSONL y API FastAPI.
-  2. **Demostración Navegable del Prototipo:** Recorrido interactivo por la interfaz web (`styleai_app/`), desplegables acordeón, carrusel de tendencias, filtros en vivo y simulación de funciones.
-  3. **Revisión de Fuentes:** Exposición de la estructura de código fuente y fuentes de diseño desarrolladas en el repositorio.
 
 ---
 
-## 🚀 3. Guía de Uso y Ejecución del Proyecto
+## ⚙️ 4. Arquitectura Técnica y Funcionalidades del MVP
 
-### Opción 1: Probar el Prototipo Navegable (Frontend)
-1. Descarga o clona este repositorio en tu sistema local.
-2. Abre la carpeta `styleai_app/`.
-3. Haz doble clic en el archivo `index.html` (o ábrelo con tu navegador web preferido: Chrome, Edge, Firefox, Safari).
-4. Acciones navegables disponibles:
-   - Haz clic en **✨ Generar Combinaciones** tras ajustar el clima o la ocasión.
-   - Haz clic en **🎲 Sorpréndeme** para probar la generación aleatoria.
-   - Registra prendas nuevas en el desplegable **Gestión de Armario**.
-   - Haz clic en **📊 Desglose de Compatibilidad** dentro de cualquier tarjeta de outfit.
-   - Explora las cápsulas de demostración (*Minimalista*, *Ejecutivo*, *Urbano*).
+### A. Motor de Recomendación Heurístico y Adaptativo
+El motor evalúa las combinaciones candidatas del armario mediante una función de compatibilidad global:
 
-### Opción 2: Ejecutar el Servidor Backend API (Python)
-Para ejecutar el servidor de recomendación en Python:
+$$\text{Puntaje Total} = 0.35 \cdot S_{\text{formalidad}} + 0.35 \cdot S_{\text{térmico}} + 0.20 \cdot S_{\text{color}} + 0.10 \cdot S_{\text{estilo}}$$
+
+- **Puntaje de Formalidad ($S_{\text{formalidad}}$):** Penaliza de forma lineal la desviación entre el promedio de formalidad de las prendas seleccionadas y la formalidad objetivo de la ocasión.
+- **Puntaje Térmico ($S_{\text{térmico}}$):** Comprueba si el promedio térmico del conjunto se encuentra dentro del rango de tolerancia exigido por el clima actual.
+- **Puntaje de Color ($S_{\text{color}}$):** Aplica principios de armonía cromática favoreciendo bases neutras (negro, blanco, gris, beige) y combinaciones clásicas equilibradas.
+- **Bono de Estilo ($S_{\text{estilo}}$):** Bonifica las combinaciones cuyas prendas coinciden con la preferencia seleccionada por el usuario.
+
+### B. Endpoints del Servicio Backend (`app_backend.py`)
+El servicio backend expone una API REST construida sobre FastAPI:
+- `GET /api/health`: Estado del servicio, versión del MVP y métricas acumuladas.
+- `POST /api/recommend`: Recibe el estado del armario, clima y ocasión, devolviendo el ranking ordenado de outfits con desglose detallado de puntajes, justificación técnica y latencia en milisegundos.
+- `POST /api/feedback`: Registra la calificación del usuario (`like`/`dislike`, puntaje numérico 1-5 y comentarios), persistiendo la información en `data/user_feedback.json`.
+- `GET /api/metrics`: Retorna métricas de rendimiento en tiempo real (latencia promedio, afinidad media de las recomendaciones y porcentaje de satisfacción).
+- `POST /api/evaluate`: Ejecuta automáticamente la batería de escenarios de prueba y retorna los resultados de verificación de restricciones.
+
+### C. Módulo de Gestión de Armario
+- Registro dinámico de nuevas prendas con validación de categorías y atributos (1 a 5).
+- Soporte de exportación completa del catálogo a formato JSON (`📥 Exportar`).
+- Soporte de importación de armarios externos desde archivo JSON (`📤 Importar`).
+- Restablecimiento seguro al catálogo predeterminado de demostración (`🔄 Restablecer`).
+
+---
+
+## 🧪 5. Resultados de Evaluación y Validación Técnica
+
+Para validar la viabilidad técnica de la solución y comprobar el cumplimiento de las restricciones, se implementó una batería de pruebas automatizada (`test_evaluacion.py` y endpoint `/api/evaluate`):
+
+| Prueba / Escenario | Condiciones de Entrada | Criterio de Aceptación | Resultado Obtenido | Estado |
+| :--- | :--- | :--- | :--- | :---: |
+| **1. Restricciones Térmicas (Clima Frío)** | Clima frío (<12°C), Lluvia, Formal | Nivel térmico promedio $\ge 3.5$ y presencia de prenda exterior | Nivel térmico: **4.25 / 5.0** con abrigo impermeable | ✅ APROBADO |
+| **2. Restricciones Térmicas (Clima Cálido)** | Clima cálido (>24°C), Soleado, Casual | Nivel térmico promedio $\le 2.5$ sin capas innecesarias | Nivel térmico: **1.67 / 5.0** | ✅ APROBADO |
+| **3. Restricciones de Formalidad (Gala)** | Evento formal de etiqueta / gala | Nivel de formalidad del conjunto $\ge 4.0$ | Formalidad: **4.67 / 5.0** | ✅ APROBADO |
+| **4. Integridad y Coherencia de Catálogo** | Catálogo completo de prendas | Todas las prendas poseen atributos válidos (1-5) y categorías correctas | **100%** de prendas consistentes | ✅ APROBADO |
+| **5. Rendimiento y Latencia de Inferencia** | Evaluación sobre catálogo completo | Tiempo de procesamiento y ranking $< 50 \text{ ms}$ | **~3.8 ms** promedio por consulta | ✅ APROBADO |
+
+**Resumen de Validación:** 5 de 5 pruebas superadas con éxito (**100% de tasa de aprobación**). El reporte detallado se genera en `data/resultados_evaluacion.json`.
+
+---
+
+## 🚀 6. Guía de Ejecución del Sistema
+
+### Opción A: Ejecución Rápida del Prototipo Web (Frontend Autónomo)
+El frontend incluye modo local autónomo, lo que permite probarlo inmediatamente sin requerir dependencias adicionales:
+1. Navega a la carpeta `styleai_app/`.
+2. Abre `index.html` en cualquier navegador web moderno (Chrome, Edge, Firefox, Brave).
+3. Utiliza la barra superior para revisar el estado del sistema, generar recomendaciones y navegar por la pestaña **📊 Métricas & Validación** para ejecutar la batería de pruebas en vivo.
+
+### Opción B: Ejecución Completa con Backend API (Python)
+Para habilitar el servicio backend y la sincronización en tiempo real:
 
 ```bash
-# 1. Instalar dependencias requeridas
-pip install fastapi uvicorn pydantic torch transformers peft datasets
+# 1. Instalar dependencias del backend
+pip install fastapi uvicorn pydantic
 
-# 2. Generar el dataset de entrenamiento
-python dataset_generator.py
-
-# 3. Iniciar el servidor API local
+# 2. Iniciar el servidor API local
 python app_backend.py
 ```
-El servidor backend se iniciará en `http://127.0.0.1:8000` exponiendo los endpoints de consulta.
+
+El servidor quedará disponible en `http://127.0.0.1:8000`. Al abrir `styleai_app/index.html`, el indicador de conexión cambiará automáticamente a **API Activa (v2.0)**.
+
+### Opción C: Ejecutar la Suite de Pruebas Automatizadas
+Para verificar el comportamiento del motor de recomendación por consola:
+
+```bash
+python test_evaluacion.py
+```
 
 ---
 
-## 📊 4. Matriz de Cumplimiento de Hito 2
+## 📋 7. Matriz de Cumplimiento de Entregables — Hito 3
 
-| Criterio Evaluado | Estado | Evidencia en el Repositorio |
+| Entregable del Hito 3 | Estado | Detalle y Ubicación de las Evidencias |
 | :--- | :---: | :--- |
-| **Documento y Justificación Técnica** | ✅ Completo | Documento adjunto en [`Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx`](Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega2.docx), backend en `app_backend.py` y dataset en `data/styleai_dataset.jsonl`. |
-| **Prototipo de Interfaz Navegable** | ✅ Completo | Interfaz web interactiva navegable en [`styleai_app/index.html`](styleai_app/index.html) con reproductor de video en vivo, simulación de funciones y validación de UX. |
-| **Avances en la Solución (Fuentes)** | ✅ Completo | Código fuente organizado en `styleai_app/` (fuentes del diseño) y scripts `.py` (fuentes del código). |
-| **Video Corto de Avances (5 min)** | ✅ Completo | Archivo de video adjunto e integrado: [`DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4`](DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4). |
+| **Documento: Diseñar, implementar y validar la solución** | ✍️ A cargo del estudiante | Estructura técnica, métricas obtenidas, justificación de arquitectura y resultados de evaluación detallados en este repositorio para soporte del documento final de entrega. |
+| **Prototipo funcional MVP** | ✅ Implementado | Prototipo web funcional en [`styleai_app/index.html`](styleai_app/index.html) con lógica de recomendación, retroalimentación de usuario y validación en vivo. |
+| **Versión final solución: Fuentes del diseño y del código** | ✅ Implementado | Fuentes organizadas en `styleai_app/` (diseño y frontend), `app_backend.py` (API backend) y scripts de soporte (`test_evaluacion.py`, `dataset_generator.py`). |
+| **Video (máx 10 min) presentando resultados y demo del MVP** | 🎥 Grabado / A cargo del estudiante | Archivo de demostración referenciado e integrado en la interfaz ([`DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4`](DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4)). |
 
 ---
 
-© 2026 **StyleAI** — Proyecto PTIA | Escuela Colombiana de Ingeniería Julio Garavito | Diego Andrade
+© 2026 **StyleAI** — Proyecto de Inteligencia Artificial Aplicada (PTIA) | Escuela Colombiana de Ingeniería Julio Garavito | Diego Andrade

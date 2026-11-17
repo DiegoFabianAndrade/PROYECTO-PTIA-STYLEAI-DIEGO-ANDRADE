@@ -1,0 +1,125 @@
+{
+  "timestamp": 1794943742.770703,
+  "title": "Evaluación de Desempeño y Validación Técnica StyleAI MVP",
+  "hito": "Hito 3 - Solución y Evaluación",
+  "totalTests": 5,
+  "passed": 5,
+  "passRate": 100.0,
+  "tests": [
+    {
+      "name": "Restricciones Térmicas",
+      "passed": true,
+      "details": [
+        {
+          "clima": "frio",
+          "targetWarmth": 4,
+          "avgWarmth": 3.7,
+          "diff": 0.3,
+          "score": 89,
+          "passed": true
+        },
+        {
+          "clima": "templado",
+          "targetWarmth": 3,
+          "avgWarmth": 2.7,
+          "diff": 0.3,
+          "score": 92,
+          "passed": true
+        },
+        {
+          "clima": "calido",
+          "targetWarmth": 1,
+          "avgWarmth": 1.7,
+          "diff": 0.7,
+          "score": 86,
+          "passed": true
+        },
+        {
+          "clima": "lluvioso",
+          "targetWarmth": 5,
+          "avgWarmth": 3.7,
+          "diff": 1.3,
+          "score": 80,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Restricciones de Formalidad",
+      "passed": true,
+      "details": [
+        {
+          "ocasion": "trabajo",
+          "targetFormality": 4,
+          "avgFormality": 4.0,
+          "diff": 0.0,
+          "score": 92,
+          "passed": true
+        },
+        {
+          "ocasion": "formal",
+          "targetFormality": 5,
+          "avgFormality": 4.8,
+          "diff": 0.2,
+          "score": 86,
+          "passed": true
+        },
+        {
+          "ocasion": "casual",
+          "targetFormality": 2,
+          "avgFormality": 2.0,
+          "diff": 0.0,
+          "score": 92,
+          "passed": true
+        },
+        {
+          "ocasion": "deporte",
+          "targetFormality": 1,
+          "avgFormality": 1.7,
+          "diff": 0.7,
+          "score": 89,
+          "passed": true
+        },
+        {
+          "ocasion": "fiesta",
+          "targetFormality": 3,
+          "avgFormality": 3.0,
+          "diff": 0.0,
+          "score": 93,
+          "passed": true
+        },
+        {
+          "ocasion": "cita",
+          "targetFormality": 4,
+          "avgFormality": 4.0,
+          "diff": 0.0,
+          "score": 92,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "Consistencia de Catálogo",
+      "passed": true,
+      "totalEvaluated": 36,
+      "inconsistencies": 0,
+      "integrityRate": 100.0
+    },
+    {
+      "name": "Armonía de Colores",
+      "passed": true,
+      "scoreBlancoNegro": 100,
+      "scoreNeutros": 90,
+      "scoreContraste": 80
+    },
+    {
+      "name": "Rendimiento y Latencia",
+      "passed": true,
+      "iterations": 50,
+      "avgLatencyMs": 2.27,
+      "maxLatencyMs": 3.92,
+      "minLatencyMs": 1.0,
+      "targetMaxMs": 50.0
+    }
+  ]
+}
