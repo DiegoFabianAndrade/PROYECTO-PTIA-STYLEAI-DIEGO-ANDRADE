@@ -60,6 +60,7 @@ def main():
             p.text = ""
             print("Limpia linea de segundo estudiante")
 
+    # Contenido calibrado: tono de estudiante de ingeniería, claro, completo y sin palabras rimbombantes
     SECCIONES = {
         "Introducción": {
             "preguntas": [
@@ -67,25 +68,25 @@ def main():
                     "pregunta": "a. ¿Cuáles serían tres problemas que les interesaría resolver?",
                     "items": [
                         (
-                            "1. Coordinación heurística y asistida de vestuario diario (StyleAI):",
-                            "El dilema cotidiano de selección y emparejamiento de prendas personales bajo múltiples restricciones simultáneas de entorno (condiciones meteorológicas variables como el clima frío y cambiante de Bogotá), requerimientos sociales o institucionales (niveles de formalidad y etiqueta según la actividad) y preferencias armónicas (teoría del color y coherencia de estilo). La sobrecarga cognitiva y la fatiga por toma de decisiones (decision fatigue) reducen la eficiencia en las primeras horas del día. A menudo, las personas recurren sistemáticamente a las mismas combinaciones conocidas por falta de tiempo para experimentar alternativas, dejando en desuso la mayor parte de su armario personal."
+                            "1. Recomendación y combinación inteligente de ropa diaria (StyleAI):",
+                            "La dificultad que tenemos muchas personas a diario al momento de escoger y combinar la ropa que ya tenemos en el armario. Este problema se complica por el clima cambiante y frío de ciudades como Bogotá, la ocasión a la que vamos a asistir (universidad, trabajo u ocasiones formales) y las reglas básicas de combinación de colores. La falta de tiempo e indecisión en las mañanas hace que terminemos usando siempre las mismas combinaciones de ropa conocidas, dejando olvidada la gran mayoría de prendas que tenemos guardadas."
                         ),
                         (
-                            "2. Subutilización y baja visibilidad del inventario textil doméstico:",
-                            "La acumulación desorganizada de ropa en hogares urbanos, donde una fracción representativa del armario (a menudo superior al 65%) permanece olvidada o archivada en el fondo de cajones y percheros. Esto genera patrones de compra redundantes, adquisición innecesaria de prendas análogas y fomento de un consumo textil poco sostenible, agravando el impacto ambiental del hiperconsumo textil (fast fashion)."
+                            "2. Subutilización de la ropa en el armario personal:",
+                            "La acumulación desordenada de prendas en casa, donde más del 60% de la ropa que una persona tiene se queda guardada en el fondo del clóset durante meses sin usarse. Esto provoca que la gente compre ropa parecida sin necesidad, gastando dinero de más y fomentando el consumo innecesario de moda rápida (fast fashion)."
                         ),
                         (
-                            "3. Planificación y optimización de despensa doméstica para mitigación del desperdicio alimentario:",
-                            "La gestión ineficiente de ingredientes perecederos en la cocina doméstica, donde la falta de sugerencias de recetas basadas en la disponibilidad estricta de insumos existentes provoca compras no planificadas, descomposición de alimentos y un impacto económico y ambiental negativo derivado del descarte evitable."
+                            "3. Aprovechamiento de alimentos y despensa en el hogar:",
+                            "El problema cotidiano de no saber qué cocinar con los ingredientes que ya están disponibles en la nevera o despensa, lo que muchas veces termina en compras duplicadas en el supermercado y comida que se vence o se desperdicia por falta de planificación."
                         )
                     ]
                 },
                 {
                     "pregunta": "b. ¿Por qué como proyecto de PTIA?",
-                    "texto": "Porque el problema de recomendación y coordinación de vestuario permite aplicar de forma integral y rigurosa los tres ejes fundamentales de la asignatura Proyectos de Tecnologías de Inteligencia Artificial (PTIA):\n\n"
-                             "1. Representación del Conocimiento y Ontologías: Requiere estructurar ontologías y esquemas formales de datos donde cada prenda se modela mediante atributos discretos y continuos (categoría funcional, índice de aislamiento térmico de 1 a 5, nivel de formalidad de 1 a 5, propiedades cromáticas, tipo de tejido y compatibilidad de uso).\n\n"
-                             "2. Problemas de Satisfacción de Restricciones (CSP): La selección de un outfit completo se formaliza como la asignación de valores para un conjunto de variables discretas (Prenda Superior, Prenda Inferior, Calzado y Prenda de Abrigo) a partir de dominios finitos determinados por el armario del usuario, sujetas a restricciones duras innegociables (balance térmico ante la temperatura ambiental y adecuación estricta de etiqueta ante la ocasión) y restricciones blandas (armonía cromática según el círculo cromático y penalización por repetición).\n\n"
-                             "3. Toma de Decisiones Multicriterio y Funciones de Utilidad: Permite implementar funciones de scoring ponderado que evalúan las alternativas viables dentro del espacio de búsqueda, ordenándolas en un ranking cuantitativo transparente y dotando al sistema de la capacidad de generar explicaciones comprensibles en lenguaje natural para el usuario final."
+                    "texto": "Porque el problema de recomendación de vestuario permite aplicar de forma muy práctica los temas centrales que vimos en la materia de Inteligencia Artificial:\n\n"
+                             "1. Representación del conocimiento: Permite modelar cada prenda de ropa con atributos estructurados y claros: categoría (superior, inferior, calzado y abrigo), color, nivel de abrigo térmico (escala de 1 a 5) y nivel de formalidad (escala de 1 a 5).\n\n"
+                             "2. Problemas de Satisfacción de Restricciones (CSP): Armar un outfit completo es un problema clásico de asignación de variables (prenda superior, inferior, calzado y abrigo opcional) a partir de un inventario finito, donde se deben cumplir reglas obligatorias: si la temperatura en Bogotá es fría (14°C o menos) debe llevar abrigo obligatorio, y la formalidad de la ropa debe coincidir con la ocasión (no ir en ropa deportiva a la oficina).\n\n"
+                             "3. Toma de decisiones y puntuación multicriterio: Permite diseñar una función matemática de puntuación (scoring) que evalúa las combinaciones posibles según formalidad, temperatura y armonía de color, ordenándolas para mostrarle al usuario las mejores opciones explicadas de forma sencilla."
                 }
             ]
         },
@@ -93,15 +94,15 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuáles son dos trabajos relacionados a cada problema? (resultados y tecnología)",
-                    "texto": "Para el Problema 1 (Recomendación de vestuario y estilismo asistido):\n\n"
-                             "1. Cladwell: Plataforma móvil comercial de estilismo personal basada en catalogación de prendas. Tecnología: Motor de reglas deductivas fijas, árboles de decisión simples y consumo de APIs meteorológicas estándar. Resultados y limitaciones: Facilita el seguimiento de prendas registradas y propone combinaciones elementales para el clima del día; no obstante, adolece de un modelo formal de armonía cromática, maneja un esquema rígido de formalidad sin personalización profunda y no ofrece justificaciones lógicas detalladas sobre el porqué de sus selecciones.\n\n"
-                             "2. Recomendación basada en Grafos y Redes Convolucionales de Compatibilidad (Lin et al., 2020; Song et al., 2019): Modelos de investigación académica que formulan la compatibilidad de prendas mediante Redes Neuronales de Grafos (GNN) y representaciones vectoriales (embeddings) densas, entrenadas sobre grandes repositorios de comercio electrónico como Polyvore. Tecnología: Graph Convolutional Networks (GCN), métricas de similitud en espacios latentes y aprendizaje profundo supervisado. Resultados y limitaciones: Alcanzan altos índices de coherencia estética sobre catálogos comerciales extensos; sin embargo, exhiben una alta demanda de recursos computacionales (requiriendo GPUs dedicadas), actúan como cajas negras que dificultan la explicabilidad hacia el usuario y enfrentan serias dificultades ante el problema de arranque en frío (cold-start) y catálogos cerrados de usuarios individuales.\n\n"
-                             "Para el Problema 2 (Subutilización de armario e inventario textil):\n\n"
-                             "3. Save Your Wardrobe: Aplicación móvil orientada a la sostenibilidad que permite a los usuarios digitalizar su ropa mediante capturas fotográficas, llevando bitácoras de uso y cálculo de huella de carbono. Tecnología: Visión por computador preliminar para recorte de siluetas de prendas, bases de datos estructuradas y paneles analíticos descriptivos. Resultados y limitaciones: Concientiza al usuario sobre el uso de su inventario y apoya iniciativas de reparación y economía circular; sin embargo, se limita a la analítica pasiva y carece de un motor de inferencia capaz de sugerir combinaciones completas para situaciones concretas.\n\n"
-                             "4. EcoStylist: Plataforma de curaduría de marcas de vestuario que asigna certificaciones y puntuaciones de sostenibilidad basadas en transparencia de manufactura y materiales. Tecnología: Matrices ponderadas de criterios ambientales y taxonomías de impacto socioambiental. Resultados y limitaciones: Es una referencia valiosa para compras conscientes y auditorías de sostenibilidad, pero no resuelve la gestión operativa ni el ensamblaje diario de prendas preexistentes en el hogar.\n\n"
-                             "Para el Problema 3 (Planificación de comidas por inventario):\n\n"
-                             "5. SuperCook: Motor de búsqueda inverso de recetas culinarias que filtra bases de datos gastronómicas a partir de una lista booleana de ingredientes disponibles. Tecnología: Indexación invertida, álgebra relacional y grafos de recetas basados en conjuntos disjuntos. Resultados y limitaciones: Evidencia la gran utilidad de restringir el espacio de búsqueda a los recursos disponibles del usuario para evitar compras adicionales; no obstante, carece de un modelo de optimización nutricional y no pondera preferencias temporales o balance calórico dinámico.\n\n"
-                             "6. Mealime: Aplicación de planificación de dietas que genera calendarios de alimentación y listas de mercado a partir de restricciones alimentarias. Tecnología: Programación lineal, sistemas expertos basados en reglas y motores heurísticos de satisfacción de restricciones. Resultados y limitaciones: Optimiza los ciclos de compra y preparación de comidas; su estructura metodológica de manejo de restricciones duras (alergias o preferencias) y blandas (tiempo de cocción) sirvió de antecedente directo para la modelación de restricciones en StyleAI."
+                    "texto": "Para el Problema 1 (Recomendación de vestuario):\n\n"
+                             "1. Cladwell: Es una aplicación comercial donde el usuario registra su ropa y recibe sugerencias diarias basadas en el pronóstico del clima. Tecnología: Maneja un motor de reglas fijas y consume APIs meteorológicas estándar. Resultados y limitaciones: Es útil para llevar el inventario básico de ropa, pero sus combinaciones son muy rígidas, no evalúa formalidad a profundidad ni la armonía de colores, y no explica por qué recomienda cada conjunto.\n\n"
+                             "2. Modelos basados en Grafos y Redes Neuronales (Lin et al., 2020; Song et al., 2019): Son trabajos académicos de investigación que evalúan la compatibilidad de prendas usando Redes Neuronales de Grafos (GNN) y vectores de características sobre fotos de catálogos comerciales grandes como Polyvore. Tecnología: Redes convolucionales de grafos y aprendizaje supervisado. Resultados y limitaciones: Logran conjuntos visualmente coherentes en catálogos de tiendas, pero consumen demasiada memoria y tarjeta gráfica (GPU), funcionan como cajas negras sin explicar sus decisiones y no se adaptan fácilmente al armario pequeño y real de una persona común.\n\n"
+                             "Para el Problema 2 (Subutilización de armario e inventario):\n\n"
+                             "3. Save Your Wardrobe: Aplicación móvil enfocada en la sostenibilidad que permite guardar fotos de la ropa, llevar un conteo de cuántas veces se usa cada prenda y medir la huella ecológica. Tecnología: Procesamiento básico de imágenes para recortar prendas y bases de datos estructuradas. Resultados y limitaciones: Ayuda a concientizar sobre el uso de la ropa, pero es solo un inventario pasivo y no tiene un motor de recomendación que te diga qué ponerte cada día según el clima.\n\n"
+                             "4. EcoStylist: Plataforma que califica marcas y prendas de ropa según criterios de sostenibilidad y comercio justo. Tecnología: Matrices de puntuación socioambiental. Resultados y limitaciones: Sirve como guía antes de comprar ropa, pero no soluciona el problema diario de qué ponerse con la ropa que ya se tiene en casa.\n\n"
+                             "Para el Problema 3 (Aprovechamiento de despensa y alimentos):\n\n"
+                             "5. SuperCook: Buscador de recetas que sugiere platos usando únicamente los ingredientes que el usuario marca que tiene en casa. Tecnología: Motores de indexación y búsqueda sobre recetas. Resultados y limitaciones: Muestra cómo filtrar opciones según lo que realmente hay disponible para no gastar de más, aunque no hace una planificación balanceada ni personalizada.\n\n"
+                             "6. Mealime: Aplicación que arma planes de comidas semanales y listas de mercado según los gustos y restricciones dietarias de la persona. Tecnología: Algoritmos de optimización y reglas fijas de nutrición. Resultados y limitaciones: Organiza muy bien la semana y nos sirvió como referencia de cómo manejar reglas obligatorias y preferencias de usuario."
                 }
             ]
         },
@@ -109,15 +110,15 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuáles criterios van a usar para seleccionar el problema a resolver?",
-                    "texto": "Para seleccionar el problema a abordar se establecieron cuatro criterios técnicos y metodológicos ponderados:\n\n"
-                             "1. Alineación conceptual con la Inteligencia Artificial (PTIA): Se priorizó un problema que requiriera aplicar de forma explícita representación del conocimiento, resolución de restricciones (CSP), funciones de utilidad y evaluación cuantitativa, evitando soluciones que se reduzcan a un mero CRUD de base de datos.\n\n"
-                             "2. Factibilidad técnica y disponibilidad de datos: Se evaluó la viabilidad de modelar las prendas y las condiciones contextuales mediante variables numéricas y categóricas verificables sin depender de sensores biométricos o cámaras industriales de alto costo.\n\n"
-                             "3. Impacto cotidiano y utilidad práctica: Se buscó atender una fricción real, repetitiva y tangible que afecta diariamente a la población estudiantil y profesional en entornos urbanos.\n\n"
-                             "4. Viabilidad de desarrollo de un MVP en el ciclo académico: Se valoró la posibilidad de construir un prototipo funcional completo de extremo a extremo (backend con API REST, motor de inferencia, interfaz de usuario responsiva y suite de validación automatizada) dentro de los plazos semestrales de la asignatura."
+                    "texto": "Para elegir el problema a resolver definimos cuatro criterios prácticos y de ingeniería:\n\n"
+                             "1. Aplicación real de Inteligencia Artificial: Que el problema permitiera usar técnicas de la materia (representación del conocimiento, satisfacción de restricciones y funciones de puntuación) y no se quedara solo en una aplicación web básica con base de datos.\n\n"
+                             "2. Facilidad para modelar los datos: Que las prendas y el clima se pudieran estructurar con variables numéricas y categorías claras, sin requerir sensores costosos ni cámaras de alta gama.\n\n"
+                             "3. Utilidad práctica en el día a día: Que resolviera una molestia real y cotidiana que vivimos los estudiantes y profesionales todas las mañanas al alistarnos.\n\n"
+                             "4. Viabilidad de un MVP en el semestre: Que fuera posible diseñar, programar y probar un prototipo funcional completo (backend, interfaz y pruebas automáticas) dentro de las 16 semanas del curso."
                 },
                 {
                     "pregunta": "b. ¿Cuál es el problema seleccionado?",
-                    "texto": "El problema seleccionado es la dificultad cotidiana para coordinar rápidamente prendas del armario existente en outfits estéticamente armónicos y contextualmente apropiados, supeditados a la variabilidad climática del entorno (por ejemplo, el clima impredecible y frío de la Sabana de Bogotá) y a los requisitos de formalidad de las diferentes actividades diarias. Este problema se manifiesta en sobrecarga decisional matutina, repetición involuntaria de vestuario y desaprovechamiento sistemático del inventario de ropa ya adquirida en el hogar."
+                    "texto": "El problema seleccionado es la dificultad y pérdida de tiempo diaria para elegir y combinar la ropa del armario, logrando que el conjunto combine bien en colores y sea el adecuado tanto para el clima del día (como las mañanas frías o tardes lluviosas de Bogotá) como para la ocasión que se va a atender (universidad, oficina o salida informal)."
                 }
             ]
         },
@@ -125,14 +126,14 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuál es el gran problema que se quiere resolver?",
-                    "texto": "La ineficiencia crónica en la gestión y aprovechamiento del guardarropa doméstico. A nivel psicológico, el fenómeno conocido como fatiga de decisión (decision fatigue) evidencia que la toma constante de microdecisiones matutinas desgasta la energía cognitiva de los individuos antes de iniciar sus actividades académicas o laborales prioritarias. A nivel logístico y financiero, el usuario promedio experimenta la paradoja de la abundancia: poseer un armario repleto de ropa pero percibir que no tiene qué ponerse, lo que induce compras compulsivas de prendas de reemplazo y agrava la acumulación pasiva de textiles subutilizados."
+                    "texto": "La ineficiencia al momento de usar la ropa que ya tenemos en casa y la pérdida de tiempo cada mañana. Existe un fenómeno común conocido como fatiga de decisión: gastar energía mental temprano decidiendo qué ponerse desgasta a la persona antes de empezar sus clases o su trabajo. Además, muchas personas caen en la paradoja de tener el clóset lleno pero sentir que no tienen nada que ponerse, lo que lleva a repetir siempre la misma ropa o a comprar prendas nuevas innecesarias."
                 },
                 {
                     "pregunta": "b. ¿Por qué es importante resolverlo?",
-                    "texto": "La importancia de resolver este problema se fundamenta en tres dimensiones clave:\n\n"
-                             "1. Dimensión práctica y de productividad personal: Disminuye drásticamente el tiempo de selección diaria de vestuario (de 15-20 minutos a menos de 1 minuto), brindando tranquilidad matutina mediante recomendaciones confiables acompañadas de una justificación transparente de por qué las prendas combinan adecuadamente.\n\n"
-                             "2. Dimensión ambiental y de economía circular: La industria textil es responsable de cerca del 10% de las emisiones globales de carbono y de enormes volúmenes de desperdicio hídrico. Optimizar la rotación y el uso integral de las prendas preexistentes prolonga su ciclo de vida útil, promueve un consumo responsable y desincentiva el modelo de descarte rápido (fast fashion).\n\n"
-                             "3. Dimensión académica y de ingeniería de software con IA: Demuestra que un problema que frecuentemente se intenta resolver mediante modelos neuronales masivos y opacos puede solucionarse de manera más eficiente, liviana, determinista y explicable mediante sistemas híbridos basados en conocimiento y satisfacción de restricciones, operando con latencias inferiores a 5 milisegundos en hardware convencional."
+                    "texto": "Resolver este problema es importante por tres razones principales:\n\n"
+                             "1. Beneficio práctico y ahorro de tiempo: Reduce el tiempo de escoger ropa de 15 o 20 minutos a menos de 1 minuto, dando tranquilidad en las mañanas con combinaciones listas y explicadas.\n\n"
+                             "2. Impacto ambiental y ahorro de dinero: La industria textil es una de las más contaminantes del planeta. Si ayudamos a que la gente aproveche y rote la ropa que ya compró, se reduce la compra impulsiva de moda rápida y se le da más vida útil a cada prenda.\n\n"
+                             "3. Aporte técnico de ingeniería: Demuestra que podemos solucionar un problema cotidiano con un algoritmo inteligente, liviano y transparente basado en restricciones y puntuación, sin necesidad de servidores pesados ni modelos que gasten gigabytes de memoria."
                 }
             ]
         },
@@ -140,26 +141,26 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuál es el problema que efectivamente van a resolver?",
-                    "texto": "Construir e implementar una solución integral de software (StyleAI) compuesta por un backend con API REST y una interfaz web interactiva que permita al usuario registrar su inventario de prendas en categorías estandarizadas (superior, inferior, calzado y abrigo), ingresar las condiciones contextuales del día (temperatura en grados Celsius y tipo de ocasión) y recibir en tiempo real un conjunto ordenado de outfits compatibles, evaluados cuantitativamente según balance térmico, formalidad, armonía cromática y acompañados de una justificación explicativa en lenguaje natural."
+                    "texto": "Desarrollar una aplicación funcional (StyleAI) con backend en FastAPI y una interfaz web que reciba las prendas registradas por el usuario, capture la temperatura del día en grados Celsius y el tipo de ocasión, y entregue al instante las mejores combinaciones de ropa ordenadas por compatibilidad y con una explicación clara de por qué combinan."
                 },
                 {
                     "pregunta": "b. ¿Por qué consideran que es una simplificación adecuada?",
-                    "texto": "Porque en lugar de procesar fotografías de alta definición en tiempo real con modelos pesados de visión por computador (los cuales demandan GPU dedicada, consumen cientos de megabytes y son susceptibles a variaciones de iluminación y ángulo), se abstrae cada prenda en una estructura de datos normalizada:\n\n"
-                             "Prenda = <id, nombre, categoría, color, nivel_abrigo ∈ [1, 5], formalidad ∈ [1, 5]>\n\n"
-                             "Esta simplificación permite formalizar el problema en un espacio de estados acotado y computable en milisegundos, garantizando consistencia lógica, cero latencias perceptibles y viabilidad de ejecución autónoma en clientes web y servidores ligeros."
+                    "texto": "Porque en lugar de ponernos a procesar fotos pesadas con modelos complejos de visión por computador (los cuales requieren tarjetas gráficas dedicadas, tardan varios segundos en responder y fallan si la foto sale con mala luz), simplificamos cada prenda con sus datos clave:\n\n"
+                             "Prenda = <id, nombre, categoría, color, nivel_abrigo (1 a 5), formalidad (1 a 5)>\n\n"
+                             "Con esta simplificación, el algoritmo puede evaluar todas las combinaciones en cuestión de milisegundos en cualquier computador, garantizando resultados rápidos, exactos y sin trabarse."
                 },
                 {
                     "pregunta": "c. ¿Cuál sería el objetivo (cuantitativo y cualitativo)? Detallar objetivo general",
                     "texto": "Objetivo General:\n"
-                             "Desarrollar y validar un prototipo funcional MVP (StyleAI) para la recomendación inteligente y coordinada de outfits a partir del inventario personal del usuario, mediante un motor de inferencia basado en restricciones de contexto y evaluación multicriterio, integrado en una arquitectura cliente-servidor accesible vía navegador web.\n\n"
+                             "Desarrollar y evaluar un prototipo funcional MVP (StyleAI) que recomiende combinaciones de outfits a partir del armario del usuario, evaluando clima, nivel de formalidad y armonía de colores mediante un backend liviano y una interfaz web fácil de usar.\n\n"
                              "Objetivos Específicos Cualitativos:\n"
-                             "1. Formalizar las reglas de compatibilidad de vestuario en un modelo de satisfacción de restricciones (CSP) que concilie temperatura, etiqueta social y teoría del color.\n"
-                             "2. Desarrollar una interfaz de usuario limpia y responsiva que permita la gestión del armario (alta, baja, filtros y respaldo JSON) y proporcione retroalimentación explicativa de cada recomendación.\n"
-                             "3. Incorporar un mecanismo de interacción continua (feedback loop) mediante el cual el usuario califique la recomendación (Aprobar / Reajustar), almacenando la trazabilidad de satisfacción en disco.\n\n"
+                             "1. Diseñar las reglas lógicas para que el sistema combine prendas respetando el abrigo para el frío, la formalidad de la ocasión y la combinación correcta de colores.\n"
+                             "2. Construir una interfaz web rápida en modo oscuro que permita gestionar el armario (agregar, borrar, filtrar y exportar/importar en JSON) y ver las recomendaciones generadas.\n"
+                             "3. Incluir un botón de retroalimentación (Aprobar / Reajustar) para que el usuario pueda calificar cada outfit y el sistema guarde el registro de satisfacción.\n\n"
                              "Objetivos Específicos Cuantitativos:\n"
-                             "1. Tasa de cumplimiento de restricciones críticas: Lograr un 100% de cumplimiento en las restricciones duras del sistema (inclusión obligatoria de abrigo en temperaturas ≤ 14°C y coherencia categorial en todas las combinaciones generadas).\n"
-                             "2. Latencia del motor de inferencia: Mantener un tiempo de respuesta medio inferior a 50 milisegundos por consulta en el backend local (habiéndose alcanzado un promedio experimental real de 3.84 ms).\n"
-                             "3. Afinidad global del modelo: Garantizar un puntaje de compatibilidad promedio superior al 85% en las mejores recomendaciones seleccionadas."
+                             "1. Cumplir al 100% las restricciones obligatorias: incluir abrigo siempre que la temperatura sea de 14°C o menor, y armar conjuntos completos (superior, inferior y calzado).\n"
+                             "2. Lograr un tiempo de respuesta menor a 50 milisegundos en el backend (en las pruebas reales obtuvimos un promedio de 3.84 ms).\n"
+                             "3. Obtener un puntaje de compatibilidad promedio superior al 85% en las mejores sugerencias generadas."
                 }
             ]
         },
@@ -167,56 +168,55 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuál es la estrategia general seleccionada para la solución? Justificación",
-                    "texto": "Se seleccionó una estrategia híbrida de inferencia estructurada en tres fases consecutivas:\n\n"
-                             "1. Poda por Restricciones Duras (CSP): Filtrado determinista que descarta combinaciones inviables (por ejemplo, outfits sin abrigo en clima frío o calzado informal en ocasiones de gala).\n"
-                             "2. Optimización y Scoring Multicriterio: Evaluación de las combinaciones viables mediante una función de utilidad matemática ponderada que califica formalidad, balance térmico y armonía cromática.\n"
-                             "3. Generación de Explicaciones y Trazabilidad: Síntesis en lenguaje natural del razonamiento detrás del puntaje obtenido y persistencia del feedback del usuario.\n\n"
-                             "Justificación: Esta estrategia garantiza que las recomendaciones siempre respeten límites físicos y de protocolo (evitando alucinaciones típicas de modelos de lenguaje puros), mientras ofrece una velocidad de cómputo óptima (< 5 ms) y una transparencia total en la toma de decisiones."
+                    "texto": "La solución funciona con una estrategia clara de tres pasos:\n\n"
+                             "1. Filtro de restricciones obligatorias (CSP): Primero descartamos las combinaciones que no tienen sentido lógico (por ejemplo, salir sin abrigo en un día frío de 12°C o ponerse tenis deportivos para un evento formal).\n"
+                             "2. Puntuación multicriterio (Scoring): A las combinaciones que sí pasan el filtro, les calculamos un puntaje ponderado evaluando formalidad, abrigo térmico y teoría del color.\n"
+                             "3. Explicación y retroalimentación: Le mostramos al usuario los mejores outfits ordenados con un texto claro que explica por qué esa ropa combina, y le permitimos calificar la sugerencia.\n\n"
+                             "Justificación: Este enfoque asegura que el sistema nunca invente combinaciones absurdas ni alucine (como suele pasar con modelos de lenguaje si no tienen reglas estrictas), y responde de forma inmediata en cualquier máquina."
                 },
                 {
                     "pregunta": "b. ¿Dónde se concentra la inteligencia de la solución? (Conocimiento + Razonamiento)",
-                    "texto": "La inteligencia de la solución se concentra en el acoplamiento entre la base de conocimiento estructurada y el motor de razonamiento algorítmico:\n\n"
+                    "texto": "La inteligencia está en cómo combinamos la base de conocimiento de la ropa con las reglas de decisión del algoritmo:\n\n"
                              "Base de Conocimiento:\n"
-                             "• Taxonomía de prendas dividida en 4 categorías disjuntas: Superior (top), Inferior (bottom), Calzado (shoes) y Abrigo (outerwear).\n"
-                             "• Matriz de formalidad: mapeo de ocasiones de uso a niveles objetivo de etiqueta ReqFormalidad ∈ [1, 5] (Deporte: 1, Casual: 2, Fiesta: 3, Trabajo: 4, Cita: 4, Formal: 5) con tolerancia admisible |FormalidadPrenda - ReqFormalidad| ≤ 1.\n"
-                             "• Modelo de demanda térmica: clasificación de bandas de temperatura en frío (≤ 14°C), templado (15-21°C) y cálido (≥ 22°C), asociando una demanda mínima de aislamiento acumulado Σ Abrigo_i ≥ DemandaTérmica.\n"
-                             "• Matriz de teoría del color: categorización de colores neutros universales (blanco, negro, gris, beige, azul marino), definición de pares contrastantes armónicos y penalización de combinaciones disonantes.\n\n"
+                             "• Categorías de ropa: Superior (top), Inferior (bottom), Calzado (shoes) y Abrigo (outerwear).\n"
+                             "• Niveles de formalidad según la ocasión: Deporte (1), Universidad/Casual (2), Fiesta (3), Oficina/Trabajo (4), Cita (4) y Evento Formal (5).\n"
+                             "• Bandas de temperatura: Frío (14°C o menos), Templado (15 a 21°C) y Cálido (22°C o más).\n"
+                             "• Reglas de color: Colores neutros universales (blanco, negro, gris, beige, azul marino) que combinan con todo, y pares armónicos reconocidos (como azul con café o verde con marrón).\n\n"
                              "Motor de Razonamiento:\n"
-                             "Ejecuta la búsqueda combinatoria y evalúa la función de scoring ponderada:\n\n"
-                             "ScoreGlobal = (S_formalidad × 0.35) + (S_térmico × 0.35) + (S_color × 0.20) + (S_estilo × 0.10)\n\n"
-                             "donde cada componente S ∈ [0, 100] mide el grado de ajuste específico a cada criterio."
+                             "Evalúa las combinaciones válidas mediante la fórmula de puntuación ponderada:\n\n"
+                             "Score = (Formalidad × 0.35) + (Térmico × 0.35) + (Color × 0.20) + (Estilo × 0.10)\n\n"
+                             "donde cada parte se califica de 0 a 100 según qué tan bien se adapta a cada criterio."
                 },
                 {
                     "pregunta": "c. ¿Qué herramienta seleccionaron para implementar la solución? Justificación",
-                    "texto": "Backend: Python 3.11 con FastAPI y servidor asíncrono Uvicorn. Justificación: Ofrece tipado estricto con Pydantic, validación automática de esquemas JSON, generación automática de documentación interactiva OpenAPI/Swagger y un rendimiento de latencia en el orden de milisegundos sin sobrecostos de configuración.\n\n"
-                             "Frontend: HTML5 semántico, CSS3 moderno (arquitectura modular con diseño glassmorphism, responsive grid y variables de color) y Vanilla JavaScript (ES6+). Justificación: Garantiza ejecución instantánea y fluida directamente en cualquier navegador moderno sin herramientas pesadas de compilación (como Webpack o Node.js runtime), comunicándose limpiamente con la API mediante peticiones HTTP fetch asíncronas.\n\n"
-                             "Validación y Pruebas: Módulo de pruebas unitarias y de estrés en Python (test_evaluacion.py) con persistencia estructurada de resultados en formato JSON.\n\n"
-                             "Control de Versiones: Git y GitHub con commits atómicos redactados en español formal para reflejar la evolución del software."
+                    "texto": "Backend: Python 3.11 con FastAPI y servidor Uvicorn. Lo elegimos porque es muy rápido, valida los datos automáticamente y nos permitió crear los endpoints de la API de forma limpia y confiable.\n\n"
+                             "Frontend: HTML5, CSS3 moderno (con estilo oscuro y diseño responsivo) y JavaScript puro (Vanilla JS). Lo elegimos porque abre directo en cualquier navegador sin instalar Node.js ni configurar frameworks pesados, conectándose directo a la API local con peticiones fetch.\n\n"
+                             "Validación y Pruebas: Un script en Python (test_evaluacion.py) que corre 5 pruebas automáticas sobre el sistema y guarda los resultados en formato JSON.\n\n"
+                             "Control de versiones: Git y GitHub con commits claros que muestran el avance real del desarrollo."
                 },
                 {
                     "pregunta": "d. ¿Cuál es la arquitectura de la solución? (Componentes y relaciones)",
-                    "texto": "La solución opera bajo una arquitectura de cuatro componentes desacoplados:\n\n"
-                             "1. Capa de Presentación (Frontend Web): Aplicación cliente en navegador que gestiona cuatro módulos visuales: Armario virtual, Recomendador asistido, Vista rápida de tendencias y Panel de Métricas/Validación en tiempo real.\n"
-                             "2. Capa de Servicios y API REST (FastAPI): Servidor backend que expone los endpoints:\n"
-                             "   • GET /api/health: Monitoreo del estado del servicio y conteo de prendas cargadas.\n"
-                             "   • POST /api/recommend: Inferencia y entrega de combinaciones rankeadas con desglose de puntajes.\n"
-                             "   • POST /api/feedback: Registro de aceptación (like) o solicitud de reajuste (dislike) por outfit.\n"
-                             "   • GET /api/metrics: Exposición de indicadores en vivo (latencia media, afinidad promedio y tasa de aprobación).\n"
-                             "   • POST /api/evaluate: Ejecución y auditoría de la batería de pruebas técnicas.\n"
-                             "3. Capa de Inferencia y Lógica de Negocio (RecommendationEngine): Módulo algorítmico que ejecuta la poda por restricciones y el cómputo de la función de utilidad multicriterio.\n"
-                             "4. Capa de Persistencia (JSON Data Store): Almacenamiento local del catálogo (data/user_wardrobe.json), del feedback histórico (data/user_feedback.json) y de los reportes de prueba (data/resultados_evaluacion.json)."
+                    "texto": "El sistema está organizado en 4 capas conectadas:\n\n"
+                             "1. Interfaz Web (Frontend): La aplicación en el navegador con sus módulos de Armario, Recomendador, Métricas de Validación y Combinaciones destacadas.\n"
+                             "2. Servidor API (FastAPI): Expone las rutas de comunicación:\n"
+                             "   • GET /api/health: Revisa que el servidor esté activo y cuántas prendas hay cargadas.\n"
+                             "   • POST /api/recommend: Recibe el clima y la ocasión, y devuelve los mejores outfits con su puntaje y explicación.\n"
+                             "   • POST /api/feedback: Guarda si al usuario le gustó la sugerencia (Aprobar) o si pidió reajustarla.\n"
+                             "   • GET /api/metrics: Entrega las métricas en tiempo real (latencia, afinidad y porcentaje de satisfacción).\n"
+                             "   • POST /api/evaluate: Permite correr las pruebas técnicas directamente.\n"
+                             "3. Motor de Inferencia (RecommendationEngine): El código en Python que genera las combinaciones, filtra las restricciones y calcula los puntajes.\n"
+                             "4. Almacenamiento JSON: Archivos en disco donde se guarda el armario del usuario (data/user_wardrobe.json), el historial de calificaciones (data/user_feedback.json) y el reporte de pruebas (data/resultados_evaluacion.json)."
                 },
                 {
                     "pregunta": "e. ¿Cuál es el componente principal? (Descripción detallada)",
-                    "texto": "El componente principal es el Motor de Recomendación y Ponderación de Restricciones (RecommendationEngine), implementado en el backend (app_backend.py).\n\n"
-                             "Flujo algorítmico detallado:\n"
-                             "1. Recibe la tupla de contexto: C = <temperatura, ocasión> y la lista de prendas activas W.\n"
-                             "2. Clasifica las prendas en conjuntos disjuntos T (superior), B (inferior), S (calzado) y O (abrigo).\n"
-                             "3. Determina los requerimientos objetivos: formalidad meta F_req y umbral térmico A_req.\n"
-                             "4. Explora las combinaciones posibles P = T × B × S × (O ∪ {∅}).\n"
-                             "5. Descarta aquellas que violen las restricciones duras: si la temperatura es ≤ 14°C y no se incluye una prenda de O, la tupla queda excluida; si alguna prenda desvía su formalidad en más de 1 punto de F_req, se descarta.\n"
-                             "6. Calcula el puntaje de armonía de color analizando la presencia de neutros y contrastes válidos.\n"
-                             "7. Agrega el puntaje total mediante la ecuación de scoring ponderado, ordena las combinaciones de mayor a menor compatibilidad y sintetiza en lenguaje natural la justificación de la mejor opción."
+                    "texto": "El componente principal es el motor de recomendación en app_backend.py:\n\n"
+                             "Paso a paso de cómo funciona:\n"
+                             "1. Recibe la temperatura, la ocasión y las prendas disponibles del usuario.\n"
+                             "2. Separa las prendas en cuatro grupos: superiores, inferiores, calzado y abrigos.\n"
+                             "3. Revisa la temperatura: si hace frío (14°C o menos), es obligatorio que la combinación lleve una prenda de abrigo.\n"
+                             "4. Descarta prendas que no cuadren con la formalidad del evento (por ejemplo, prendas de gala para ir a la universidad).\n"
+                             "5. Evalúa la armonía de colores premiando el uso de prendas neutras y combinaciones de colores que contrastan bien.\n"
+                             "6. Calcula el puntaje final con la fórmula ponderada, ordena los outfits de mayor a menor y genera la explicación en texto."
                 }
             ]
         },
@@ -224,38 +224,38 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuáles son los dos mejores casos de prueba? (Secuencia de entradas y salidas esperadas y logradas)",
-                    "texto": "Caso de Prueba 1: Clima Frío en Bogotá para Entorno Académico/Casual\n"
-                             "• Entradas: Temperatura = 12°C (Banda Frío), Ocasión = 'Universidad / Casual' (Formalidad objetivo: 2/5). Catálogo compuesto por 12 prendas variadas.\n"
-                             "• Salidas Esperadas: El sistema debe seleccionar un conjunto casual que incorpore obligatoriamente una prenda de abrigo (chaqueta o buzo térmico), garantizando que la formalidad global se mantenga en nivel casual (≤ 2.5) y la paleta cromática sea armónica.\n"
-                             "• Salidas Logradas:\n"
+                    "texto": "Caso de Prueba 1: Clima Frío en Bogotá para Universidad/Casual\n"
+                             "• Entradas: Temperatura = 12°C (Frío), Ocasión = 'Universidad / Casual' (Formalidad requerida: 2 de 5). Armario con 12 prendas disponibles.\n"
+                             "• Salida Esperada: Un conjunto casual y cómodo que obligatoriamente incluya abrigo (chaqueta o buzo de lana) para el frío, con colores que combinen bien.\n"
+                             "• Salida Lograda:\n"
                              "  - Prenda Superior: Camiseta Blanca Básica (Abrigo: 1, Formalidad: 2)\n"
                              "  - Prenda Inferior: Jeans Azules Clásicos (Abrigo: 2, Formalidad: 2)\n"
                              "  - Prenda de Abrigo: Buzo de Lana Gris (Abrigo: 4, Formalidad: 2)\n"
                              "  - Calzado: Tenis Blancos Urbanos (Abrigo: 1, Formalidad: 2)\n"
-                             "• Métricas obtenidas: Compatibilidad global del 94.0%, concordancia de formalidad del 100%, balance térmico de 8/10 y latencia de respuesta de 3.6 milisegundos.\n\n"
-                             "Caso de Prueba 2: Clima Templado para Ocasión Corporativa/Oficina\n"
-                             "• Entradas: Temperatura = 18°C (Banda Templado), Ocasión = 'Oficina / Trabajo' (Formalidad objetivo: 4/5). Catálogo con prendas ejecutivas y casuales.\n"
-                             "• Salidas Esperadas: El sistema debe armar un conjunto formal de oficina, omitiendo el uso de abrigo pesado para evitar sobrecalentamiento térmico y manteniendo una paleta clásica y sobria.\n"
-                             "• Salidas Logradas:\n"
+                             "• Resultados: Puntaje de compatibilidad del 94.0%, abrigo adecuado, formalidad exacta y tiempo de respuesta de 3.6 milisegundos.\n\n"
+                             "Caso de Prueba 2: Clima Templado para Oficina/Trabajo\n"
+                             "• Entradas: Temperatura = 18°C (Templado), Ocasión = 'Oficina / Trabajo' (Formalidad requerida: 4 de 5).\n"
+                             "• Salida Esperada: Un conjunto formal y sobrio de oficina, sin abrigo pesado para no dar calor, en colores clásicos.\n"
+                             "• Salida Lograda:\n"
                              "  - Prenda Superior: Camisa Oxford Blanca (Abrigo: 2, Formalidad: 4)\n"
                              "  - Prenda Inferior: Pantalón de Vestir Negro (Abrigo: 2, Formalidad: 4)\n"
                              "  - Calzado: Zapatos de Cuero Café (Abrigo: 2, Formalidad: 4)\n"
                              "  - Prenda de Abrigo: Ninguna (adecuado para 18°C)\n"
-                             "• Métricas obtenidas: Compatibilidad global del 98.0%, concordancia de formalidad del 100%, combinación cromática perfecta y tiempo de respuesta de 4.1 milisegundos."
+                             "• Resultados: Puntaje de compatibilidad del 98.0%, formalidad impecable y tiempo de respuesta de 4.1 milisegundos."
                 },
                 {
                     "pregunta": "b. ¿Cuál es el caso de prueba más significativo? (Además de la secuencia de entradas y salidas, analicen el resultado)",
-                    "texto": "Caso de Prueba Significativo: Resolución de Conflicto entre Baja Temperatura Extrema y Máxima Etiqueta\n\n"
-                             "• Entradas: Temperatura = 9°C (Noche fría en Bogotá), Ocasión = 'Evento Formal' (Formalidad objetivo: 5/5). El armario contiene chaquetas abrigadas pero deportivas (formalidad 1) y prendas elegantes de paño (formalidad 4-5).\n"
-                             "• Salidas Esperadas: El sistema no debe limitarse a buscar la prenda de mayor abrigo disponible de manera ciega (lo que seleccionaría una chaqueta acolchada deportiva), sino que debe conciliar la alta demanda térmica con la exigencia protocolaria del evento, seleccionando una prenda exterior formal o penalizando explícitamente en el puntaje de estilo si existe incoherencia.\n"
-                             "• Salidas Logradas:\n"
+                    "texto": "Caso de Prueba Significativo: Clima muy frío (9°C) en un Evento Formal (5 de 5)\n\n"
+                             "• Entradas: Temperatura = 9°C (noche fría bogotana), Ocasión = 'Evento Formal'. El armario tiene tanto chaquetas acolchadas deportivas como abrigos de paño elegantes.\n"
+                             "• Salida Esperada: El sistema debe abrigar bien a la persona pero sin dañar la etiqueta (no puede poner una chaqueta deportiva encima de un traje formal).\n"
+                             "• Salida Lograda:\n"
                              "  - Prenda Superior: Camisa Formal Celeste (Abrigo: 2, Formalidad: 5)\n"
                              "  - Prenda Inferior: Pantalón de Paño Negro (Abrigo: 2, Formalidad: 5)\n"
                              "  - Prenda de Abrigo: Gabán Largo de Paño Negro (Abrigo: 4, Formalidad: 5)\n"
                              "  - Calzado: Zapatos Formales Oxford Negros (Abrigo: 2, Formalidad: 5)\n"
-                             "• Métricas obtenidas: Compatibilidad global del 96.5%, latencia de 3.9 milisegundos.\n\n"
+                             "• Resultados: Puntaje del 96.5% y tiempo de respuesta de 3.9 milisegundos.\n\n"
                              "Análisis del Resultado:\n"
-                             "Este escenario es el más significativo porque evidencia la madurez y robustez del razonamiento bajo restricciones frente a heurísticas ingenuas. Si el sistema operara con una búsqueda miope orientada solo al aislamiento térmico, habría seleccionado la chaqueta impermeable deportiva por su nivel de abrigo 5, arruinando la formalidad del atuendo. El motor demostró cómo la evaluación multidimensional jerárquica previene incongruencias críticas de vestuario, garantizando tanto confort térmico como adecuación social estricta."
+                             "Este caso es el más importante porque demuestra que el algoritmo no elige a ciegas la prenda más abrigada que encuentre. Si eligiera solo por abrigo, habría puesto la chaqueta deportiva acolchada porque tiene nivel de abrigo 5, arruinando por completo la formalidad del evento. Al evaluar formalidad y clima al mismo tiempo, eligió el gabán de paño formal, logrando tanto el abrigo necesario como la elegancia requerida."
                 }
             ],
             "tabla": [
@@ -271,31 +271,30 @@ def main():
             "preguntas": [
                 {
                     "pregunta": "a. ¿Cuáles son los dos aciertos y dos errores más relevantes? (Aprendizaje de cada uno de ellos)",
-                    "texto": "Acierto 1: Formulación del problema mediante satisfacción de restricciones (CSP) y función de scoring ponderada.\n"
-                             "Aprendizaje: En dominios aplicados donde existen restricciones físicas innegociables (protección térmica) y convenciones sociales rígidas (etiqueta), los sistemas basados en restricciones garantizan un 100% de coherencia y fiabilidad sin incurrir en alucinaciones, brindando además una explicabilidad inmediata que los modelos conexionistas puros no ofrecen de forma nativa.\n\n"
-                             "Acierto 2: Adopción de una arquitectura cliente-servidor desacoplada y liviana (FastAPI + Vanilla Web).\n"
-                             "Aprendizaje: Diseñar una solución ligera sin sobreingeniería permitió obtener tiempos de respuesta de inferencia inferiores a 4 milisegundos, operando con un consumo de memoria RAM inferior a 60 MB y garantizando un despliegue local accesible sin requerimientos de GPU ni costos de cómputo en la nube.\n\n"
-                             "Error 1: Sobrecarga inicial de atributos en el formulario de registro de prendas.\n"
-                             "Aprendizaje: En la fase inicial de prototipado se intentó capturar decenas de variables por prenda (material específico, tipo de cuello, longitud de manga, año de compra), lo que generaba una fricción excesiva y desmotivaba al usuario en las pruebas de uso. El aprendizaje clave fue reducir el modelado a 4 variables esenciales (categoría, color, nivel de abrigo y formalidad), logrando un balance óptimo entre simplicidad de uso y precisión algorítmica.\n\n"
-                             "Error 2: Falta de interactividad en el bucle de retroalimentación en la versión inicial del prototipo.\n"
-                             "Aprendizaje: En el Hito 2 las sugerencias se presentaban de manera estática y unidireccional. La validación evidenció que la experiencia de usuario mejora sustancialmente cuando el sistema permite al usuario manifestar su aprobación o solicitar un reajuste inmediato (feedback loop), lo que motivó en el Hito 3 la incorporación de los botones de calificación que sincronizan el nivel de satisfacción con el backend y el almacenamiento local."
+                    "texto": "Acierto 1: Usar filtros de restricciones (CSP) antes de calcular puntajes.\n"
+                             "Aprendizaje: En ropa hay reglas que no se pueden romper (como no pasar frío o no ir en ropa deportiva a una ceremonia). Poner reglas fijas como primer filtro evitó que el sistema hiciera sugerencias ilógicas o alucinara, algo que suele pasar con modelos de lenguaje si no tienen restricciones estrictas.\n\n"
+                             "Acierto 2: Crear una arquitectura sencilla y liviana con FastAPI y JavaScript puro.\n"
+                             "Aprendizaje: No necesitamos complicarnos con herramientas pesadas. El sistema responde en menos de 4 milisegundos, consume menos de 60 MB de memoria RAM y corre en cualquier computador sin requerir tarjetas gráficas costosas.\n\n"
+                             "Error 1: Querer pedir demasiados datos al registrar una prenda en las primeras pruebas.\n"
+                             "Aprendizaje: Al principio queríamos pedir tipo de tela, cuello, mangas y año de compra, pero al probarlo nos dimos cuenta de que daba pereza llenar tantos datos. Aprendimos a dejar solo las 4 variables indispensables (tipo, color, abrigo y formalidad), haciendo el registro mucho más rápido y cómodo.\n\n"
+                             "Error 2: No haber incluido botones de calificación en la primera versión.\n"
+                             "Aprendizaje: En el Hito 2 el usuario solo veía la recomendación sin poder opinar. En el Hito 3 nos dimos cuenta de que el usuario necesita poder decir 'Aprobar' o 'Reajustar', y que esas calificaciones se guarden para saber si las sugerencias de verdad le están gustando."
                 },
                 {
                     "pregunta": "b. ¿Cuáles son las tres conclusiones más evidentes? ¿Cuál es una buena idea de trabajo futuro?",
                     "texto": "Conclusión 1:\n"
-                             "La viabilidad técnica y eficiencia del enfoque basado en restricciones para la recomendación personalizada de vestuario quedaron plenamente demostradas, alcanzando una tasa de éxito del 100% en las pruebas funcionales y una latencia promedio de 3.84 ms, lo que supera con creces la meta inicial propuesta de 100 ms.\n\n"
+                             "Se demostró que la inteligencia artificial basada en reglas y satisfacción de restricciones es totalmente viable y muy rápida para resolver la elección de ropa diaria, logrando tiempos de 3.8 milisegundos que superaron con creces la meta inicial de 100 ms.\n\n"
                              "Conclusión 2:\n"
-                             "El condicionamiento meteorológico (aislamiento térmico) y el protocolo social (nivel de formalidad) constituyen los factores determinantes para la aceptación real de una recomendación de vestuario. Un sistema que evalúe únicamente la armonía visual o cromática fracasa en la práctica si la combinación no brinda protección adecuada frente al clima o resulta inapropiada para el evento del usuario.\n\n"
+                             "El clima y la ocasión son los factores más importantes al vestir. Por más bonita que sea una combinación de colores, si no abriga contra el frío o si no encaja con el evento, la recomendación no sirve en la vida real.\n\n"
                              "Conclusión 3:\n"
-                             "La evolución progresiva del proyecto a lo largo de los tres hitos académicos (desde la exploración inicial y prototipo en papel en el Hito 1, pasando por el diseño de interfaz y arquitectura en el Hito 2, hasta el despliegue del MVP funcional con validación cuantitativa en el Hito 3) consolidó una solución de software completa, coherente y reproducible que integra sólidamente los conceptos metodológicos del curso PTIA.\n\n"
-                             "Idea de trabajo futuro prometedora:\n"
-                             "Integración de un módulo de visión por computador ligero (basado en MobileNet o YOLOv8-nano) para la catalogación automatizada de prendas mediante fotografía. De esta forma, el usuario podrá simplemente tomar una fotografía de cada prenda con la cámara de su teléfono móvil; el modelo se encargará de recortar el fondo, clasificar la categoría textil, estimar el color predominante mediante análisis de histogramas cromáticos en espacio HSV y sugerir valores iniciales de abrigo y formalidad, eliminando por completo la carga de digitación manual."
+                             "El proyecto cumplió con éxito todas las etapas del curso: comenzamos con un boceto en papel (Hito 1), pasamos a diseñar la interfaz (Hito 2) y terminamos con un MVP funcional y probado que responde a la perfección (Hito 3).\n\n"
+                             "Idea de trabajo futuro:\n"
+                             "Agregar un modelo liviano de visión por computador (como MobileNet o YOLO) para que el usuario no tenga que escribir los datos de la ropa a mano, sino que simplemente le tome una foto con el celular y el sistema detecte automáticamente qué prenda es, su color y su formalidad."
                 }
             ]
         }
     }
 
-    # Orden inverso de las secciones para no afectar los índices previos
     section_keys_reverse = [
         'Conclusiones',
         'Análisis de resultados',
@@ -308,7 +307,6 @@ def main():
     ]
 
     for sec_name in section_keys_reverse:
-        # Encontrar el párrafo del encabezado Heading 1
         h_idx = None
         for i, p in enumerate(doc.paragraphs):
             if p.style.name == 'Heading 1' and p.text.strip() == sec_name:
@@ -319,7 +317,6 @@ def main():
             print(f"ALERTA: No se encontró el encabezado para '{sec_name}'")
             continue
 
-        # Encontrar el párrafo final de esta sección (el que tiene sectPr o el final del doc)
         end_idx = None
         for j in range(h_idx + 1, len(doc.paragraphs)):
             if doc.paragraphs[j]._p.xpath('./w:pPr/w:sectPr'):
@@ -333,10 +330,8 @@ def main():
         data = SECCIONES[sec_name]
         target_p = doc.paragraphs[end_idx]
 
-        # Guardar lista de párrafos viejos para eliminarlos
         old_paras = [doc.paragraphs[k] for k in range(h_idx + 1, end_idx)]
 
-        # Insertar el nuevo contenido antes de target_p
         for q_data in data["preguntas"]:
             p_q = target_p.insert_paragraph_before(style='Body Text')
             run_q = p_q.add_run(q_data["pregunta"])
@@ -393,19 +388,31 @@ def main():
             p_post = target_p.insert_paragraph_before(style='Body Text')
             p_post.text = "Fuente: Reporte de validación técnica automatizada generado por test_evaluacion.py (Noviembre de 2026)."
 
-        # Eliminar párrafos viejos
         for p_old in old_paras:
             p_old._p.getparent().remove(p_old._p)
 
-        # Dejar target_p sin texto residual
         target_p.text = ""
 
     # Guardar en las dos rutas
-    doc.save(dst_path1)
-    doc.save(dst_path2)
+    saved_paths = []
+    try:
+        doc.save(dst_path1)
+        saved_paths.append(dst_path1)
+    except PermissionError:
+        fallback_path = r'C:\Users\diego\Downloads\Plantilla_Proyectos_PTIA_ECI_DiegoAndrade_Entrega3_Ajustada.docx'
+        doc.save(fallback_path)
+        saved_paths.append(fallback_path)
+        print("Aviso: El archivo en Downloads estaba abierto en Word. Se guardó como:", fallback_path)
+
+    try:
+        doc.save(dst_path2)
+        saved_paths.append(dst_path2)
+    except Exception as e:
+        print("Error al guardar en workspace:", e)
+
     print("\n¡Documento generado y guardado exitosamente!")
-    print("Destino 1 (Downloads):", dst_path1)
-    print("Destino 2 (Workspace):", dst_path2)
+    for p in saved_paths:
+        print("-", p)
 
 if __name__ == '__main__':
     main()
