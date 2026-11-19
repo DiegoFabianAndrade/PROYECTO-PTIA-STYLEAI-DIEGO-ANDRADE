@@ -1,5 +1,5 @@
 {
-  "timestamp": 1794967584.7274358,
+  "timestamp": 1795123727.8742867,
   "title": "Evaluación de Desempeño y Validación Técnica StyleAI MVP",
   "hito": "Hito 3 - Solución y Evaluación",
   "totalTests": 5,
@@ -116,9 +116,9 @@
       "name": "Rendimiento y Latencia",
       "passed": true,
       "iterations": 50,
-      "avgLatencyMs": 3.71,
-      "maxLatencyMs": 5.54,
-      "minLatencyMs": 2.99,
+      "avgLatencyMs": 2.12,
+      "maxLatencyMs": 3.24,
+      "minLatencyMs": 1.0,
       "targetMaxMs": 50.0
     }
   ]

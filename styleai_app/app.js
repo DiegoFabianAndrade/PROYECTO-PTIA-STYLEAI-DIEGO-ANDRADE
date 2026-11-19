@@ -156,19 +156,36 @@ function renderTrendingCarousel() {
   track.innerHTML = '';
 
   const trendingSamples = [
-    { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: 'Oficina' },
-    { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: 'Casual' },
-    { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: 'Fiesta' },
-    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: 'Urbano' },
-    { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: 'Cita' }
+    { name: 'Oficina Minimalista', score: 98, top: 'Camisa Oxford Blanca', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos de Cuero Café', tag: 'Oficina', weather: 'templado', occasion: 'trabajo' },
+    { name: 'Universidad Templado', score: 95, top: 'Buzo de Lana Gris', bottom: 'Jeans Azules Oscuros', shoes: 'Tenis Blancos Urbano', tag: 'Casual', weather: 'templado', occasion: 'casual' },
+    { name: 'Noche Elegante', score: 96, top: 'Camisa Oxford Azul', bottom: 'Pantalón Chino Beige', shoes: 'Botas de Cuero Negras', tag: 'Fiesta', weather: 'frio', occasion: 'fiesta' },
+    { name: 'Urbano Streetwear', score: 92, top: 'Camiseta Negra Básica', bottom: 'Jeans Negros Ajustados', shoes: 'Tenis Blancos Urbano', tag: 'Urbano', weather: 'calido', occasion: 'casual' },
+    { name: 'Cita Nocturna', score: 94, top: 'Suéter de Punto Marrón', bottom: 'Pantalón de Vestir Negro', shoes: 'Zapatos Formales Negros', tag: 'Cita', weather: 'frio', occasion: 'cita' }
   ];
 
   trendingSamples.forEach(sample => {
     const card = document.createElement('div');
     card.className = 'carousel-card';
+    card.style.cursor = 'pointer';
+    card.title = `Clic para generar combinación para ${sample.name}`;
     card.onclick = () => {
-      showToast(`Viendo combinación: ${sample.name}`);
+      document.getElementById('weather-select').value = sample.weather;
+      document.getElementById('event-select').value = sample.occasion;
+
+      const weatherKeys = Object.keys(WEATHER_CONFIG);
+      const occasionKeys = Object.keys(OCCASION_CONFIG);
+      document.querySelectorAll('#context-body .visual-pill').forEach(p => {
+        const val = p.dataset.value;
+        if (weatherKeys.includes(val)) {
+          p.classList.toggle('active', val === sample.weather);
+        } else if (occasionKeys.includes(val)) {
+          p.classList.toggle('active', val === sample.occasion);
+        }
+      });
+
+      switchTab('outfits');
       generateOutfits();
+      showToast(`Generando combinación para ${sample.name}`);
     };
     card.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -186,7 +203,7 @@ function renderTrendingCarousel() {
   });
 }
 
-// Generador aleatorio de combinaciones ("Sorpréndeme")
+// Generador aleatorio de combinaciones ("Sugerencia Rápida")
 function generateSurpriseOutfit() {
   const weatherKeys = Object.keys(WEATHER_CONFIG);
   const occasionKeys = Object.keys(OCCASION_CONFIG);
@@ -197,46 +214,99 @@ function generateSurpriseOutfit() {
   document.getElementById('weather-select').value = randomWeather;
   document.getElementById('event-select').value = randomOccasion;
 
-  document.querySelectorAll('.visual-pill').forEach(pill => {
-    if (pill.dataset.value === randomWeather || pill.dataset.value === randomOccasion) {
-      pill.classList.add('active');
+  document.querySelectorAll('#context-body .visual-pill').forEach(pill => {
+    const val = pill.dataset.value;
+    if (weatherKeys.includes(val)) {
+      pill.classList.toggle('active', val === randomWeather);
+    } else if (occasionKeys.includes(val)) {
+      pill.classList.toggle('active', val === randomOccasion);
     }
   });
 
+  switchTab('outfits');
   generateOutfits();
-  showToast(`Combinación sugerida para ${OCCASION_CONFIG[randomOccasion].label}`);
+  showToast(`Sugerencia para ${OCCASION_CONFIG[randomOccasion].label} en clima ${WEATHER_CONFIG[randomWeather].label}`);
 }
 
-// Filtro de búsqueda en tiempo real
+function getCurrentActiveTab() {
+  const tabs = ['outfits', 'wardrobe', 'favs', 'metrics'];
+  for (const t of tabs) {
+    const el = document.getElementById(`tab-${t}`);
+    if (el && el.style.display !== 'none') return t;
+  }
+  return 'outfits';
+}
+
+// Filtro de búsqueda en tiempo real reactivo y universal
 function handleLiveSearch(query) {
-  const q = query.toLowerCase().trim();
+  const q = (query || '').toLowerCase().trim();
+
   if (!q) {
     renderWardrobe('all');
     if (generatedOutfits.length > 0) {
-      renderOutfits(generatedOutfits, 'Filtro', 'En vivo');
+      const occasionKey = document.getElementById('event-select').value;
+      const weatherKey = document.getElementById('weather-select').value;
+      renderOutfits(generatedOutfits, OCCASION_CONFIG[occasionKey].label, WEATHER_CONFIG[weatherKey].label);
     }
+    renderFavorites();
     return;
   }
 
-  const filteredItems = wardrobe.filter(i => 
+  // 1. Filtrar prendas del armario
+  const filteredWardrobe = wardrobe.filter(i => 
     i.name.toLowerCase().includes(q) || 
     i.color.toLowerCase().includes(q) || 
-    i.category.toLowerCase().includes(q)
+    (CATEGORY_LABELS[i.category] && CATEGORY_LABELS[i.category].toLowerCase().includes(q)) ||
+    i.category.toLowerCase().includes(q) ||
+    (i.style && i.style.toLowerCase().includes(q))
   );
-  
-  const wContainer = document.getElementById('wardrobe-container');
-  if (wContainer) {
-    wContainer.innerHTML = '';
-    filteredItems.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'item-card';
-      card.innerHTML = `
-        <div class="piece-icon">${CATEGORY_ICONS[item.category] || ''}</div>
-        <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
-        <div style="font-size: 11px; color: var(--text-muted);">Color: ${item.color} | ${CATEGORY_LABELS[item.category]}</div>
-      `;
-      wContainer.appendChild(card);
+
+  renderWardrobeList(filteredWardrobe, q);
+
+  // 2. Filtrar combinaciones generadas
+  const filteredOutfits = generatedOutfits.filter(o => {
+    const pieces = [o.top, o.bottom, o.shoes];
+    if (o.outerwear) pieces.push(o.outerwear);
+    const pieceMatch = pieces.some(p => 
+      p.name.toLowerCase().includes(q) || 
+      p.color.toLowerCase().includes(q) ||
+      (p.category && p.category.toLowerCase().includes(q))
+    );
+    const reasonMatch = o.reasoning && o.reasoning.toLowerCase().includes(q);
+    return pieceMatch || reasonMatch;
+  });
+
+  // 3. Determinar qué pestaña actualizar o mostrar
+  const currentTab = getCurrentActiveTab();
+
+  if (currentTab === 'outfits') {
+    if (generatedOutfits.length > 0) {
+      if (filteredOutfits.length > 0) {
+        renderOutfits(filteredOutfits, `Búsqueda: "${query}"`, `${filteredOutfits.length} encontradas`);
+      } else {
+        const oContainer = document.getElementById('outfits-container');
+        oContainer.innerHTML = `
+          <div class="empty-state" style="padding: 40px 20px;">
+            <h3 style="color: #fff; font-family: var(--font-display); font-size: 17px;">Sin combinaciones para "${query}"</h3>
+            <p style="margin: 8px 0 16px;">Se encontraron ${filteredWardrobe.length} prenda(s) en tu armario que coinciden con la búsqueda.</p>
+            <button class="btn btn-primary" onclick="switchTab('wardrobe')" style="width: auto; padding: 10px 20px;">
+              Ver ${filteredWardrobe.length} prenda(s) en Catálogo
+            </button>
+          </div>
+        `;
+      }
+    } else {
+      // Si aún no se han generado outfits, cambiamos al catálogo automáticamente
+      switchTab('wardrobe');
+      showToast(`Mostrando ${filteredWardrobe.length} prenda(s) para "${query}"`);
+    }
+  } else if (currentTab === 'favs') {
+    const filteredFavs = favoriteOutfits.filter(o => {
+      const pieces = [o.top, o.bottom, o.shoes];
+      if (o.outerwear) pieces.push(o.outerwear);
+      return pieces.some(p => p.name.toLowerCase().includes(q) || p.color.toLowerCase().includes(q));
     });
+    renderFavorites(filteredFavs);
   }
 }
 
@@ -337,6 +407,11 @@ function resetToDefaultWardrobe() {
 
 // Carga de paquetes y cápsulas de estilo preconfiguradas
 function loadPresetPack(packType, btnElement) {
+  if (btnElement && btnElement.parentElement) {
+    btnElement.parentElement.querySelectorAll('.visual-pill').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+  }
+
   if (packType === 'full') {
     wardrobe = [...INITIAL_ITEMS];
   } else if (PRESET_PACKS[packType]) {
@@ -344,6 +419,8 @@ function loadPresetPack(packType, btnElement) {
   }
 
   saveWardrobe();
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) searchInput.value = '';
   renderWardrobe('all');
   showToast(`Armario cargado (${wardrobe.length} prendas)`);
 }
@@ -428,10 +505,17 @@ function handleAddItem(event) {
 
   wardrobe.push(newItem);
   saveWardrobe();
+
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) searchInput.value = '';
+
   renderWardrobe('all');
+  switchTab('wardrobe');
 
   document.getElementById('add-item-form').reset();
-  showToast(`Prenda "${name}" guardada`);
+  document.getElementById('warmth-val').innerText = '3';
+  document.getElementById('formality-val').innerText = '2';
+  showToast(`Prenda "${name}" guardada en tu catálogo`);
 }
 
 function deleteItem(id) {
@@ -443,19 +527,21 @@ function deleteItem(id) {
   }
 }
 
-function renderWardrobe(categoryFilter = 'all') {
+// Renderizado de lista de prendas (catálogo y buscador)
+function renderWardrobeList(items, searchQuery = '') {
   const container = document.getElementById('wardrobe-container');
   if (!container) return;
   container.innerHTML = '';
 
-  const filtered = categoryFilter === 'all' ? wardrobe : wardrobe.filter(i => i.category === categoryFilter);
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state"><p>No hay prendas en esta categoría.</p></div>`;
+  if (!items || items.length === 0) {
+    const msg = searchQuery 
+      ? `No se encontraron prendas para "${searchQuery}".`
+      : 'No hay prendas disponibles en esta categoría.';
+    container.innerHTML = `<div class="empty-state"><p>${msg}</p></div>`;
     return;
   }
 
-  filtered.forEach(item => {
+  items.forEach(item => {
     const card = document.createElement('div');
     card.className = 'item-card';
     card.style.cssText = 'background: var(--bg-surface); border: 1.5px solid var(--border-subtle); padding: 16px; border-radius: 16px; position: relative; display: flex; flex-direction: column; gap: 8px;';
@@ -463,15 +549,27 @@ function renderWardrobe(categoryFilter = 'all') {
       <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Eliminar">✕</button>
       <div style="font-size: 28px;">${CATEGORY_ICONS[item.category] || ''}</div>
       <div style="font-weight: 700; font-size: 14px; color: #fff;">${item.name}</div>
-      <div style="font-size: 11px; color: var(--text-muted);">${CATEGORY_LABELS[item.category]} • ${item.color}</div>
+      <div style="font-size: 11px; color: var(--text-muted);">${CATEGORY_LABELS[item.category] || item.category} • ${item.color}</div>
+      <div style="font-size: 10.5px; color: var(--text-dim); margin-top: 2px;">Abrigo: ${item.warmth}/5 • Formalidad: ${item.formality}/5</div>
     `;
     container.appendChild(card);
   });
 }
 
+function renderWardrobe(categoryFilter = 'all') {
+  const filtered = categoryFilter === 'all' ? wardrobe : wardrobe.filter(i => i.category === categoryFilter);
+  renderWardrobeList(filtered);
+}
+
 function filterCategory(cat, btn) {
-  document.querySelectorAll('.visual-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if (btn && btn.parentElement) {
+    btn.parentElement.querySelectorAll('.visual-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const searchInput = document.getElementById('search-input');
+  if (searchInput && searchInput.value) {
+    searchInput.value = '';
+  }
   renderWardrobe(cat);
 }
 
@@ -949,69 +1047,178 @@ function toggleFavorite(index) {
   updateBadges();
 }
 
-function renderFavorites() {
+function renderFavorites(list = null) {
   const container = document.getElementById('favs-container');
   if (!container) return;
   container.innerHTML = '';
 
-  if (favoriteOutfits.length === 0) {
-    container.innerHTML = `<div class="empty-state"><p>No has guardado outfits favoritos aún.</p></div>`;
+  const itemsToRender = list !== null ? list : favoriteOutfits;
+
+  if (itemsToRender.length === 0) {
+    const msg = list !== null 
+      ? 'No se encontraron outfits favoritos coincidentes con la búsqueda.'
+      : 'No has guardado outfits favoritos aún. Puedes guardar combinaciones haciendo clic en "Favorito" en la pestaña de Combinaciones.';
+    container.innerHTML = `<div class="empty-state"><p>${msg}</p></div>`;
     return;
   }
 
-  favoriteOutfits.forEach((outfit, index) => {
+  itemsToRender.forEach((outfit, index) => {
+    const originalIndex = favoriteOutfits.indexOf(outfit);
+    const targetIdx = originalIndex !== -1 ? originalIndex : index;
     const card = document.createElement('div');
     card.className = 'mobbin-card';
     card.innerHTML = `
       <div class="mobbin-card-header">
-        <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff;">Favorito #${index + 1}</h3>
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff;">Favorito #${index + 1}</h3>
+          <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;">Guardado en biblioteca personal</span>
+        </div>
         <div class="match-badge">${outfit.score}% Match</div>
       </div>
-      <div style="font-size: 13px; color: var(--text-main);">
-        ${outfit.top.name} • ${outfit.bottom.name} • ${outfit.shoes.name}
+      <div style="font-size: 13.5px; color: var(--text-main); margin-bottom: 12px; line-height: 1.6;">
+        <div><strong>Superior:</strong> ${outfit.top.name} (${outfit.top.color})</div>
+        <div><strong>Inferior:</strong> ${outfit.bottom.name} (${outfit.bottom.color})</div>
+        <div><strong>Calzado:</strong> ${outfit.shoes.name} (${outfit.shoes.color})</div>
+        ${outfit.outerwear ? `<div><strong>Abrigo:</strong> ${outfit.outerwear.name} (${outfit.outerwear.color})</div>` : ''}
+      </div>
+      <div class="reasoning-box" style="margin-bottom: 14px;">
+        <strong>Justificación:</strong> ${outfit.reasoning || 'Combinación guardada.'}
+      </div>
+      <div class="card-actions">
+        <button class="btn-action btn-fav active-fav" onclick="removeFavorite(${targetIdx})" title="Quitar de favoritos">Quitar</button>
+        <button class="btn-action" onclick="copyFavoriteToClipboard(${targetIdx})" title="Copiar combinación">Copiar</button>
+        <button class="btn-action" onclick="openFavoriteModal(${targetIdx})" title="Ver detalle">Detalle</button>
       </div>
     `;
     container.appendChild(card);
   });
 }
 
+function removeFavorite(index) {
+  if (index >= 0 && index < favoriteOutfits.length) {
+    favoriteOutfits.splice(index, 1);
+    localStorage.setItem('styleai_favs', JSON.stringify(favoriteOutfits));
+    updateBadges();
+    renderFavorites();
+    showToast('Combinación eliminada de favoritos');
+  }
+}
+
+function copyFavoriteToClipboard(index) {
+  const outfit = favoriteOutfits[index];
+  if (!outfit) return;
+  copyOutfitObject(outfit);
+}
+
+function copyOutfitToClipboard(index) {
+  const outfit = generatedOutfits[index];
+  if (!outfit) return;
+  copyOutfitObject(outfit);
+}
+
+function copyOutfitObject(outfit) {
+  const pieces = [
+    `Superior: ${outfit.top.name} (${outfit.top.color})`,
+    `Inferior: ${outfit.bottom.name} (${outfit.bottom.color})`,
+    `Calzado: ${outfit.shoes.name} (${outfit.shoes.color})`
+  ];
+  if (outfit.outerwear) {
+    pieces.push(`Abrigo: ${outfit.outerwear.name} (${outfit.outerwear.color})`);
+  }
+
+  const textToCopy = [
+    `StyleAI - Combinación Recomendada (${outfit.score}% Match)`,
+    `Prendas:`,
+    ...pieces.map(p => `  - ${p}`),
+    `Justificación: ${outfit.reasoning || 'Selección equilibrada para ocasión y clima.'}`
+  ].join('\n');
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast('Combinación copiada al portapapeles');
+    }).catch(() => {
+      fallbackCopyText(textToCopy);
+    });
+  } else {
+    fallbackCopyText(textToCopy);
+  }
+}
+
+function fallbackCopyText(text) {
+  try {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.top = '-9999px';
+    textArea.style.left = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    if (successful) {
+      showToast('Combinación copiada al portapapeles');
+    } else {
+      showToast('No se pudo copiar automáticamente');
+    }
+  } catch (err) {
+    showToast('No se pudo copiar automáticamente');
+  }
+}
+
 function openOutfitModal(index) {
   const outfit = generatedOutfits[index];
   if (!outfit) return;
+  renderOutfitDetailInModal(outfit, `Outfit Recomendado #${index + 1}`, false, index);
+}
 
-  document.getElementById('modal-title').innerText = `Outfit Recomendado #${index + 1} (${outfit.score}% Match)`;
+function openFavoriteModal(index) {
+  const outfit = favoriteOutfits[index];
+  if (!outfit) return;
+  renderOutfitDetailInModal(outfit, `Favorito #${index + 1}`, true, index);
+}
+
+function renderOutfitDetailInModal(outfit, titlePrefix, isFav, index) {
+  document.getElementById('modal-title').innerText = `${titlePrefix} (${outfit.score}% Match)`;
   
+  const copyFn = isFav ? `copyFavoriteToClipboard(${index})` : `copyOutfitToClipboard(${index})`;
+
   let modalHtml = `
     <div style="display: flex; flex-direction: column; gap: 16px;">
       <div style="background: rgba(168, 85, 247, 0.12); border: 1.5px solid rgba(168, 85, 247, 0.35); padding: 16px; border-radius: 14px;">
         <strong style="color: #c084fc;">Justificación Completa:</strong>
-        <p style="margin-top: 6px; font-size: 14px; color: #e2e8f0;">${outfit.reasoning}</p>
+        <p style="margin-top: 6px; font-size: 14px; color: #e2e8f0; line-height: 1.5;">${outfit.reasoning}</p>
       </div>
 
       <h4 style="font-family: var(--font-display); font-size: 16px; color: #fff;">Prendas del Conjunto:</h4>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
-        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-subtle);">
           <span><strong>Superior:</strong> ${outfit.top.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.top.color} | Abrigo: ${outfit.top.warmth}/5</span>
         </li>
-        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-subtle);">
           <span><strong>Inferior:</strong> ${outfit.bottom.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.bottom.color} | Abrigo: ${outfit.bottom.warmth}/5</span>
         </li>
-        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-subtle);">
           <span><strong>Calzado:</strong> ${outfit.shoes.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.shoes.color} | Abrigo: ${outfit.shoes.warmth}/5</span>
         </li>
         ${outfit.outerwear ? `
-        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <li style="background: rgba(14, 21, 37, 0.9); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-subtle);">
           <span><strong>Abrigo:</strong> ${outfit.outerwear.name}</span>
-          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color}</span>
+          <span style="font-size: 12px; color: var(--text-muted);">Color: ${outfit.outerwear.color} | Abrigo: ${outfit.outerwear.warmth}/5</span>
         </li>` : ''}
       </ul>
 
-      <button class="btn btn-primary" onclick="copyOutfitToClipboard(${index})" style="margin-top: 8px;">
-        Copiar al Portapapeles
-      </button>
+      <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <button class="btn btn-primary" onclick="${copyFn}" style="flex: 1;">
+          Copiar al Portapapeles
+        </button>
+        <button class="btn btn-action" onclick="closeModal()" style="padding: 10px 20px;">
+          Cerrar
+        </button>
+      </div>
     </div>
   `;
 
@@ -1028,7 +1235,7 @@ function openVideoModal() {
   document.getElementById('modal-title').innerText = 'Video Demostración del MVP (Hito 3)';
   document.getElementById('modal-body').innerHTML = `
     <div style="text-align: center; padding: 10px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
-      <h3 style="color: #fff; font-family: var(--font-display); font-size: 18px;">Demostración del MVP y Validación Técnica — Hito 3 (Diego Andrade)</h3>
+      <h3 style="color: #fff; font-family: var(--font-display); font-size: 18px;">Demostración del MVP y Validación Técnica - Hito 3 (Diego Andrade)</h3>
       
       <div style="width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid var(--accent-cyan); background: #000; box-shadow: 0 10px 30px rgba(0,240,255,0.25);">
         <video controls style="width: 100%; max-height: 360px; display: block;" poster="assets/logo.png">
@@ -1044,8 +1251,6 @@ function openVideoModal() {
       <div style="display: flex; gap: 12px;">
         <a href="../DiegoFabianAndrade_PROYECTO-PTIA-STYLEAI-DIEGO-ANDRADE_Demo.mp4" target="_blank" class="btn btn-primary" style="width: auto; padding: 10px 24px; text-decoration: none;">
           Abrir Video en Pestaña Nueva
-        </a>
-          ▶️ Abrir Video en Pestaña Nueva
         </a>
         <button class="btn btn-action" onclick="closeModal()" style="padding: 10px 20px;">
           Cerrar
